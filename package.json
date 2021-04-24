@@ -1,0 +1,19 @@
+{
+  "name": "screeps",
+  "version": "1.0.0",
+  "description": "My Screeps game script",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "screeps": "grunt screeps"
+  },
+  "keywords": [
+    "screeps"
+  ],
+  "author": "ODAEL",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "grunt-screeps": "^1.5.0"
+  }
+}
