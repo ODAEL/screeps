@@ -8,16 +8,16 @@ const afterHarvestTaskBlueprintsOrderList = [
     {times: 1, blueprint: {type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_WALL, minHitPercentage: 0.000001}},
     {times: 1, blueprint: {type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_CONTAINER, minHitPercentage: 0.2}},
 ]
-    
-var processCreep = (creep) => {
+
+const processCreep = (creep) => {
     if (tc.runCreep(creep)) {
         return
     }
-    
+
     processCreepNewTask(creep)
-    
+
     tc.runCreep(creep)
-}
+};
 
 var processCreepNewTask = (creep) => {
     
@@ -29,37 +29,37 @@ var processCreepNewTask = (creep) => {
 }
 
 var processHarvest = (creep) => {
-    var roomWrapper = new RoomWrapper(creep.room)
-    
-    if (creep.store.getUsedCapacity(RESOURCE_ENERGY) != 0) {
+    const roomWrapper = new RoomWrapper(creep.room);
+
+    if (creep.store.getUsedCapacity(RESOURCE_ENERGY) !== 0) {
         return false
     }
-    
-    var sources = roomWrapper.availableSources((object) => {
-        var sourceWrapper = new SourceWrapper(object)
-        
+
+    const sources = roomWrapper.availableSources((object) => {
+        const sourceWrapper = new SourceWrapper(object);
+
         return sourceWrapper.availableHarvestPos().length > sourceWrapper.connectedCreeps().length
-    })
-    
-    if (sources.length == 0) {
+    });
+
+    if (sources.length === 0) {
         return false
     }
-    
-    var source = helpers.findClosest(creep, sources)
+
+    const source = helpers.findClosest(creep, sources);
     tc.harvest(creep, source.id)
             
     return true
 }
 
 var processAfterHarvest = (creep) => {
-    if (creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
+    if (creep.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
         return false
     }
-    
-    var taskBlueprints = blueprintsHelper.taskBlueprintsOrder(afterHarvestTaskBlueprintsOrderList)
-    
-    var numberOfIterations = 0
-    
+
+    const taskBlueprints = blueprintsHelper.taskBlueprintsOrder(afterHarvestTaskBlueprintsOrderList);
+
+    let numberOfIterations = 0;
+
     do {
         if (numberOfIterations++ > taskBlueprints.length) {
             log('Panic! numberOfIterations was ' + numberOfIterations + ' while iterating on ' + taskBlueprints.length + ' items')
@@ -72,11 +72,11 @@ var processAfterHarvest = (creep) => {
 }
 
 var processTaskBlueprint = (creep, blueprint) => {
-    var roomWrapper = new RoomWrapper(creep.room)
-    
-    if (blueprint.type == TASK_TYPE_TRANSFER) {
+    const roomWrapper = new RoomWrapper(creep.room);
+
+    if (blueprint.type === TASK_TYPE_TRANSFER) {
         var targets = blueprintsHelper.getStructuresByBlueprint(roomWrapper, blueprint)
-        if (targets.length == 0) {
+        if (targets.length === 0) {
             return false
         }
         
@@ -87,9 +87,9 @@ var processTaskBlueprint = (creep, blueprint) => {
         return true
     }
     
-    if (blueprint.type == TASK_TYPE_BUILD) {
-        var myConstructionSites = roomWrapper.myConstructionSites()
-        if (myConstructionSites.length == 0) {
+    if (blueprint.type === TASK_TYPE_BUILD) {
+        const myConstructionSites = roomWrapper.myConstructionSites();
+        if (myConstructionSites.length === 0) {
             return false
         }
         
@@ -100,8 +100,8 @@ var processTaskBlueprint = (creep, blueprint) => {
         return true
     }
     
-    if (blueprint.type == TASK_TYPE_UPGRADE_CONTROLLER) {
-        var controller = roomWrapper.controller()
+    if (blueprint.type === TASK_TYPE_UPGRADE_CONTROLLER) {
+        const controller = roomWrapper.controller();
         if (!controller) {
             return false
         }
@@ -110,9 +110,9 @@ var processTaskBlueprint = (creep, blueprint) => {
         return true
     }
     
-    if (blueprint.type == TASK_TYPE_REPAIR) {
+    if (blueprint.type === TASK_TYPE_REPAIR) {
         var targets = blueprintsHelper.getStructuresByBlueprint(roomWrapper, blueprint)
-        if (targets.length == 0) {
+        if (targets.length === 0) {
             return false
         }
         
@@ -128,8 +128,8 @@ var processTaskBlueprint = (creep, blueprint) => {
 
 module.exports = {
     process: () => {
-        for (var name in Game.creeps) {
-            var creep = Game.creeps[name]
+        for (let name in Game.creeps) {
+            const creep = Game.creeps[name];
             if (creep.spawning) {
                 continue
             }

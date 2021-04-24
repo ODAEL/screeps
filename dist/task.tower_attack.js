@@ -6,7 +6,7 @@ class TaskTowerAttack extends Task {
     }
     
     run() {
-        var target = Game.getObjectById(this.targetId)
+        const target = Game.getObjectById(this.targetId);
         if (!target) {
             debug('Unable to find target by id=' + this.targetId)
             
@@ -18,13 +18,13 @@ class TaskTowerAttack extends Task {
             
             return false
         }
-        
-        var tower = Game.getObjectById(this.subjectId)
+
+        const tower = Game.getObjectById(this.subjectId);
         if (!tower || !(tower instanceof StructureTower)) {
             return false
         }
         
-        if (tower.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
+        if (tower.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
             return false
         }
         

@@ -6,7 +6,7 @@ class TaskRenewCreep extends Task {
     }
     
     run() {
-        var spawn = Game.getObjectById(this.subjectId)
+        const spawn = Game.getObjectById(this.subjectId);
         if (!spawn) {
             return false
         }
@@ -14,8 +14,8 @@ class TaskRenewCreep extends Task {
         if (spawn.spawning) {
             return false
         }
-        
-        var creep = Game.getObjectById(this.creepId)
+
+        const creep = Game.getObjectById(this.creepId);
         if (!creep) {
             return false
         }

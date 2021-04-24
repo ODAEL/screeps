@@ -1,7 +1,7 @@
 class RoomWrapper {
     constructor(roomParam) {
-        var room = helpers.roomByParam(roomParam)
-        
+        const room = helpers.roomByParam(roomParam);
+
         if (!room) {
             debug('Unable to find source by roomParam=' + roomParam)
         }
@@ -24,8 +24,8 @@ class RoomWrapper {
     availableSources(filter) {
         return this.activeSources(
             (object) => {
-                var nearestHostileWithAttack = (new SourceWrapper(object)).nearestHostileWithAttack()
-                
+                const nearestHostileWithAttack = (new SourceWrapper(object)).nearestHostileWithAttack();
+
                 return (!nearestHostileWithAttack || !nearestHostileWithAttack.pos.inRangeTo(object, 3)) &&
                     this.checkFilter(filter, object)
             }
@@ -33,10 +33,10 @@ class RoomWrapper {
     }
     
     availableHarvestPos() {
-        var availableHarvestPos = []
-        
-        var sources = this.availableSources()
-        for (var source of sources) {
+        const availableHarvestPos = [];
+
+        const sources = this.availableSources();
+        for (let source of sources) {
             availableHarvestPos.push(...(new SourceWrapper(source)).availableHarvestPos())
         }
         
@@ -62,7 +62,7 @@ class RoomWrapper {
     myStructuresWithStore(filter) {
         return this.myStructures(
             (object) => {
-                return (object.structureType == STRUCTURE_SPAWN || object.structureType == STRUCTURE_EXTENSION) &&
+                return (object.structureType === STRUCTURE_SPAWN || object.structureType === STRUCTURE_EXTENSION) &&
                     object.store.getFreeCapacity(RESOURCE_ENERGY) > 0 &&
                     this.checkFilter(filter, object)
             }
@@ -76,7 +76,7 @@ class RoomWrapper {
     walls(filter) {
         return this.structures( 
             (object) => {
-                return object.structureType == STRUCTURE_WALL &&
+                return object.structureType === STRUCTURE_WALL &&
                     this.checkFilter(filter, object)
             }
         )
@@ -85,7 +85,7 @@ class RoomWrapper {
     roads(filter) {
         return this.structures( 
             (object) => {
-                return object.structureType == STRUCTURE_ROAD &&
+                return object.structureType === STRUCTURE_ROAD &&
                     this.checkFilter(filter, object)
             }
         )

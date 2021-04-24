@@ -14,7 +14,7 @@ class TaskRepair extends Task {
     }
     
     run() {
-        var structure = Game.getObjectById(this.structureId)
+        const structure = Game.getObjectById(this.structureId);
         if (!structure) {
             debug('Unable to find target by id=' + this.structureId)
             
@@ -27,24 +27,24 @@ class TaskRepair extends Task {
             return false
         }
         
-        if (structure.hitsMax == structure.hits) {
+        if (structure.hitsMax === structure.hits) {
             debug('Structure has maximum hist ' + structure)
             
             return false
         }
-        
-        var subject = Game.getObjectById(this.subjectId)
+
+        const subject = Game.getObjectById(this.subjectId);
         if (!subject || !(subject instanceof Creep || subject instanceof StructureTower)) {
             return false
         }
         
-        if (subject.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
+        if (subject.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
             return false
         }
         
         subject instanceof Creep && subject.say(this.type)
         
-        if (subject.repair(structure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+        if (subject.repair(structure, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
             if (subject instanceof Creep) {
                 subject.moveTo(structure, {visualizePathStyle: {stroke: '#ffffff'}});
             } else {
@@ -54,7 +54,7 @@ class TaskRepair extends Task {
             return true
         }
         
-        if (structure.hitsMax == structure.hits) {
+        if (structure.hitsMax === structure.hits) {
             return false
         }
         

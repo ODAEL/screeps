@@ -16,19 +16,19 @@ class TaskBuild extends Task {
             
             return false
         }
-        
-        var creep = Game.getObjectById(this.subjectId)
+
+        const creep = Game.getObjectById(this.subjectId);
         if (!creep || !(creep instanceof Creep)) {
             return false
         }
         
-        if (creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
+        if (creep.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
             return false
         }
         
         creep.say(this.type)
         
-        if (creep.build(constructionSite) == ERR_NOT_IN_RANGE) {
+        if (creep.build(constructionSite) === ERR_NOT_IN_RANGE) {
             creep.moveTo(constructionSite, {visualizePathStyle: {stroke: '#ffffff'}});
             
             return true

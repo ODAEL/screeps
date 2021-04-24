@@ -13,14 +13,14 @@ class Task {
     }
     
     static deserialize(task, taskClass = Task) {
-        var obj = new taskClass()
+        const obj = new taskClass();
         Object.assign(obj, task)
         
         return obj
     }
     
     getObjectById(id) {
-        var object = Game.getObjectById(id)
+        const object = Game.getObjectById(id);
         if (!object) {
             log('Unable to find object by id=' + id)
         }

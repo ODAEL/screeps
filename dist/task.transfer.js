@@ -6,29 +6,29 @@ class TaskTransfer extends Task {
     }
     
     run() {
-        var target = Game.getObjectById(this.targetId)
+        const target = Game.getObjectById(this.targetId);
         if (!target) {
             debug('Unable to find target by id=' + this.targetId)
             
             return false
         }
         
-        if (target.store && target.store.getFreeCapacity(RESOURCE_ENERGY) == 0) {
+        if (target.store && target.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
             return false
         }
-        
-        var creep = Game.getObjectById(this.subjectId)
+
+        const creep = Game.getObjectById(this.subjectId);
         if (!creep || !(creep instanceof Creep)) {
             return false
         }
         
-        if (creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
+        if (creep.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
             return false
         }
         
         creep.say(this.type)
         
-        if (creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+        if (creep.transfer(target, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
             creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
             
             return true

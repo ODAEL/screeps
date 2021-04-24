@@ -6,10 +6,10 @@ class TaskHarvest extends Task {
     }
     
     run() {
-        var creep = Game.getObjectById(this.subjectId)
-        
+        const creep = Game.getObjectById(this.subjectId);
+
         if (!creep) {
-            debug('Unable to find creep by id=' + subjectId)
+            debug('Unable to find creep by id=' + this.subjectId)
             
             return false
         }
@@ -17,14 +17,14 @@ class TaskHarvest extends Task {
         creep.say(this.type)
         
         if(creep.store.getFreeCapacity() > 0) {
-            var source = Game.getObjectById(this.sourceId);
-            
-            var harvestResult = creep.harvest(source)
-            if (harvestResult == ERR_NOT_IN_RANGE) {
+            const source = Game.getObjectById(this.sourceId);
+
+            const harvestResult = creep.harvest(source);
+            if (harvestResult === ERR_NOT_IN_RANGE) {
                 creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
                 return true
             }
-            if (harvestResult == ERR_NOT_ENOUGH_RESOURCES) {
+            if (harvestResult === ERR_NOT_ENOUGH_RESOURCES) {
                 return false
             }
             

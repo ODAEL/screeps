@@ -6,7 +6,7 @@ class TaskUpgradeController extends Task {
     }
     
     run() {
-        var controller = Game.getObjectById(this.controllerId)
+        const controller = Game.getObjectById(this.controllerId);
         if (!controller) {
             debug('Unable to find controller by id=' + this.controllerId)
             
@@ -18,19 +18,19 @@ class TaskUpgradeController extends Task {
             
             return false
         }
-        
-        var creep = Game.getObjectById(this.subjectId)
+
+        const creep = Game.getObjectById(this.subjectId);
         if (!creep || !(creep instanceof Creep)) {
             return false
         }
         
-        if (creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
+        if (creep.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
             return false
         }
         
         creep.say(this.type)
         
-        if (creep.upgradeController(controller) == ERR_NOT_IN_RANGE) {
+        if (creep.upgradeController(controller) === ERR_NOT_IN_RANGE) {
             creep.moveTo(controller, {visualizePathStyle: {stroke: '#ffffff'}});
             
             return true

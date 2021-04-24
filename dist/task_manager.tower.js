@@ -5,25 +5,25 @@ const taskBlueprintsOrderList = [
     {times: 4, blueprint: {type: TASK_TYPE_TOWER_ATTACK}},
 ]
 
-var processTower = (tower) => {
+const processTower = (tower) => {
     if (tc.runTower(tower)) {
         return
     }
-    
+
     processTowerNewTask(tower)
-    
+
     tc.runTower(tower)
-}
+};
 
 var processTowerNewTask = (tower) => {
-    if (tower.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
+    if (tower.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
         return false
     }
-    
-    var taskBlueprints = blueprintsHelper.taskBlueprintsOrder(taskBlueprintsOrderList)
-    
-    var numberOfIterations = 0
-    
+
+    const taskBlueprints = blueprintsHelper.taskBlueprintsOrder(taskBlueprintsOrderList);
+
+    let numberOfIterations = 0;
+
     do {
         if (numberOfIterations++ > taskBlueprints.length) {
             return false
@@ -35,11 +35,11 @@ var processTowerNewTask = (tower) => {
 }
 
 var processTaskBlueprint = (tower, blueprint) => {
-    var roomWrapper = new RoomWrapper(tower.room)
-    
-    if (blueprint.type == TASK_TYPE_REPAIR) {
+    const roomWrapper = new RoomWrapper(tower.room);
+
+    if (blueprint.type === TASK_TYPE_REPAIR) {
         var targets = blueprintsHelper.getStructuresByBlueprint(roomWrapper, blueprint)
-        if (targets.length == 0) {
+        if (targets.length === 0) {
             return false
         }
         
@@ -50,9 +50,9 @@ var processTaskBlueprint = (tower, blueprint) => {
         return true
     }
     
-    if (blueprint.type == TASK_TYPE_TOWER_ATTACK) {
+    if (blueprint.type === TASK_TYPE_TOWER_ATTACK) {
         var targets = roomWrapper.hostileCreeps()
-        if (targets.length == 0) {
+        if (targets.length === 0) {
             return false
         }
         
@@ -68,8 +68,8 @@ var processTaskBlueprint = (tower, blueprint) => {
 
 module.exports = {
     process: () => {
-        for (var name in Game.structures) {
-            var structure = Game.structures[name]
+        for (let name in Game.structures) {
+            const structure = Game.structures[name];
             if (!(structure instanceof StructureTower)) {
                 continue
             }

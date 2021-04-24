@@ -4,9 +4,9 @@ class TaskSpawnCreep extends Task {
     }
     
     run() {
-        var spawn = Game.getObjectById(this.subjectId)
-        
-        if (spawn.spawnCreep(this.chooseBodyParts(), 'Creep ' + Game.time) == OK) {
+        const spawn = Game.getObjectById(this.subjectId);
+
+        if (spawn.spawnCreep(this.chooseBodyParts(), 'Creep ' + Game.time) === OK) {
             return false
         }
         
@@ -18,28 +18,28 @@ class TaskSpawnCreep extends Task {
     }
     
     chooseBodyParts() {
-        var roomWrapper = new RoomWrapper(Game.getObjectById(this.subjectId).room)
-        var energyCapasityAvailable = roomWrapper.energyCapasityAvailable()
-        
-        var i = 0
-        var bodyParts = []
-        var totalCost = 0
-        
-        if (roomWrapper.myCreeps().length == 0) {
+        const roomWrapper = new RoomWrapper(Game.getObjectById(this.subjectId).room);
+        const energyCapasityAvailable = roomWrapper.energyCapasityAvailable();
+
+        let i = 0;
+        const bodyParts = [];
+        let totalCost = 0;
+
+        if (roomWrapper.myCreeps().length === 0) {
             return [WORK, CARRY, MOVE]
         }
         
         while (true) {
-            var bodyPart, cost
-            if (i % 3 == 0) {
+            let bodyPart, cost;
+            if (i % 3 === 0) {
                 bodyPart = MOVE
                 cost = 50
             }
-            if (i % 3 == 1) {
+            if (i % 3 === 1) {
                 bodyPart = WORK
                 cost = 100
             }
-            if (i % 3 == 2) {
+            if (i % 3 === 2) {
                 bodyPart = CARRY
                 cost = 50
             }
