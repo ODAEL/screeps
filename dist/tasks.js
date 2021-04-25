@@ -52,6 +52,10 @@ global.TaskSpawnCreep = class TaskSpawnCreep extends Task {
     run() {
         const spawn = Game.getObjectById(this.subjectId);
 
+        let memory = {
+
+        }
+
         if (spawn.spawnCreep(this.chooseBodyParts(), 'Creep ' + Game.time) === OK) {
             return false
         }

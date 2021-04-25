@@ -143,7 +143,7 @@ class SourceWrapper {
         const connectedCreeps = [];
         for (let name in Game.creeps) {
             const creep = Game.creeps[name];
-            const currentTask = TaskController.currentCreepTask(creep);
+            const currentTask = TaskController.currentTask(creep);
             if (currentTask && currentTask.sourceId && currentTask.sourceId === this.source.id) {
                 connectedCreeps.push(creep)
             }

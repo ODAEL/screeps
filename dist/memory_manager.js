@@ -12,5 +12,17 @@ module.exports.MemoryManager = {
         }
         
         log(tasksCleared + ' tasks was cleared')
-    }
+    },
+
+    pushTask: (task) => {
+        Memory.tasks.push(task)
+    },
+    destroyTask: (task) => {
+        for (let i = 0; i < Memory.tasks.length; i++) {
+            if (Memory.tasks[i].id === task.id) {
+                Memory.tasks.splice(i, 1);
+                return
+            }
+        }
+    },
 };

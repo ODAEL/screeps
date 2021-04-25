@@ -1,17 +1,5 @@
-const {Helpers} = require("helpers");
-
-const pushTask = (task) => {
-    Memory.tasks.push(task)
-};
-
-const destroyTask = (task) => {
-    for (let i = 0; i < Memory.tasks.length; i++) {
-        if (Memory.tasks[i].id === task.id) {
-            Memory.tasks.splice(i, 1);
-            return
-        }
-    }
-};
+const {MemoryManager} = require("./memory_manager");
+const {Helpers} = require("./helpers");
 
 const getTaskObject = (task) => {
     const taskClass =
@@ -34,7 +22,7 @@ const runTask = (task) => {
     }
 
     if (!task.run()) {
-        destroyTask(task)
+        MemoryManager.destroyTask(task)
 
         return false
     }
@@ -129,68 +117,62 @@ var currentTowerTask = (towerParam) => {
 const spawnCreep = (spawnParam) => {
     const spawn = Helpers.spawnByParam(spawnParam, true);
 
-    pushTask(new TaskSpawnCreep(spawn))
+    MemoryManager.pushTask(new TaskSpawnCreep(spawn))
 };
 
 const renewCreep = (spawnParam, creepParam) => {
     const spawn = Helpers.spawnByParam(spawnParam, true);
     const creep = Helpers.creepByParam(creepParam, true);
 
-    pushTask(new TaskRenewCreep(spawn, creep))
+    MemoryManager.pushTask(new TaskRenewCreep(spawn, creep))
 };
 
 const harvest = (creepParam, sourceParam) => {
     const creep = Helpers.creepByParam(creepParam, true);
     const source = Helpers.sourceByParam(sourceParam, true);
 
-    pushTask(new TaskHarvest(creep, source))
+    MemoryManager.pushTask(new TaskHarvest(creep, source))
 };
 
 const transfer = (creepParam, targetParam) => {
     const creep = Helpers.creepByParam(creepParam, true);
     const target = Helpers.objectByParam(targetParam, true);
 
-    pushTask(new TaskTransfer(creep, target))
+    MemoryManager.pushTask(new TaskTransfer(creep, target))
 };
 
 const build = (creepParam, constructionSiteParam) => {
     const creep = Helpers.creepByParam(creepParam, true);
     const constructionSite = Helpers.constructionSiteByParam(constructionSiteParam, true);
 
-    pushTask(new TaskBuild(creep, constructionSite))
+    MemoryManager.pushTask(new TaskBuild(creep, constructionSite))
 };
 
 const upgradeController = (creepParam, controllerParam) => {
     const creep = Helpers.creepByParam(creepParam, true);
     const controller = Helpers.controllerByParam(controllerParam, true);
 
-    pushTask(new TaskUpgradeController(creep, controller))
+    MemoryManager.pushTask(new TaskUpgradeController(creep, controller))
 };
 
 const repair = (subjectParam, structureParam) => {
     const subject = Helpers.objectByParam(subjectParam, true);
     const structure = Helpers.structureByParam(structureParam, true);
 
-    pushTask(new TaskRepair(subject, structure))
+    MemoryManager.pushTask(new TaskRepair(subject, structure))
 };
 
 const towerAttack = (towerParam, targetParam) => {
     const tower = Helpers.structureByParam(towerParam, true);
     const target = Helpers.objectByParam(targetParam, true);
 
-    pushTask(new TaskTowerAttack(tower, target))
+    MemoryManager.pushTask(new TaskTowerAttack(tower, target))
 };
 
 module.exports.TaskController = {
     runTask: runTask,
-    runSpawn: runSpawn,
-    runCreep: runCreep,
-    runTower: runTower,
-    taskById: taskById,
     currentTask: currentTask,
-    currentSpawnTask: currentSpawnTask,
-    currentCreepTask: currentCreepTask,
-    currentTowerTask: currentTowerTask,
+
     spawnCreep: spawnCreep,
     renewCreep: renewCreep,
     harvest: harvest,

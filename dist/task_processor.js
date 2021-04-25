@@ -1,9 +1,9 @@
 const {SpawnWrapper} = require("./wrappers");
 const {SourceWrapper} = require("./wrappers");
 const {RoomWrapper} = require("./wrappers");
-const {BlueprintsHelper} = require("helper.blueprints");
-const {Helpers} = require("helpers");
-const {TaskController} = require("task_controller");
+const {BlueprintsHelper} = require("./helper.blueprints");
+const {Helpers} = require("./helpers");
+const {TaskController} = require("./task_controller");
 
 class BaseTaskProcessor {
     constructor(subject) {
@@ -48,17 +48,6 @@ class SpawnTaskProcessor extends BaseTaskProcessor {
 
 class CreepTaskProcessor extends BaseTaskProcessor {
     processNewTask() {
-        this.afterHarvestTaskBlueprintsOrderList = [
-            {times: 8, blueprint: {type: TASK_TYPE_TRANSFER, structureTypes: [STRUCTURE_SPAWN, STRUCTURE_EXTENSION], my: true, maxFreeCapacityEnergy: 0}},
-            {times: 1, blueprint: {type: TASK_TYPE_TRANSFER, structureTypes: STRUCTURE_TOWER, my: true, maxFreeCapacityEnergy: 0}},
-            {times: 1, blueprint: {type: TASK_TYPE_TRANSFER, structureTypes: STRUCTURE_CONTAINER, maxFreeCapacityEnergy: 0}},
-            {times: 1, blueprint: {type: TASK_TYPE_UPGRADE_CONTROLLER}},
-            {times: 3, blueprint: {type: TASK_TYPE_BUILD}},
-            {times: 1, blueprint: {type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_ROAD, minHitPercentage: 0.50}},
-            {times: 1, blueprint: {type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_WALL, minHitPercentage: 0.000001}},
-            {times: 1, blueprint: {type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_CONTAINER, minHitPercentage: 0.2}},
-        ]
-
         if (this.processHarvest()) {
             return
         }
@@ -96,7 +85,16 @@ class CreepTaskProcessor extends BaseTaskProcessor {
             return false
         }
 
-        const taskBlueprints = BlueprintsHelper.taskBlueprintsOrder(this.afterHarvestTaskBlueprintsOrderList);
+        const taskBlueprints = [
+            ..._.times(8, () => ({type: TASK_TYPE_TRANSFER, structureTypes: [STRUCTURE_SPAWN, STRUCTURE_EXTENSION], my: true, maxFreeCapacityEnergy: 0})),
+            ..._.times(1, () => ({type: TASK_TYPE_TRANSFER, structureTypes: STRUCTURE_TOWER, my: true, maxFreeCapacityEnergy: 0})),
+            ..._.times(1, () => ({type: TASK_TYPE_TRANSFER, structureTypes: STRUCTURE_CONTAINER, maxFreeCapacityEnergy: 0})),
+            ..._.times(1, () => ({type: TASK_TYPE_UPGRADE_CONTROLLER})),
+            ..._.times(3, () => ({type: TASK_TYPE_BUILD})),
+            ..._.times(1, () => ({type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_ROAD, minHitPercentage: 0.50})),
+            ..._.times(1, () => ({type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_WALL, minHitPercentage: 0.000001})),
+            ..._.times(1, () => ({type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_CONTAINER, minHitPercentage: 0.2})),
+        ]
 
         let numberOfIterations = 0;
 
@@ -166,20 +164,17 @@ class CreepTaskProcessor extends BaseTaskProcessor {
 
 class TowerTaskProcessor extends BaseTaskProcessor {
     processNewTask() {
-        this.taskBlueprintsOrderList = [
-            {times: 2, blueprint: {type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_ROAD, minHitPercentage: 0.50}},
-            {times: 1, blueprint: {type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_WALL, minHitPercentage: 0.000001}},
-            {times: 1, blueprint: {type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_CONTAINER, minHitPercentage: 0.2}},
-            {times: 4, blueprint: {type: TASK_TYPE_TOWER_ATTACK}},
-        ]
-
-
         let tower = this.subject
         if (tower.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
             return false
         }
 
-        const taskBlueprints = BlueprintsHelper.taskBlueprintsOrder(this.taskBlueprintsOrderList);
+        const taskBlueprints = [
+            ..._.times(2, () => ({type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_ROAD, minHitPercentage: 0.50})),
+            ..._.times(1, () => ({type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_WALL, minHitPercentage: 0.000001})),
+            ..._.times(1, () => ({type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_CONTAINER, minHitPercentage: 0.2})),
+            ..._.times(4, () => ({type: TASK_TYPE_TOWER_ATTACK})),
+        ]
 
         let numberOfIterations = 0;
 

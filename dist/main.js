@@ -1,5 +1,6 @@
 const {MemoryManager} = require("./memory_manager");
 
+global._ = require('lodash')
 global.debug = (something) => {
     console.log(JSON.stringify(something))
 }
