@@ -1,4 +1,4 @@
-module.exports = {
+module.exports.Helpers = {
     // smthByParam
     objectByParam: (objectParam, withLogIfNotFound = false) => {
         let objectById;

@@ -28,7 +28,7 @@ const getStructuresByBlueprint = (roomWrapper, blueprint) => {
     })
 };
 
-module.exports = {
+module.exports.BlueprintsHelper = {
     taskBlueprintsOrder: taskBlueprintsOrder,
     getStructuresByBlueprint: getStructuresByBlueprint,
 };

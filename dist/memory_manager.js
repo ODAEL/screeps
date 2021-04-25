@@ -1,4 +1,4 @@
-global.MemoryManager = {
+module.exports.MemoryManager = {
     init: () => {
         Memory.tasks = Memory.tasks || []
     },

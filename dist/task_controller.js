@@ -1,3 +1,5 @@
+const {Helpers} = require("helpers");
+
 const pushTask = (task) => {
     Memory.tasks.push(task)
 };
@@ -94,7 +96,7 @@ const taskById = (id) => {
 };
 
 const currentTask = (subjectParam) => {
-    const subject = helpers.objectByParam(subjectParam)
+    const subject = Helpers.objectByParam(subjectParam)
 
     for (let task of Memory.tasks) {
         if (task.subjectId === subject.id) {
@@ -104,19 +106,19 @@ const currentTask = (subjectParam) => {
 };
 
 var currentSpawnTask = (spawnParam) => {
-    const spawn = helpers.spawnByParam(spawnParam, true);
+    const spawn = Helpers.spawnByParam(spawnParam, true);
 
     return currentTask(spawn && spawn.id)
 }
 
 var currentCreepTask = (creepParam) => {
-    const creep = helpers.creepByParam(creepParam, true);
+    const creep = Helpers.creepByParam(creepParam, true);
 
     return currentTask(creep && creep.id)
 }
 
 var currentTowerTask = (towerParam) => {
-    const tower = helpers.structureByParam(towerParam, true);
+    const tower = Helpers.structureByParam(towerParam, true);
     if (!(tower instanceof StructureTower)) {
         log('Found structure is not a tower ' + tower)
     }
@@ -125,61 +127,61 @@ var currentTowerTask = (towerParam) => {
 }
 
 const spawnCreep = (spawnParam) => {
-    const spawn = helpers.spawnByParam(spawnParam, true);
+    const spawn = Helpers.spawnByParam(spawnParam, true);
 
     pushTask(new TaskSpawnCreep(spawn))
 };
 
 const renewCreep = (spawnParam, creepParam) => {
-    const spawn = helpers.spawnByParam(spawnParam, true);
-    const creep = helpers.creepByParam(creepParam, true);
+    const spawn = Helpers.spawnByParam(spawnParam, true);
+    const creep = Helpers.creepByParam(creepParam, true);
 
     pushTask(new TaskRenewCreep(spawn, creep))
 };
 
 const harvest = (creepParam, sourceParam) => {
-    const creep = helpers.creepByParam(creepParam, true);
-    const source = helpers.sourceByParam(sourceParam, true);
+    const creep = Helpers.creepByParam(creepParam, true);
+    const source = Helpers.sourceByParam(sourceParam, true);
 
     pushTask(new TaskHarvest(creep, source))
 };
 
 const transfer = (creepParam, targetParam) => {
-    const creep = helpers.creepByParam(creepParam, true);
-    const target = helpers.objectByParam(targetParam, true);
+    const creep = Helpers.creepByParam(creepParam, true);
+    const target = Helpers.objectByParam(targetParam, true);
 
     pushTask(new TaskTransfer(creep, target))
 };
 
 const build = (creepParam, constructionSiteParam) => {
-    const creep = helpers.creepByParam(creepParam, true);
-    const constructionSite = helpers.constructionSiteByParam(constructionSiteParam, true);
+    const creep = Helpers.creepByParam(creepParam, true);
+    const constructionSite = Helpers.constructionSiteByParam(constructionSiteParam, true);
 
     pushTask(new TaskBuild(creep, constructionSite))
 };
 
 const upgradeController = (creepParam, controllerParam) => {
-    const creep = helpers.creepByParam(creepParam, true);
-    const controller = helpers.controllerByParam(controllerParam, true);
+    const creep = Helpers.creepByParam(creepParam, true);
+    const controller = Helpers.controllerByParam(controllerParam, true);
 
     pushTask(new TaskUpgradeController(creep, controller))
 };
 
 const repair = (subjectParam, structureParam) => {
-    const subject = helpers.objectByParam(subjectParam, true);
-    const structure = helpers.structureByParam(structureParam, true);
+    const subject = Helpers.objectByParam(subjectParam, true);
+    const structure = Helpers.structureByParam(structureParam, true);
 
     pushTask(new TaskRepair(subject, structure))
 };
 
 const towerAttack = (towerParam, targetParam) => {
-    const tower = helpers.structureByParam(towerParam, true);
-    const target = helpers.objectByParam(targetParam, true);
+    const tower = Helpers.structureByParam(towerParam, true);
+    const target = Helpers.objectByParam(targetParam, true);
 
     pushTask(new TaskTowerAttack(tower, target))
 };
 
-module.exports = {
+module.exports.TaskController = {
     runTask: runTask,
     runSpawn: runSpawn,
     runCreep: runCreep,

@@ -1,16 +1,23 @@
+const {SpawnWrapper} = require("./wrappers");
+const {SourceWrapper} = require("./wrappers");
+const {RoomWrapper} = require("./wrappers");
+const {BlueprintsHelper} = require("helper.blueprints");
+const {Helpers} = require("helpers");
+const {TaskController} = require("task_controller");
+
 class BaseTaskProcessor {
     constructor(subject) {
         this.subject = subject;
     }
 
     process() {
-        let task = tc.currentTask(this.subject);
+        let task = TaskController.currentTask(this.subject);
         if (!task) {
             this.processNewTask();
-            task = tc.currentTask(this.subject);
+            task = TaskController.currentTask(this.subject);
         }
 
-        tc.runTask(task);
+        TaskController.runTask(task);
     }
 
     processNewTask() {}
@@ -22,7 +29,7 @@ class SpawnTaskProcessor extends BaseTaskProcessor {
         const roomWrapper = new RoomWrapper(spawn.room);
         if (roomWrapper.availableHarvestPos().length + 1 > roomWrapper.myCreeps().length &&
             (roomWrapper.myCreeps().length === 0 || (roomWrapper.energyCapacityAvailable() === roomWrapper.energyAvailable()))) {
-            tc.spawnCreep(spawn)
+            TaskController.spawnCreep(spawn)
 
             return;
         }
@@ -32,7 +39,7 @@ class SpawnTaskProcessor extends BaseTaskProcessor {
             return object.ticksToLive < 800
         });
         if (myCreepsNear.length > 0) {
-            tc.renewCreep(spawn, myCreepsNear[0])
+            TaskController.renewCreep(spawn, myCreepsNear[0])
 
             return;
         }
@@ -77,8 +84,8 @@ class CreepTaskProcessor extends BaseTaskProcessor {
             return false
         }
 
-        const source = helpers.findClosest(creep, sources);
-        tc.harvest(creep, source.id)
+        const source = Helpers.findClosest(creep, sources);
+        TaskController.harvest(creep, source.id)
 
         return true
     }
@@ -89,7 +96,7 @@ class CreepTaskProcessor extends BaseTaskProcessor {
             return false
         }
 
-        const taskBlueprints = blueprintsHelper.taskBlueprintsOrder(this.afterHarvestTaskBlueprintsOrderList);
+        const taskBlueprints = BlueprintsHelper.taskBlueprintsOrder(this.afterHarvestTaskBlueprintsOrderList);
 
         let numberOfIterations = 0;
 
@@ -111,14 +118,14 @@ class CreepTaskProcessor extends BaseTaskProcessor {
         const roomWrapper = new RoomWrapper(creep.room);
 
         if (blueprint.type === TASK_TYPE_TRANSFER) {
-            targets = blueprintsHelper.getStructuresByBlueprint(roomWrapper, blueprint);
+            targets = BlueprintsHelper.getStructuresByBlueprint(roomWrapper, blueprint);
             if (targets.length === 0) {
                 return false
             }
 
-            target = helpers.findClosest(creep, targets);
+            target = Helpers.findClosest(creep, targets);
 
-            tc.transfer(creep, target.id)
+            TaskController.transfer(creep, target.id)
 
             return true
         } else if (blueprint.type === TASK_TYPE_BUILD) {
@@ -127,9 +134,9 @@ class CreepTaskProcessor extends BaseTaskProcessor {
                 return false
             }
 
-            target = helpers.findClosest(creep, myConstructionSites);
+            target = Helpers.findClosest(creep, myConstructionSites);
 
-            tc.build(creep, target.id)
+            TaskController.build(creep, target.id)
 
             return true
         } else if (blueprint.type === TASK_TYPE_UPGRADE_CONTROLLER) {
@@ -137,18 +144,18 @@ class CreepTaskProcessor extends BaseTaskProcessor {
             if (!controller) {
                 return false
             }
-            tc.upgradeController(creep, controller.id)
+            TaskController.upgradeController(creep, controller.id)
 
             return true
         } else if (blueprint.type === TASK_TYPE_REPAIR) {
-            targets = blueprintsHelper.getStructuresByBlueprint(roomWrapper, blueprint);
+            targets = BlueprintsHelper.getStructuresByBlueprint(roomWrapper, blueprint);
             if (targets.length === 0) {
                 return false
             }
 
-            target = helpers.findClosest(creep, targets);
+            target = Helpers.findClosest(creep, targets);
 
-            tc.repair(creep, target.id)
+            TaskController.repair(creep, target.id)
 
             return true
         }
@@ -172,7 +179,7 @@ class TowerTaskProcessor extends BaseTaskProcessor {
             return false
         }
 
-        const taskBlueprints = blueprintsHelper.taskBlueprintsOrder(this.taskBlueprintsOrderList);
+        const taskBlueprints = BlueprintsHelper.taskBlueprintsOrder(this.taskBlueprintsOrderList);
 
         let numberOfIterations = 0;
 
@@ -193,14 +200,14 @@ class TowerTaskProcessor extends BaseTaskProcessor {
         const roomWrapper = new RoomWrapper(tower.room);
 
         if (blueprint.type === TASK_TYPE_REPAIR) {
-            targets = blueprintsHelper.getStructuresByBlueprint(roomWrapper, blueprint);
+            targets = BlueprintsHelper.getStructuresByBlueprint(roomWrapper, blueprint);
             if (targets.length === 0) {
                 return false
             }
 
-            target = helpers.findClosest(tower, targets);
+            target = Helpers.findClosest(tower, targets);
 
-            tc.repair(tower, target.id)
+            TaskController.repair(tower, target.id)
 
             return true
         } else if (blueprint.type === TASK_TYPE_TOWER_ATTACK) {
@@ -209,9 +216,9 @@ class TowerTaskProcessor extends BaseTaskProcessor {
                 return false
             }
 
-            target = helpers.findClosest(tower, targets);
+            target = Helpers.findClosest(tower, targets);
 
-            tc.towerAttack(tower, target.id)
+            TaskController.towerAttack(tower, target.id)
 
             return true
         }

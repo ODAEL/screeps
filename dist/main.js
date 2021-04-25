@@ -1,12 +1,10 @@
+const {MemoryManager} = require("./memory_manager");
+
 global.debug = (something) => {
     console.log(JSON.stringify(something))
 }
 
 global.log = debug
-
-global.tc = require('task_controller')
-global.helpers = require('helpers')
-global.blueprintsHelper = require('helper.blueprints')
 require('tasks')
 require('memory_manager')
 

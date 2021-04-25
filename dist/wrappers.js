@@ -1,6 +1,9 @@
-global.RoomWrapper = class RoomWrapper {
+const {Helpers} = require("helpers");
+const {TaskController} = require("task_controller");
+
+class RoomWrapper {
     constructor(roomParam) {
-        const room = helpers.roomByParam(roomParam);
+        const room = Helpers.roomByParam(roomParam);
 
         if (!room) {
             debug('Unable to find source by roomParam=' + roomParam)
@@ -104,9 +107,9 @@ global.RoomWrapper = class RoomWrapper {
     }
 }
 
-global.SourceWrapper = class SourceWrapper {
+class SourceWrapper {
     constructor(sourceParam) {
-        const source = helpers.sourceByParam(sourceParam);
+        const source = Helpers.sourceByParam(sourceParam);
 
         if (!source) {
             debug('Unable to find source by sourceParam=' + sourceParam)
@@ -140,7 +143,7 @@ global.SourceWrapper = class SourceWrapper {
         const connectedCreeps = [];
         for (let name in Game.creeps) {
             const creep = Game.creeps[name];
-            const currentTask = tc.currentCreepTask(creep);
+            const currentTask = TaskController.currentCreepTask(creep);
             if (currentTask && currentTask.sourceId && currentTask.sourceId === this.source.id) {
                 connectedCreeps.push(creep)
             }
@@ -162,9 +165,9 @@ global.SourceWrapper = class SourceWrapper {
     }
 }
 
-global.SpawnWrapper = class SpawnWrapper {
+class SpawnWrapper {
     constructor(spawnParam) {
-        const spawn = helpers.spawnByParam(spawnParam);
+        const spawn = Helpers.spawnByParam(spawnParam);
 
         if (!spawn) {
             debug('Unable to find spawn by spawnParam=' + spawnParam)
@@ -204,3 +207,7 @@ global.SpawnWrapper = class SpawnWrapper {
         return myCreepsNear
     }
 }
+
+module.exports.RoomWrapper = RoomWrapper
+module.exports.SourceWrapper = SourceWrapper
+module.exports.SpawnWrapper = SpawnWrapper

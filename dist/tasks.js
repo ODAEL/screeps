@@ -1,3 +1,5 @@
+const {RoomWrapper} = require("./wrappers");
+
 global.TASK_SUBJECT_TYPE_SPAWN = 'spawn'
 global.TASK_SUBJECT_TYPE_CREEP = 'creep'
 global.TASK_SUBJECT_TYPE_TOWER = 'tower'
@@ -63,7 +65,7 @@ global.TaskSpawnCreep = class TaskSpawnCreep extends Task {
 
     chooseBodyParts() {
         const roomWrapper = new RoomWrapper(Game.getObjectById(this.subjectId).room);
-        const energyCapasityAvailable = roomWrapper.energyCapacityAvailable();
+        const energyCapacityAvailable = roomWrapper.energyCapacityAvailable();
 
         let i = 0;
         const bodyParts = [];
@@ -88,7 +90,7 @@ global.TaskSpawnCreep = class TaskSpawnCreep extends Task {
                 cost = 50
             }
 
-            if (totalCost + cost > energyCapasityAvailable) {
+            if (totalCost + cost > energyCapacityAvailable) {
                 break
             }
 
@@ -98,7 +100,7 @@ global.TaskSpawnCreep = class TaskSpawnCreep extends Task {
             i++
         }
 
-        if (energyCapasityAvailable - totalCost >= 50) {
+        if (energyCapacityAvailable - totalCost >= 50) {
             bodyParts.push(MOVE)
         }
 
