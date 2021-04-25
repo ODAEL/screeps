@@ -1,3 +1,8 @@
+const {__} = require("./filters");
+const {Filters} = require("./filters");
+const {MemoryManager} = require("./memory_manager");
+const {BlueprintManager} = require("./blueprints");
+const {Blueprint} = require("./blueprints");
 const {SpawnWrapper} = require("./wrappers");
 const {SourceWrapper} = require("./wrappers");
 const {RoomWrapper} = require("./wrappers");
@@ -12,6 +17,10 @@ class BaseTaskProcessor {
 
     process() {
         let task = TaskController.currentTask(this.subject);
+        if (task) {
+            TaskController.runTask(task);
+            task = TaskController.currentTask(this.subject);
+        }
         if (!task) {
             this.processNewTask();
             task = TaskController.currentTask(this.subject);
@@ -57,26 +66,41 @@ class CreepTaskProcessor extends BaseTaskProcessor {
 
     processHarvest() {
         let creep = this.subject
-        const roomWrapper = new RoomWrapper(creep.room);
-
         if (creep.store.getUsedCapacity(RESOURCE_ENERGY) !== 0) {
             return false
         }
 
-        const sources = roomWrapper.availableSources((object) => {
-            const sourceWrapper = new SourceWrapper(object);
 
-            return sourceWrapper.availableHarvestPos().length > sourceWrapper.connectedCreeps().length
-        });
+        let blueprint = Blueprint.harvest()
 
-        if (sources.length === 0) {
-            return false
+        let task = BlueprintManager.taskByBlueprint(creep, blueprint)
+
+        if (task) {
+            MemoryManager.pushTask(task)
+
+            return true
         }
 
-        const source = Helpers.findClosest(creep, sources);
-        TaskController.harvest(creep, source.id)
+        return false
 
-        return true
+
+        // const roomWrapper = new RoomWrapper(creep.room);
+
+        //
+        // const sources = roomWrapper.availableSources((object) => {
+        //     const sourceWrapper = new SourceWrapper(object);
+        //
+        //     return sourceWrapper.availableHarvestPos().length > sourceWrapper.connectedCreeps().length
+        // });
+        //
+        // if (sources.length === 0) {
+        //     return false
+        // }
+        //
+        // const source = Helpers.findClosest(creep, sources);
+        // TaskController.harvest(creep, source.id)
+        //
+        // return true
     }
 
     processAfterHarvest() {
@@ -169,21 +193,42 @@ class TowerTaskProcessor extends BaseTaskProcessor {
             return false
         }
 
+        // const taskBlueprints = [
+        //     ..._.times(2, () => ({type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_ROAD, minHitPercentage: 0.50})),
+        //     ..._.times(1, () => ({type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_WALL, minHitPercentage: 0.000001})),
+        //     ..._.times(1, () => ({type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_CONTAINER, minHitPercentage: 0.2})),
+        //     ..._.times(1, () => ({type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_RAMPART, minHitPercentage: 0.001})),
+        //     ..._.times(4, () => ({type: TASK_TYPE_TOWER_ATTACK})),
+        // ]
+
         const taskBlueprints = [
-            ..._.times(2, () => ({type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_ROAD, minHitPercentage: 0.50})),
-            ..._.times(1, () => ({type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_WALL, minHitPercentage: 0.000001})),
-            ..._.times(1, () => ({type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_CONTAINER, minHitPercentage: 0.2})),
-            ..._.times(4, () => ({type: TASK_TYPE_TOWER_ATTACK})),
+            ..._.times(2, () => (Blueprint.repair(
+                [Filters.structureType(__.eq(STRUCTURE_ROAD)), Filters.hitsPercentage(__.lt(0.50))]
+            ))),
+            ..._.times(1, () => (Blueprint.repair(
+                [Filters.structureType(__.eq(STRUCTURE_WALL)), Filters.hitsPercentage(__.lt(0.00001))]
+            ))),
+            ..._.times(1, () => (Blueprint.repair(
+                [Filters.structureType(__.eq(STRUCTURE_CONTAINER)), Filters.hitsPercentage(__.lt(0.2))]
+            ))),
+            ..._.times(1, () => (Blueprint.repair(
+                [Filters.structureType(__.eq(STRUCTURE_RAMPART)), Filters.hitsPercentage(__.lt(0.001))]
+            ))),
+            ..._.times(4, () => (Blueprint.towerAttack())),
         ]
 
         let numberOfIterations = 0;
+        let task
 
         do {
             if (numberOfIterations++ > taskBlueprints.length) {
                 return false
             }
-            Memory.blueprintsOrderPosition.tower =  Memory.blueprintsOrderPosition.tower < taskBlueprints.length ? Memory.blueprintsOrderPosition.tower : 0
-        } while (!this.processTaskBlueprint(tower, taskBlueprints[Memory.blueprintsOrderPosition.tower++]))
+            Memory.blueprintsOrderPosition.tower =  Memory.blueprintsOrderPosition.tower < taskBlueprints.length ? Memory.blueprintsOrderPosition.tower : 0;
+            task = BlueprintManager.taskByBlueprint(tower, taskBlueprints[Memory.blueprintsOrderPosition.tower++])
+        } while (!task)
+
+        MemoryManager.pushTask(task);
 
         return true
     }

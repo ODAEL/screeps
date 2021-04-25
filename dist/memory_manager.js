@@ -2,7 +2,7 @@ module.exports.MemoryManager = {
     init: () => {
         Memory.tasks = Memory.tasks || []
     },
-    cleanUpTasks: () => {
+    cleanUp: () => {
         let tasksCleared = 0;
         for (let i = 0; i < Memory.tasks.length; i++) {
             if (!Game.getObjectById(Memory.tasks[i].subjectId)) {
@@ -12,6 +12,17 @@ module.exports.MemoryManager = {
         }
         
         log(tasksCleared + ' tasks was cleared')
+
+
+        let creepsCleared = 0;
+        for (let name in Memory.creeps) {
+            if (!Game.creeps[name]) {
+                creepsCleared++
+                delete Memory.creeps[name];
+            }
+        }
+
+        log(creepsCleared + ' creeps was cleared')
     },
 
     pushTask: (task) => {

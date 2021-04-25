@@ -35,6 +35,17 @@ class RoomWrapper {
         )
     }
 
+    currentAvailableSources(filter) {
+        return this.availableSources(
+            (object) => {
+                const sourceWrapper = new SourceWrapper(object);
+
+                return (sourceWrapper.availableHarvestPos().length > sourceWrapper.connectedCreeps().length) &&
+                    this.checkFilter(filter, object)
+            }
+        )
+    }
+
     availableHarvestPos() {
         const availableHarvestPos = [];
 
@@ -48,6 +59,10 @@ class RoomWrapper {
 
     myConstructionSites() {
         return this.room.find(FIND_MY_CONSTRUCTION_SITES)
+    }
+
+    creeps() {
+        return this.room.find(FIND_CREEPS)
     }
 
     myCreeps() {

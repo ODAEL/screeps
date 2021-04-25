@@ -53,10 +53,19 @@ global.TaskSpawnCreep = class TaskSpawnCreep extends Task {
         const spawn = Game.getObjectById(this.subjectId);
 
         let memory = {
-
+            taskBlueprints: [
+                ..._.times(8, () => ({type: TASK_TYPE_TRANSFER, structureTypes: [STRUCTURE_SPAWN, STRUCTURE_EXTENSION], my: true, maxFreeCapacityEnergy: 0})),
+                ..._.times(1, () => ({type: TASK_TYPE_TRANSFER, structureTypes: STRUCTURE_TOWER, my: true, maxFreeCapacityEnergy: 0})),
+                ..._.times(1, () => ({type: TASK_TYPE_TRANSFER, structureTypes: STRUCTURE_CONTAINER, maxFreeCapacityEnergy: 0})),
+                ..._.times(1, () => ({type: TASK_TYPE_UPGRADE_CONTROLLER})),
+                ..._.times(3, () => ({type: TASK_TYPE_BUILD})),
+                ..._.times(1, () => ({type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_ROAD, minHitPercentage: 0.50})),
+                ..._.times(1, () => ({type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_WALL, minHitPercentage: 0.000001})),
+                ..._.times(1, () => ({type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_CONTAINER, minHitPercentage: 0.2})),
+            ]
         }
 
-        if (spawn.spawnCreep(this.chooseBodyParts(), 'Creep ' + Game.time) === OK) {
+        if (spawn.spawnCreep(this.chooseBodyParts(), 'Creep ' + Game.time, memory) === OK) {
             return false
         }
 
