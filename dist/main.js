@@ -10,9 +10,7 @@ global.blueprintsHelper = require('helper.blueprints')
 require('tasks')
 require('memory_manager')
 
-require('wrapper.source')
-require('wrapper.room')
-require('wrapper.spawn')
+require('wrappers')
 
 MemoryManager.init()
 
