@@ -26,6 +26,20 @@ const getTaskObject = (task) => {
     return taskClass.deserialize(task)
 };
 
+const runTask = (task) => {
+    if (!task) {
+        return false
+    }
+
+    if (!task.run()) {
+        destroyTask(task)
+
+        return false
+    }
+
+    return true
+}
+
 const runSpawn = (spawn) => {
     const task = currentSpawnTask(spawn);
     if (!task) {
@@ -79,9 +93,11 @@ const taskById = (id) => {
     }
 };
 
-const currentTask = (subjectId) => {
+const currentTask = (subjectParam) => {
+    const subject = helpers.objectByParam(subjectParam)
+
     for (let task of Memory.tasks) {
-        if (task.subjectId === subjectId) {
+        if (task.subjectId === subject.id) {
             return getTaskObject(task)
         }
     }
@@ -164,10 +180,12 @@ const towerAttack = (towerParam, targetParam) => {
 };
 
 module.exports = {
+    runTask: runTask,
     runSpawn: runSpawn,
     runCreep: runCreep,
     runTower: runTower,
     taskById: taskById,
+    currentTask: currentTask,
     currentSpawnTask: currentSpawnTask,
     currentCreepTask: currentCreepTask,
     currentTowerTask: currentTowerTask,

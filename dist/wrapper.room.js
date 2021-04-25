@@ -1,4 +1,4 @@
-class RoomWrapper {
+global.RoomWrapper = class RoomWrapper {
     constructor(roomParam) {
         const room = helpers.roomByParam(roomParam);
 
@@ -95,7 +95,7 @@ class RoomWrapper {
         return this.room.controller
     }
     
-    energyCapasityAvailable() {
+    energyCapacityAvailable() {
         return this.room.energyCapacityAvailable
     }
     
@@ -103,5 +103,3 @@ class RoomWrapper {
         return this.room.energyAvailable
     }
 }
-
-module.exports = RoomWrapper

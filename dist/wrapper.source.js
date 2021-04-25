@@ -1,4 +1,4 @@
-class SourceWrapper {
+global.SourceWrapper = class SourceWrapper {
     constructor(sourceParam) {
         const source = helpers.sourceByParam(sourceParam);
 
@@ -55,5 +55,3 @@ class SourceWrapper {
         return new RoomWrapper(this.source.room)
     }
 }
-
-module.exports = SourceWrapper

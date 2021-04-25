@@ -1,13 +1,26 @@
-require('constants')
-require('globals')
+global.debug = (something) => {
+    console.log(JSON.stringify(something))
+}
 
-Memory.tasks = Memory.tasks || []
+global.log = debug
+
+global.tc = require('task_controller')
+global.helpers = require('helpers')
+global.blueprintsHelper = require('helper.blueprints')
+require('tasks')
+require('memory_manager')
+
+require('wrapper.source')
+require('wrapper.room')
+require('wrapper.spawn')
+
+MemoryManager.init()
 
 module.exports.loop = function () {
-    require('task_manager').process()
+    require('task_processor').process()
     
     if (Game.time % 500 === 0) {
-        require('memory').cleanUpTasks()
+        MemoryManager.cleanUpTasks()
     }
     
     if (Game.cpu.bucket === 10000) {

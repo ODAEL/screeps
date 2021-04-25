@@ -1,4 +1,7 @@
-module.exports = {
+global.MemoryManager = {
+    init: () => {
+        Memory.tasks = Memory.tasks || []
+    },
     cleanUpTasks: () => {
         let tasksCleared = 0;
         for (let i = 0; i < Memory.tasks.length; i++) {

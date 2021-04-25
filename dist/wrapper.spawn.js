@@ -1,4 +1,4 @@
-class SpawnWrapper {
+global.SpawnWrapper = class SpawnWrapper {
     constructor(spawnParam) {
         const spawn = helpers.spawnByParam(spawnParam);
 
@@ -40,5 +40,3 @@ class SpawnWrapper {
         return myCreepsNear
     }
 }
-
-module.exports = SpawnWrapper
