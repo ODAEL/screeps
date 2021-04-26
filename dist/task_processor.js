@@ -1,13 +1,14 @@
+const {TaskRenewCreep} = require("./tasks");
+const {TaskSpawnCreep} = require("./tasks");
+const {Task} = require("./tasks");
+const {Helpers} = require("./helpers");
 const {__} = require("./filters");
 const {Filters} = require("./filters");
 const {MemoryManager} = require("./memory_manager");
 const {BlueprintManager} = require("./blueprints");
 const {Blueprint} = require("./blueprints");
 const {SpawnWrapper} = require("./wrappers");
-const {SourceWrapper} = require("./wrappers");
 const {RoomWrapper} = require("./wrappers");
-const {Helpers} = require("./helpers");
-const {TaskController} = require("./task_controller");
 
 class BaseTaskProcessor {
     constructor(subject) {
@@ -15,18 +16,42 @@ class BaseTaskProcessor {
     }
 
     process() {
-        let task = TaskController.currentTask(this.subject);
+        let task = this.currentTask(this.subject);
         if (task) {
-            TaskController.runTask(task);
-            task = TaskController.currentTask(this.subject);
+            this.runTask(task);
+            task = this.currentTask(this.subject);
         }
         if (!task) {
             this.processNewTask();
-            task = TaskController.currentTask(this.subject);
+            task = this.currentTask(this.subject);
         }
 
-        TaskController.runTask(task);
+        this.runTask(task);
     }
+
+    runTask(task) {
+        if (!task) {
+            return false
+        }
+
+        if (!task.run()) {
+            MemoryManager.destroyTask(task)
+
+            return false
+        }
+
+        return true
+    }
+
+    currentTask(subjectParam) {
+        const subject = Helpers.objectByParam(subjectParam)
+
+        for (let task of Memory.tasks) {
+            if (task.subjectId === subject.id) {
+                return Task.getTaskObject(task)
+            }
+        }
+    };
 
     processNewTask() {}
 }
@@ -37,7 +62,7 @@ class SpawnTaskProcessor extends BaseTaskProcessor {
         const roomWrapper = new RoomWrapper(spawn.room);
         if (roomWrapper.availableHarvestPos().length + 1 > roomWrapper.myCreeps().length &&
             (roomWrapper.myCreeps().length === 0 || (roomWrapper.energyCapacityAvailable() === roomWrapper.energyAvailable()))) {
-            TaskController.spawnCreep(spawn)
+            MemoryManager.pushTask(new TaskSpawnCreep(spawn))
 
             return;
         }
@@ -47,7 +72,7 @@ class SpawnTaskProcessor extends BaseTaskProcessor {
             return object.ticksToLive < 800
         });
         if (myCreepsNear.length > 0) {
-            TaskController.renewCreep(spawn, myCreepsNear[0])
+            MemoryManager.pushTask(new TaskRenewCreep(spawn, myCreepsNear[0]))
 
             return;
         }

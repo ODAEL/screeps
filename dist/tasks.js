@@ -1,6 +1,6 @@
 const {RoomWrapper} = require("./wrappers");
 
-global.Task = class Task {
+class Task {
     constructor(subjectType, subjectId, type) {
         this.id = Game.time + '_' + Math.abs(Math.random() * 2e8 | 0)
         this.subjectType = subjectType
@@ -29,9 +29,24 @@ global.Task = class Task {
 
         return object
     }
+
+    static getTaskObject(task) {
+        const taskClass =
+            (task.type === TASK_TYPE_SPAWN_CREEP && TaskSpawnCreep) ||
+            (task.type === TASK_TYPE_RENEW_CREEP && TaskRenewCreep) ||
+            (task.type === TASK_TYPE_HARVEST && TaskHarvest) ||
+            (task.type === TASK_TYPE_TRANSFER && TaskTransfer) ||
+            (task.type === TASK_TYPE_BUILD && TaskBuild) ||
+            (task.type === TASK_TYPE_UPGRADE_CONTROLLER && TaskUpgradeController) ||
+            (task.type === TASK_TYPE_REPAIR && TaskRepair) ||
+            (task.type === TASK_TYPE_TOWER_ATTACK && TaskTowerAttack) ||
+            (Task);
+
+        return taskClass.deserialize(task)
+    };
 }
 
-global.TaskSpawnCreep = class TaskSpawnCreep extends Task {
+class TaskSpawnCreep extends Task {
     constructor(spawn) {
         super(TASK_SUBJECT_TYPE_SPAWN, spawn && spawn.id, TASK_TYPE_SPAWN_CREEP)
     }
@@ -108,7 +123,7 @@ global.TaskSpawnCreep = class TaskSpawnCreep extends Task {
     }
 }
 
-global.TaskRenewCreep = class TaskRenewCreep extends Task {
+class TaskRenewCreep extends Task {
     constructor(spawn, creep) {
         super(TASK_SUBJECT_TYPE_SPAWN, spawn && spawn.id, TASK_TYPE_RENEW_CREEP)
 
@@ -140,7 +155,7 @@ global.TaskRenewCreep = class TaskRenewCreep extends Task {
     }
 }
 
-global.TaskHarvest = class TaskHarvest extends Task {
+class TaskHarvest extends Task {
     constructor(creep, source) {
         super(TASK_SUBJECT_TYPE_CREEP, creep && creep.id, TASK_TYPE_HARVEST)
 
@@ -181,7 +196,7 @@ global.TaskHarvest = class TaskHarvest extends Task {
     }
 }
 
-global.TaskTransfer = class TaskTransfer extends Task {
+class TaskTransfer extends Task {
     constructor(creep, target) {
         super(TASK_SUBJECT_TYPE_CREEP, creep && creep.id, TASK_TYPE_TRANSFER)
 
@@ -232,7 +247,7 @@ global.TaskTransfer = class TaskTransfer extends Task {
     }
 }
 
-global.TaskBuild = class TaskBuild extends Task {
+class TaskBuild extends Task {
     constructor(creep, constructionSite) {
         super(TASK_SUBJECT_TYPE_CREEP, creep && creep.id, TASK_TYPE_BUILD)
 
@@ -287,7 +302,7 @@ global.TaskBuild = class TaskBuild extends Task {
     }
 }
 
-global.TaskUpgradeController = class TaskUpgradeController extends Task {
+class TaskUpgradeController extends Task {
     constructor(creep, controller) {
         super(TASK_SUBJECT_TYPE_CREEP, creep && creep.id, TASK_TYPE_UPGRADE_CONTROLLER)
 
@@ -340,7 +355,7 @@ global.TaskUpgradeController = class TaskUpgradeController extends Task {
     }
 }
 
-global.TaskRepair = class TaskRepair extends Task {
+class TaskRepair extends Task {
     constructor(subject, structure) {
         super(TaskRepair.getSubjectType(subject), subject && subject.id, TASK_TYPE_REPAIR)
 
@@ -415,7 +430,7 @@ global.TaskRepair = class TaskRepair extends Task {
     }
 }
 
-global.TaskTowerAttack = class TaskTowerAttack extends Task {
+class TaskTowerAttack extends Task {
     constructor(tower, target) {
         super(TASK_SUBJECT_TYPE_TOWER, tower && tower.id, TASK_TYPE_TOWER_ATTACK)
 
@@ -454,3 +469,13 @@ global.TaskTowerAttack = class TaskTowerAttack extends Task {
         return super.deserialize(task, TaskTowerAttack)
     }
 }
+
+module.exports.Task = Task;
+module.exports.TaskSpawnCreep = TaskSpawnCreep;
+module.exports.TaskRenewCreep = TaskRenewCreep;
+module.exports.TaskHarvest = TaskHarvest;
+module.exports.TaskTransfer = TaskTransfer;
+module.exports.TaskBuild = TaskBuild;
+module.exports.TaskUpgradeController = TaskUpgradeController;
+module.exports.TaskRepair = TaskRepair;
+module.exports.TaskTowerAttack = TaskTowerAttack;

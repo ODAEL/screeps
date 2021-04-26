@@ -1,5 +1,4 @@
 const {Helpers} = require("helpers");
-const {TaskController} = require("task_controller");
 
 class RoomWrapper {
     constructor(roomParam) {
@@ -156,11 +155,10 @@ class SourceWrapper {
 
     connectedCreeps() {
         const connectedCreeps = [];
-        for (let name in Game.creeps) {
-            const creep = Game.creeps[name];
-            const currentTask = TaskController.currentTask(creep);
-            if (currentTask && currentTask.sourceId && currentTask.sourceId === this.source.id) {
-                connectedCreeps.push(creep)
+        for (let task of Memory.tasks) {
+            let subject = Game.getObjectById(task.subjectId)
+            if (subject && task.sourceId && task.sourceId === this.source.id) {
+                connectedCreeps.push(subject)
             }
         }
 
