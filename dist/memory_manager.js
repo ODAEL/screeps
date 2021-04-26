@@ -36,4 +36,11 @@ module.exports.MemoryManager = {
             }
         }
     },
+
+    blueprintsOrderPosition: (key, max) => {
+        Memory.blueprintsOrderPosition = Memory.blueprintsOrderPosition || {}
+        Memory.blueprintsOrderPosition.key = Memory.blueprintsOrderPosition.key || 0
+        Memory.blueprintsOrderPosition.key =  Memory.blueprintsOrderPosition.key < max ? Memory.blueprintsOrderPosition.key : 0
+        return Memory.blueprintsOrderPosition.key++
+    }
 };

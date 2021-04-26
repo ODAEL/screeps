@@ -1,18 +1,5 @@
 const {RoomWrapper} = require("./wrappers");
 
-global.TASK_SUBJECT_TYPE_SPAWN = 'spawn'
-global.TASK_SUBJECT_TYPE_CREEP = 'creep'
-global.TASK_SUBJECT_TYPE_TOWER = 'tower'
-
-global.TASK_TYPE_SPAWN_CREEP = 'spawn_creep'
-global.TASK_TYPE_RENEW_CREEP = 'renew_creep'
-global.TASK_TYPE_HARVEST = 'harvest'
-global.TASK_TYPE_TRANSFER = 'transfer'
-global.TASK_TYPE_BUILD = 'build'
-global.TASK_TYPE_UPGRADE_CONTROLLER = 'upgrade_controller'
-global.TASK_TYPE_REPAIR = 'repair'
-global.TASK_TYPE_TOWER_ATTACK = 'tower_attack'
-
 global.Task = class Task {
     constructor(subjectType, subjectId, type) {
         this.id = Game.time + '_' + Math.abs(Math.random() * 2e8 | 0)

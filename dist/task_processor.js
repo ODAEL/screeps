@@ -6,7 +6,6 @@ const {Blueprint} = require("./blueprints");
 const {SpawnWrapper} = require("./wrappers");
 const {SourceWrapper} = require("./wrappers");
 const {RoomWrapper} = require("./wrappers");
-const {BlueprintsHelper} = require("./helper.blueprints");
 const {Helpers} = require("./helpers");
 const {TaskController} = require("./task_controller");
 
@@ -82,25 +81,6 @@ class CreepTaskProcessor extends BaseTaskProcessor {
         }
 
         return false
-
-
-        // const roomWrapper = new RoomWrapper(creep.room);
-
-        //
-        // const sources = roomWrapper.availableSources((object) => {
-        //     const sourceWrapper = new SourceWrapper(object);
-        //
-        //     return sourceWrapper.availableHarvestPos().length > sourceWrapper.connectedCreeps().length
-        // });
-        //
-        // if (sources.length === 0) {
-        //     return false
-        // }
-        //
-        // const source = Helpers.findClosest(creep, sources);
-        // TaskController.harvest(creep, source.id)
-        //
-        // return true
     }
 
     processAfterHarvest() {
@@ -110,79 +90,44 @@ class CreepTaskProcessor extends BaseTaskProcessor {
         }
 
         const taskBlueprints = [
-            ..._.times(8, () => ({type: TASK_TYPE_TRANSFER, structureTypes: [STRUCTURE_SPAWN, STRUCTURE_EXTENSION], my: true, maxFreeCapacityEnergy: 0})),
-            ..._.times(1, () => ({type: TASK_TYPE_TRANSFER, structureTypes: STRUCTURE_TOWER, my: true, maxFreeCapacityEnergy: 0})),
-            ..._.times(1, () => ({type: TASK_TYPE_TRANSFER, structureTypes: STRUCTURE_CONTAINER, maxFreeCapacityEnergy: 0})),
-            ..._.times(1, () => ({type: TASK_TYPE_UPGRADE_CONTROLLER})),
-            ..._.times(3, () => ({type: TASK_TYPE_BUILD})),
-            ..._.times(1, () => ({type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_ROAD, minHitPercentage: 0.50})),
-            ..._.times(1, () => ({type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_WALL, minHitPercentage: 0.000001})),
-            ..._.times(1, () => ({type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_CONTAINER, minHitPercentage: 0.2})),
+            ..._.times(8, () => (Blueprint.transfer(
+                [Filters.structureType(__.in([STRUCTURE_SPAWN, STRUCTURE_EXTENSION])), Filters.my()]
+            ))),
+            ..._.times(1, () => (Blueprint.transfer(
+                [Filters.structureType(__.eq(STRUCTURE_TOWER)), Filters.my()]
+            ))),
+            ..._.times(1, () => (Blueprint.transfer(
+                [Filters.structureType(__.eq(STRUCTURE_CONTAINER))]
+            ))),
+            ..._.times(1, () => (Blueprint.upgradeController())),
+            ..._.times(3, () => (Blueprint.build())),
+            ..._.times(1, () => (Blueprint.repair(
+                [Filters.structureType(__.eq(STRUCTURE_ROAD)), Filters.hitsPercentage(__.lt(0.50))]
+            ))),
+            ..._.times(1, () => (Blueprint.repair(
+                [Filters.structureType(__.eq(STRUCTURE_WALL)), Filters.hitsPercentage(__.lt(0.000001))]
+            ))),
+            ..._.times(1, () => (Blueprint.repair(
+                [Filters.structureType(__.eq(STRUCTURE_CONTAINER)), Filters.hitsPercentage(__.lt(0.2))]
+            ))),
         ]
 
         let numberOfIterations = 0;
+        let task
 
         do {
             if (numberOfIterations++ > taskBlueprints.length) {
                 log('Panic! numberOfIterations was ' + numberOfIterations + ' while iterating on ' + taskBlueprints.length + ' items')
                 return false
             }
-            Memory.blueprintsOrderPosition.creep =  Memory.blueprintsOrderPosition.creep < taskBlueprints.length ? Memory.blueprintsOrderPosition.creep : 0
-        } while (!this.processTaskBlueprint(taskBlueprints[Memory.blueprintsOrderPosition.creep++]))
+
+            task = BlueprintManager.taskByBlueprint(creep, taskBlueprints[MemoryManager.blueprintsOrderPosition('creep', taskBlueprints.length)])
+
+        } while (!task)
+
+        MemoryManager.pushTask(task)
 
         return true
-    }
-
-    processTaskBlueprint(blueprint) {
-        let target;
-        let targets;
-        let creep = this.subject
-        const roomWrapper = new RoomWrapper(creep.room);
-
-        if (blueprint.type === TASK_TYPE_TRANSFER) {
-            targets = BlueprintsHelper.getStructuresByBlueprint(roomWrapper, blueprint);
-            if (targets.length === 0) {
-                return false
-            }
-
-            target = Helpers.findClosest(creep, targets);
-
-            TaskController.transfer(creep, target.id)
-
-            return true
-        } else if (blueprint.type === TASK_TYPE_BUILD) {
-            const myConstructionSites = roomWrapper.myConstructionSites();
-            if (myConstructionSites.length === 0) {
-                return false
-            }
-
-            target = Helpers.findClosest(creep, myConstructionSites);
-
-            TaskController.build(creep, target.id)
-
-            return true
-        } else if (blueprint.type === TASK_TYPE_UPGRADE_CONTROLLER) {
-            const controller = roomWrapper.controller();
-            if (!controller) {
-                return false
-            }
-            TaskController.upgradeController(creep, controller.id)
-
-            return true
-        } else if (blueprint.type === TASK_TYPE_REPAIR) {
-            targets = BlueprintsHelper.getStructuresByBlueprint(roomWrapper, blueprint);
-            if (targets.length === 0) {
-                return false
-            }
-
-            target = Helpers.findClosest(creep, targets);
-
-            TaskController.repair(creep, target.id)
-
-            return true
-        }
-
-        return false
     }
 }
 
@@ -192,14 +137,6 @@ class TowerTaskProcessor extends BaseTaskProcessor {
         if (tower.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
             return false
         }
-
-        // const taskBlueprints = [
-        //     ..._.times(2, () => ({type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_ROAD, minHitPercentage: 0.50})),
-        //     ..._.times(1, () => ({type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_WALL, minHitPercentage: 0.000001})),
-        //     ..._.times(1, () => ({type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_CONTAINER, minHitPercentage: 0.2})),
-        //     ..._.times(1, () => ({type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_RAMPART, minHitPercentage: 0.001})),
-        //     ..._.times(4, () => ({type: TASK_TYPE_TOWER_ATTACK})),
-        // ]
 
         const taskBlueprints = [
             ..._.times(2, () => (Blueprint.repair(
@@ -224,46 +161,12 @@ class TowerTaskProcessor extends BaseTaskProcessor {
             if (numberOfIterations++ > taskBlueprints.length) {
                 return false
             }
-            Memory.blueprintsOrderPosition.tower =  Memory.blueprintsOrderPosition.tower < taskBlueprints.length ? Memory.blueprintsOrderPosition.tower : 0;
-            task = BlueprintManager.taskByBlueprint(tower, taskBlueprints[Memory.blueprintsOrderPosition.tower++])
+            task = BlueprintManager.taskByBlueprint(tower, taskBlueprints[MemoryManager.blueprintsOrderPosition('tower', taskBlueprints.length)])
         } while (!task)
 
         MemoryManager.pushTask(task);
 
         return true
-    }
-
-    processTaskBlueprint(blueprint) {
-        let targets;
-        let target;
-        let tower = this.subject
-        const roomWrapper = new RoomWrapper(tower.room);
-
-        if (blueprint.type === TASK_TYPE_REPAIR) {
-            targets = BlueprintsHelper.getStructuresByBlueprint(roomWrapper, blueprint);
-            if (targets.length === 0) {
-                return false
-            }
-
-            target = Helpers.findClosest(tower, targets);
-
-            TaskController.repair(tower, target.id)
-
-            return true
-        } else if (blueprint.type === TASK_TYPE_TOWER_ATTACK) {
-            targets = roomWrapper.hostileCreeps();
-            if (targets.length === 0) {
-                return false
-            }
-
-            target = Helpers.findClosest(tower, targets);
-
-            TaskController.towerAttack(tower, target.id)
-
-            return true
-        }
-
-        return false
     }
 }
 

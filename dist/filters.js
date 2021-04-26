@@ -30,7 +30,7 @@ module.exports.Filters = {
         return fn(object.ticksToLive);
     }),
     freeCapacityEnergy: (fn) => ((object) => {
-        return fn(object.store.getFreeCapacity(RESOURCE_ENERGY));
+        return !object.store || fn(object.store.getFreeCapacity(RESOURCE_ENERGY));
     }),
     usedCapacityEnergy: (fn) => ((object) => {
         return fn(object.store.getUsedCapacity(RESOURCE_ENERGY));

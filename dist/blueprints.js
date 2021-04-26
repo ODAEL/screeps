@@ -64,7 +64,7 @@ module.exports.BlueprintManager = {
 
             case TASK_TYPE_TRANSFER:
                 filter = Filters.combineFilters([...defaultFilters, ...blueprint.structureFilters]);
-                structures = getRoomWrapper(subject).structures();
+                structures = getRoomWrapper(subject).structures(filter);
                 structure = Helpers.findClosest(subject, structures);
 
                 if (!structure) {

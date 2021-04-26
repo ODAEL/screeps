@@ -30,59 +30,6 @@ const runTask = (task) => {
     return true
 }
 
-const runSpawn = (spawn) => {
-    const task = currentSpawnTask(spawn);
-    if (!task) {
-        return false
-    }
-
-    if (!task.run()) {
-        destroyTask(task)
-
-        return false
-    }
-
-    return true
-};
-
-const runCreep = (creep) => {
-    const task = currentCreepTask(creep);
-    if (!task) {
-        return false
-    }
-
-    if (!task.run()) {
-        destroyTask(task)
-
-        return false
-    }
-
-    return true
-};
-
-const runTower = (tower) => {
-    const task = currentTowerTask(tower);
-    if (!task) {
-        return false
-    }
-
-    if (!task.run()) {
-        destroyTask(task)
-
-        return false
-    }
-
-    return true
-};
-
-const taskById = (id) => {
-    for (let task of Memory.tasks) {
-        if (task.id === id) {
-            return getTaskObject(task)
-        }
-    }
-};
-
 const currentTask = (subjectParam) => {
     const subject = Helpers.objectByParam(subjectParam)
 
@@ -92,27 +39,6 @@ const currentTask = (subjectParam) => {
         }
     }
 };
-
-var currentSpawnTask = (spawnParam) => {
-    const spawn = Helpers.spawnByParam(spawnParam, true);
-
-    return currentTask(spawn && spawn.id)
-}
-
-var currentCreepTask = (creepParam) => {
-    const creep = Helpers.creepByParam(creepParam, true);
-
-    return currentTask(creep && creep.id)
-}
-
-var currentTowerTask = (towerParam) => {
-    const tower = Helpers.structureByParam(towerParam, true);
-    if (!(tower instanceof StructureTower)) {
-        log('Found structure is not a tower ' + tower)
-    }
-    
-    return currentTask(tower && tower.id)
-}
 
 const spawnCreep = (spawnParam) => {
     const spawn = Helpers.spawnByParam(spawnParam, true);
