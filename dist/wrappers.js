@@ -77,6 +77,14 @@ class RoomWrapper {
         return this.find(FIND_STRUCTURES, filter)
     }
 
+    tombstones(filter) {
+        return this.find(FIND_TOMBSTONES, filter)
+    }
+
+    droppedResources(filter) {
+        return this.find(FIND_DROPPED_RESOURCES, filter)
+    }
+
     controller() {
         return this.room.controller
     }

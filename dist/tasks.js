@@ -41,6 +41,8 @@ class Task {
             (task.type === TASK_TYPE_UPGRADE_CONTROLLER && TaskUpgradeController) ||
             (task.type === TASK_TYPE_REPAIR && TaskRepair) ||
             (task.type === TASK_TYPE_HEAL && TaskHeal) ||
+            (task.type === TASK_TYPE_PICKUP && TaskPickup) ||
+            (task.type === TASK_TYPE_WITHDRAW && TaskWithdraw) ||
             (task.type === TASK_TYPE_TOWER_ATTACK && TaskTowerAttack) ||
             (Task);
 
@@ -460,6 +462,114 @@ class TaskHeal extends Task {
     }
 }
 
+class TaskPickup extends Task {
+    constructor(creep, resource) {
+        super(TASK_SUBJECT_TYPE_CREEP, creep && creep.id, TASK_TYPE_PICKUP)
+
+        this.resourceId = resource && resource.id
+    }
+
+    run() {
+        const resource = Game.getObjectById(this.resourceId);
+        if (!resource) {
+            log('Unable to find resource by id=' + this.resourceId)
+
+            return false
+        }
+
+        if (!(resource instanceof Resource)) {
+            log('Found resource is not resource ' + resource)
+
+            return false
+        }
+
+        const creep = Game.getObjectById(this.subjectId);
+        if (!creep || !(creep instanceof Creep)) {
+            return false
+        }
+
+        if (creep.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
+            return false
+        }
+
+        creep.say(this.type)
+
+        if (creep.pickup(resource) === ERR_NOT_IN_RANGE) {
+            creep.moveTo(resource, {visualizePathStyle: {stroke: '#ffffff'}});
+
+            return true
+        }
+
+        creep.say('Done!')
+
+        return false
+    }
+
+    static deserialize(task) {
+        return super.deserialize(task, TaskPickup)
+    }
+}
+
+class TaskWithdraw extends Task {
+    constructor(creep, target) {
+        super(TASK_SUBJECT_TYPE_CREEP, creep && creep.id, TASK_TYPE_WITHDRAW)
+
+        this.targetId = target && target.id
+    }
+
+    run() {
+        const target = Game.getObjectById(this.targetId);
+        if (!target) {
+            log('Unable to find target by id=' + this.targetId)
+
+            return false
+        }
+
+        if (!(target instanceof Structure) && !(target instanceof Tombstone)) {
+            log('Found target is not structure or tombstone ' + target)
+
+            return false
+        }
+
+        if (!target.store) {
+            log('Found target has no store ' + target)
+
+            return false
+        }
+
+        if (target.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
+            log('Found target has no energy ' + target)
+
+            return false
+        }
+
+        const creep = Game.getObjectById(this.subjectId);
+        if (!creep || !(creep instanceof Creep)) {
+            return false
+        }
+
+        if (creep.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
+            return false
+        }
+
+        creep.say(this.type)
+
+        if (creep.withdraw(target, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+            creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
+
+            return true
+        }
+
+        creep.say('Done!')
+
+        return false
+    }
+
+    static deserialize(task) {
+        return super.deserialize(task, TaskWithdraw)
+    }
+}
+
 class TaskTowerAttack extends Task {
     constructor(tower, target) {
         super(TASK_SUBJECT_TYPE_TOWER, tower && tower.id, TASK_TYPE_TOWER_ATTACK)
@@ -509,4 +619,6 @@ module.exports.TaskBuild = TaskBuild;
 module.exports.TaskUpgradeController = TaskUpgradeController;
 module.exports.TaskRepair = TaskRepair;
 module.exports.TaskHeal = TaskHeal;
+module.exports.TaskPickup = TaskPickup;
+module.exports.TaskWithdraw = TaskWithdraw;
 module.exports.TaskTowerAttack = TaskTowerAttack;

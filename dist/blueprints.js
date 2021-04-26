@@ -1,3 +1,5 @@
+const {TaskWithdraw} = require("./tasks");
+const {TaskPickup} = require("./tasks");
 const {TaskHeal} = require("./tasks");
 const {TaskTowerAttack} = require("./tasks");
 const {TaskRepair} = require("./tasks");
@@ -36,6 +38,10 @@ const getDefaultFilters = (subject, type) => {
                 Filters.my(),
                 Filters.hitsPercentage(__.lt(1.0)),
             ];
+        case TASK_TYPE_WITHDRAW:
+            return [
+                Filters.my(false)
+            ];
         default:
             return [];
     }
@@ -49,6 +55,7 @@ module.exports.BlueprintManager = {
             structures, structure,
             constructionSites, constructionSite,
             targets, target,
+            resources, resource,
             controller
 
         const defaultFilters = getDefaultFilters(subject, blueprint.type);
@@ -134,6 +141,28 @@ module.exports.BlueprintManager = {
 
                 return new TaskHeal(subject, creep);
 
+            case TASK_TYPE_PICKUP:
+                filter = Filters.combineFilters([...defaultFilters, ...blueprint.resourceFilters]);
+                resources = getRoomWrapper(subject).droppedResources(filter);
+                resource = Helpers.findClosest(subject, resources);
+
+                if (!resource) {
+                    return null;
+                }
+
+                return new TaskPickup(subject, resource);
+
+            case TASK_TYPE_WITHDRAW:
+                filter = Filters.combineFilters([...defaultFilters, ...blueprint.targetFilters]);
+                targets = [...getRoomWrapper(subject).structures(filter), ...getRoomWrapper(subject).tombstones(filter)];
+                target = Helpers.findClosest(subject, targets);
+
+                if (!target) {
+                    return null;
+                }
+
+                return new TaskWithdraw(subject, target);
+
             case TASK_TYPE_TOWER_ATTACK:
                 filter = Filters.combineFilters([...defaultFilters, ...blueprint.targetFilters]);
                 targets = getRoomWrapper(subject).hostileCreeps(filter);
@@ -160,5 +189,7 @@ module.exports.Blueprint = {
     upgradeController: () => ({type: TASK_TYPE_UPGRADE_CONTROLLER}),
     repair: (structureFilters = []) => ({type: TASK_TYPE_REPAIR, structureFilters: structureFilters}),
     heal: (creepFilters = []) => ({type: TASK_TYPE_HEAL, creepFilters: creepFilters}),
+    pickup: (resourceFilters = []) => ({type: TASK_TYPE_PICKUP, resourceFilters: resourceFilters}),
+    withdraw: (targetFilters = []) => ({type: TASK_TYPE_WITHDRAW, targetFilters: targetFilters}),
     towerAttack: (targetFilters = []) => ({type: TASK_TYPE_TOWER_ATTACK, targetFilters: targetFilters}),
 };
