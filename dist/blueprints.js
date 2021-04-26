@@ -125,7 +125,6 @@ module.exports.BlueprintManager = {
             case TASK_TYPE_HEAL:
                 filter = Filters.combineFilters([...defaultFilters, ...blueprint.creepFilters]);
                 creeps = getRoomWrapper(subject).creeps(filter);
-                log(creeps.length)
                 creep = Helpers.findClosest(subject, creeps);
 
                 if (!creep) {
