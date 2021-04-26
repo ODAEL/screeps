@@ -1,3 +1,4 @@
+const {TaskHeal} = require("./tasks");
 const {TaskTowerAttack} = require("./tasks");
 const {TaskRepair} = require("./tasks");
 const {TaskUpgradeController} = require("./tasks");
@@ -25,6 +26,15 @@ const getDefaultFilters = (subject, type) => {
         case TASK_TYPE_TRANSFER:
             return [
                 Filters.freeCapacityEnergy(__.gt(0)),
+            ];
+        case TASK_TYPE_BUILD:
+            return [
+                Filters.my(),
+            ];
+        case TASK_TYPE_HEAL:
+            return [
+                Filters.my(),
+                Filters.hitsPercentage(__.lt(1.0)),
             ];
         default:
             return [];
@@ -83,7 +93,7 @@ module.exports.BlueprintManager = {
 
             case TASK_TYPE_BUILD:
                 filter = Filters.combineFilters([...defaultFilters, ...blueprint.constructionSiteFilters]);
-                constructionSites = getRoomWrapper(subject).myConstructionSites(filter);
+                constructionSites = getRoomWrapper(subject).constructionSites(filter);
                 constructionSite = Helpers.findClosest(subject, constructionSites);
 
                 if (!constructionSite) {
@@ -112,6 +122,18 @@ module.exports.BlueprintManager = {
 
                 return new TaskRepair(subject, structure);
 
+            case TASK_TYPE_HEAL:
+                filter = Filters.combineFilters([...defaultFilters, ...blueprint.creepFilters]);
+                creeps = getRoomWrapper(subject).creeps(filter);
+                log(creeps.length)
+                creep = Helpers.findClosest(subject, creeps);
+
+                if (!creep) {
+                    return null;
+                }
+
+                return new TaskHeal(subject, creep);
+
             case TASK_TYPE_TOWER_ATTACK:
                 filter = Filters.combineFilters([...defaultFilters, ...blueprint.targetFilters]);
                 targets = getRoomWrapper(subject).hostileCreeps(filter);
@@ -137,5 +159,6 @@ module.exports.Blueprint = {
     build: (constructionSiteFilters = []) => ({type: TASK_TYPE_BUILD, constructionSiteFilters: constructionSiteFilters}),
     upgradeController: () => ({type: TASK_TYPE_UPGRADE_CONTROLLER}),
     repair: (structureFilters = []) => ({type: TASK_TYPE_REPAIR, structureFilters: structureFilters}),
+    heal: (creepFilters = []) => ({type: TASK_TYPE_HEAL, creepFilters: creepFilters}),
     towerAttack: (targetFilters = []) => ({type: TASK_TYPE_TOWER_ATTACK, targetFilters: targetFilters}),
 };

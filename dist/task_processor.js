@@ -177,6 +177,7 @@ class TowerTaskProcessor extends BaseTaskProcessor {
                 [Filters.structureType(__.eq(STRUCTURE_RAMPART)), Filters.hitsPercentage(__.lt(0.001))]
             ))),
             ..._.times(4, () => (Blueprint.towerAttack())),
+            ..._.times(2, () => (Blueprint.heal())),
         ]
 
         let numberOfIterations = 0;
@@ -195,7 +196,7 @@ class TowerTaskProcessor extends BaseTaskProcessor {
     }
 }
 
-module.exports = {
+module.exports.TaskProcessor = {
     process: function() {
         for (let name in Game.spawns) {
             const spawn = Game.spawns[name];

@@ -57,56 +57,24 @@ class RoomWrapper {
         return availableHarvestPos
     }
 
-    myConstructionSites() {
-        return this.room.find(FIND_MY_CONSTRUCTION_SITES)
+    constructionSites(filter) {
+        return this.find(FIND_CONSTRUCTION_SITES, filter)
     }
 
-    creeps() {
-        return this.room.find(FIND_CREEPS)
+    creeps(filter) {
+        return this.find(FIND_CREEPS, filter)
     }
 
-    myCreeps() {
-        return this.room.find(FIND_MY_CREEPS)
+    myCreeps(filter) {
+        return this.find(FIND_MY_CREEPS, filter)
     }
 
-    hostileCreeps() {
-        return this.room.find(FIND_HOSTILE_CREEPS)
-    }
-
-    myStructures(filter) {
-        return this.find(FIND_MY_STRUCTURES, filter)
-    }
-
-    myStructuresWithStore(filter) {
-        return this.myStructures(
-            (object) => {
-                return (object.structureType === STRUCTURE_SPAWN || object.structureType === STRUCTURE_EXTENSION) &&
-                    object.store.getFreeCapacity(RESOURCE_ENERGY) > 0 &&
-                    this.checkFilter(filter, object)
-            }
-        )
+    hostileCreeps(filter) {
+        return this.find(FIND_HOSTILE_CREEPS, filter)
     }
 
     structures(filter) {
         return this.find(FIND_STRUCTURES, filter)
-    }
-
-    walls(filter) {
-        return this.structures(
-            (object) => {
-                return object.structureType === STRUCTURE_WALL &&
-                    this.checkFilter(filter, object)
-            }
-        )
-    }
-
-    roads(filter) {
-        return this.structures(
-            (object) => {
-                return object.structureType === STRUCTURE_ROAD &&
-                    this.checkFilter(filter, object)
-            }
-        )
     }
 
     controller() {
@@ -172,10 +140,6 @@ class SourceWrapper {
                 return object.getActiveBodyparts(ATTACK) !== 0;
             }
         });
-    }
-
-    roomWrapper() {
-        return new RoomWrapper(this.source.room)
     }
 }
 

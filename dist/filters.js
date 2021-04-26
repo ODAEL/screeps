@@ -21,7 +21,7 @@ module.exports.Filters = {
         return fn(object.hits);
     }),
     hitsPercentage: (fn) => ((object) => {
-        return fn((object.hits / object.hitsMax));
+        return fn(object.hits / object.hitsMax);
     }),
     structureType: (fn) => ((object) => {
         return fn(object.structureType);

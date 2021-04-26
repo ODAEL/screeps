@@ -1,12 +1,11 @@
-const {MemoryManager} = require("./memory_manager");
-
 require('globals')
-require('tasks')
+const {MemoryManager} = require("./memory_manager");
+const {TaskProcessor} = require("./task_processor");
 
 MemoryManager.init()
 
 module.exports.loop = function () {
-    require('task_processor').process()
+    TaskProcessor.process()
     
     if (Game.time % 500 === 0) {
         MemoryManager.cleanUp()
