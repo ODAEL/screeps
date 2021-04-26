@@ -1,3 +1,27 @@
+const bodypartCost = (bodypart) => {
+    switch (bodypart) {
+        case MOVE:
+            return 50;
+        case WORK:
+            return 100;
+        case CARRY:
+            return 50;
+        case ATTACK:
+            return 80;
+        case RANGED_ATTACK:
+            return 150;
+        case HEAL:
+            return 250;
+        case CLAIM:
+            return 600;
+        case TOUGH:
+            return 10;
+        default:
+            log('bodypartCost undefined bodypart ' + bodypart);
+            return 9999
+    }
+};
+
 module.exports.Helpers = {
     // smthByParam
     objectByParam: (objectParam, withLogIfNotFound = false) => {
@@ -113,5 +137,47 @@ module.exports.Helpers = {
         
         // TODO Change to findClosestByRange for CPU-save mode
         return fromObject.pos.findClosestByPath(toObjects)
+    },
+
+    chooseBodyparts: (energyCapacityAvailable, optimalBodyparts) => {
+        if (!optimalBodyparts) {
+            optimalBodyparts = [WORK, CARRY, MOVE];
+        }
+
+        let energyCapacityNeeded = _.sum(optimalBodyparts, (bodypart) => bodypartCost(bodypart));
+
+        if (energyCapacityNeeded <= energyCapacityAvailable) {
+            return optimalBodyparts;
+        }
+
+        let coef =  energyCapacityAvailable / energyCapacityNeeded
+
+        let bodypartsCount = _.reduce(
+            optimalBodyparts,
+            (result, bodypart) => {
+                result[bodypart] = result[bodypart] || 0
+                result[bodypart]++
+
+                return result
+            },
+            {}
+        )
+
+        bodypartsCount = _.reduce(
+            bodypartsCount,
+            (result, count, bodypart) => {
+                result[bodypart] = _.max([_.floor(count * coef), 1])
+                return result
+            },
+            {}
+        )
+
+        return _.reduce(
+            bodypartsCount,
+            (result, count, bodypart) => {
+                return [...result, ..._.times(count, () => bodypart)]
+            },
+            []
+        )
     },
 };

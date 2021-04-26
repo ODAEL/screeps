@@ -1,3 +1,4 @@
+const {Helpers} = require("./helpers");
 const {RoomWrapper} = require("./wrappers");
 
 class Task {
@@ -48,27 +49,23 @@ class Task {
 }
 
 class TaskSpawnCreep extends Task {
-    constructor(spawn) {
+    constructor(spawn, data) {
         super(TASK_SUBJECT_TYPE_SPAWN, spawn && spawn.id, TASK_TYPE_SPAWN_CREEP)
+
+        this.data = data || {}
     }
 
     run() {
         const spawn = Game.getObjectById(this.subjectId);
+        const roomWrapper = new RoomWrapper(Game.getObjectById(this.subjectId).room);
 
         let memory = {
-            taskBlueprints: [
-                ..._.times(8, () => ({type: TASK_TYPE_TRANSFER, structureTypes: [STRUCTURE_SPAWN, STRUCTURE_EXTENSION], my: true, maxFreeCapacityEnergy: 0})),
-                ..._.times(1, () => ({type: TASK_TYPE_TRANSFER, structureTypes: STRUCTURE_TOWER, my: true, maxFreeCapacityEnergy: 0})),
-                ..._.times(1, () => ({type: TASK_TYPE_TRANSFER, structureTypes: STRUCTURE_CONTAINER, maxFreeCapacityEnergy: 0})),
-                ..._.times(1, () => ({type: TASK_TYPE_UPGRADE_CONTROLLER})),
-                ..._.times(3, () => ({type: TASK_TYPE_BUILD})),
-                ..._.times(1, () => ({type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_ROAD, minHitPercentage: 0.50})),
-                ..._.times(1, () => ({type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_WALL, minHitPercentage: 0.000001})),
-                ..._.times(1, () => ({type: TASK_TYPE_REPAIR, structureTypes: STRUCTURE_CONTAINER, minHitPercentage: 0.2})),
-            ]
+            taskBlueprints: this.data.taskBlueprints || []
         }
 
-        if (spawn.spawnCreep(this.chooseBodyParts(), 'Creep ' + Game.time, memory) === OK) {
+        let optimalBodyparts = this.data.optimalBodyparts || [WORK, CARRY, MOVE];
+
+        if (spawn.spawnCreep(Helpers.chooseBodyparts(roomWrapper.energyCapacityAvailable(), optimalBodyparts), 'Creep ' + Game.time, {memory: memory}) === OK) {
             return false
         }
 
@@ -77,50 +74,6 @@ class TaskSpawnCreep extends Task {
 
     static deserialize(task) {
         return super.deserialize(task, TaskSpawnCreep)
-    }
-
-    chooseBodyParts() {
-        const roomWrapper = new RoomWrapper(Game.getObjectById(this.subjectId).room);
-        const energyCapacityAvailable = roomWrapper.energyCapacityAvailable();
-
-        let i = 0;
-        const bodyParts = [];
-        let totalCost = 0;
-
-        if (roomWrapper.myCreeps().length === 0) {
-            return [WORK, CARRY, MOVE]
-        }
-
-        while (true) {
-            let bodyPart, cost;
-            if (i % 3 === 0) {
-                bodyPart = MOVE
-                cost = 50
-            }
-            if (i % 3 === 1) {
-                bodyPart = WORK
-                cost = 100
-            }
-            if (i % 3 === 2) {
-                bodyPart = CARRY
-                cost = 50
-            }
-
-            if (totalCost + cost > energyCapacityAvailable) {
-                break
-            }
-
-            bodyParts.push(bodyPart)
-            totalCost += cost
-
-            i++
-        }
-
-        if (energyCapacityAvailable - totalCost >= 50) {
-            bodyParts.push(MOVE)
-        }
-
-        return bodyParts
     }
 }
 

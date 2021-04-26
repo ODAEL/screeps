@@ -54,6 +54,7 @@ module.exports.BlueprintManager = {
         const defaultFilters = getDefaultFilters(subject, blueprint.type);
 
         switch (blueprint.type) {
+            // TODO Support data
             case TASK_TYPE_SPAWN_CREEP:
                 return new TaskSpawnCreep(subject);
 
@@ -151,7 +152,7 @@ module.exports.BlueprintManager = {
 };
 
 module.exports.Blueprint = {
-    spawnCreep: () => ({type: TASK_TYPE_SPAWN_CREEP}),
+    spawnCreep: (data) => ({type: TASK_TYPE_SPAWN_CREEP, data: data}),
     renewCreep: (creepFilters = []) => ({type: TASK_TYPE_RENEW_CREEP, creepFilters: creepFilters}),
     harvest: (sourceFilters = []) => ({type: TASK_TYPE_HARVEST, sourceFilters: sourceFilters}),
     transfer: (structureFilters = []) => ({type: TASK_TYPE_TRANSFER, structureFilters: structureFilters}),

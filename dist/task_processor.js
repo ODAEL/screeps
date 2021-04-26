@@ -1,3 +1,4 @@
+const {RoomConfig} = require("./rooms_config");
 const {TaskRenewCreep} = require("./tasks");
 const {TaskSpawnCreep} = require("./tasks");
 const {Task} = require("./tasks");
@@ -60,9 +61,19 @@ class SpawnTaskProcessor extends BaseTaskProcessor {
     processNewTask() {
         let spawn = this.subject
         const roomWrapper = new RoomWrapper(spawn.room);
+        const roomConfig = new RoomConfig(spawn.room.name)
+        const creepRoleData = roomConfig.creepRoleData('default')
+
         if (roomWrapper.availableHarvestPos().length + 1 > roomWrapper.myCreeps().length &&
             (roomWrapper.myCreeps().length === 0 || (roomWrapper.energyCapacityAvailable() === roomWrapper.energyAvailable()))) {
-            MemoryManager.pushTask(new TaskSpawnCreep(spawn))
+            let task = new TaskSpawnCreep(
+                spawn,
+                {
+                    optimalBodyparts: creepRoleData.optimalBodyparts,
+                    taskBlueprints: creepRoleData.taskBlueprints,
+                }
+            )
+            MemoryManager.pushTask(task)
 
             return;
         }
