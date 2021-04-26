@@ -20,6 +20,9 @@ const defaultCreepRoleData = {
         ..._.times(7, () => CARRY),
         ..._.times(7, () => MOVE),
     ],
+    harvestTaskBlueprints: [
+        Blueprint.harvest(),
+    ],
     afterHarvestTaskBlueprints: [
         ..._.times(8, () => (Blueprint.transfer(
             [Filters.structureType(__.in([STRUCTURE_SPAWN, STRUCTURE_EXTENSION])), Filters.my()]

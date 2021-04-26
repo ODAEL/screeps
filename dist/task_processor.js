@@ -123,18 +123,23 @@ class CreepTaskProcessor extends BaseTaskProcessor {
             return false
         }
 
+        const role = MemoryManager.creepMemory(creep).role
+        const taskBlueprints = (new RoomConfig(creep.room.name)).creepRoleData(role).harvestTaskBlueprints
 
-        let blueprint = Blueprint.harvest()
+        let numberOfIterations = 0;
+        let task
+        do {
+            if (numberOfIterations++ > taskBlueprints.length) {
+                return false
+            }
 
-        let task = BlueprintManager.taskByBlueprint(creep, blueprint)
+            task = BlueprintManager.taskByBlueprint(creep, taskBlueprints[MemoryManager.blueprintsOrderPosition('creep.harvest.' + creep.id, taskBlueprints.length)])
 
-        if (task) {
-            MemoryManager.pushTask(task)
+        } while (!task)
 
-            return true
-        }
+        MemoryManager.pushTask(task)
 
-        return false
+        return true
     }
 
     processAfterHarvest() {
@@ -143,28 +148,8 @@ class CreepTaskProcessor extends BaseTaskProcessor {
             return false
         }
 
-        const taskBlueprints = [
-            ..._.times(8, () => (Blueprint.transfer(
-                [Filters.structureType(__.in([STRUCTURE_SPAWN, STRUCTURE_EXTENSION])), Filters.my()]
-            ))),
-            ..._.times(1, () => (Blueprint.transfer(
-                [Filters.structureType(__.eq(STRUCTURE_TOWER)), Filters.my()]
-            ))),
-            ..._.times(1, () => (Blueprint.transfer(
-                [Filters.structureType(__.eq(STRUCTURE_CONTAINER))]
-            ))),
-            ..._.times(1, () => (Blueprint.upgradeController())),
-            ..._.times(3, () => (Blueprint.build())),
-            ..._.times(1, () => (Blueprint.repair(
-                [Filters.structureType(__.eq(STRUCTURE_ROAD)), Filters.hitsPercentage(__.lt(0.50))]
-            ))),
-            ..._.times(1, () => (Blueprint.repair(
-                [Filters.structureType(__.eq(STRUCTURE_WALL)), Filters.hitsPercentage(__.lt(0.000001))]
-            ))),
-            ..._.times(1, () => (Blueprint.repair(
-                [Filters.structureType(__.eq(STRUCTURE_CONTAINER)), Filters.hitsPercentage(__.lt(0.2))]
-            ))),
-        ]
+        const role = MemoryManager.creepMemory(creep).role
+        const taskBlueprints = (new RoomConfig(creep.room.name)).creepRoleData(role).afterHarvestTaskBlueprints
 
         let numberOfIterations = 0;
         let task
@@ -175,7 +160,7 @@ class CreepTaskProcessor extends BaseTaskProcessor {
                 return false
             }
 
-            task = BlueprintManager.taskByBlueprint(creep, taskBlueprints[MemoryManager.blueprintsOrderPosition('creep', taskBlueprints.length)])
+            task = BlueprintManager.taskByBlueprint(creep, taskBlueprints[MemoryManager.blueprintsOrderPosition('creep.afterHarvest.' + creep.id, taskBlueprints.length)])
 
         } while (!task)
 

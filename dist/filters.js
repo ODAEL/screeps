@@ -43,5 +43,8 @@ module.exports.Filters = {
     nearTo: (to) => ((object) => {
         return object.pos.isNearTo(to)
     }),
+    id: (id) => ((object) => {
+        return object.id === id
+    }),
 
 };
