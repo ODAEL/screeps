@@ -60,7 +60,7 @@ class TaskSpawnCreep extends Task {
         const roomWrapper = new RoomWrapper(Game.getObjectById(this.subjectId).room);
 
         let memory = {
-            taskBlueprints: this.data.taskBlueprints || []
+            role: this.data.role || 'default'
         }
 
         let optimalBodyparts = this.data.optimalBodyparts || [WORK, CARRY, MOVE];

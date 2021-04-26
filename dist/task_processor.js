@@ -54,27 +54,15 @@ class BaseTaskProcessor {
         }
     };
 
-    processNewTask() {}
+    processNewTask() {
+    }
 }
 
 class SpawnTaskProcessor extends BaseTaskProcessor {
     processNewTask() {
         let spawn = this.subject
-        const roomWrapper = new RoomWrapper(spawn.room);
-        const roomConfig = new RoomConfig(spawn.room.name)
-        const creepRoleData = roomConfig.creepRoleData('default')
 
-        if (roomWrapper.availableHarvestPos().length + 1 > roomWrapper.myCreeps().length &&
-            (roomWrapper.myCreeps().length === 0 || (roomWrapper.energyCapacityAvailable() === roomWrapper.energyAvailable()))) {
-            let task = new TaskSpawnCreep(
-                spawn,
-                {
-                    optimalBodyparts: creepRoleData.optimalBodyparts,
-                    taskBlueprints: creepRoleData.taskBlueprints,
-                }
-            )
-            MemoryManager.pushTask(task)
-
+        if (this.processSpawnCreep()) {
             return;
         }
 
@@ -87,6 +75,36 @@ class SpawnTaskProcessor extends BaseTaskProcessor {
 
             return;
         }
+    }
+
+    processSpawnCreep() {
+        let spawn = this.subject
+        const roomWrapper = new RoomWrapper(spawn.room);
+        const roomConfig = new RoomConfig(spawn.room.name)
+
+        const neededCreepRoles = roomConfig.neededCreepRoles(roomWrapper.myCreeps())
+        if (neededCreepRoles.length === 0) {
+            return false;
+        }
+
+        const creepRole = neededCreepRoles[0]
+
+        const creepRoleData = roomConfig.creepRoleData(creepRole)
+        let optimalBodyparts = creepRoleData.optimalBodyparts
+        if (roomWrapper.myCreeps().length === 0) {
+            optimalBodyparts = [WORK, CARRY, MOVE]
+        }
+
+        let task = new TaskSpawnCreep(
+            spawn,
+            {
+                optimalBodyparts: optimalBodyparts,
+                role: creepRole,
+            }
+        )
+        MemoryManager.pushTask(task)
+
+        return true;
     }
 }
 
@@ -208,7 +226,7 @@ class TowerTaskProcessor extends BaseTaskProcessor {
 }
 
 module.exports.TaskProcessor = {
-    process: function() {
+    process: function () {
         for (let name in Game.spawns) {
             const spawn = Game.spawns[name];
             (new SpawnTaskProcessor(spawn)).process()

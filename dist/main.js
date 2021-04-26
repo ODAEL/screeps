@@ -4,6 +4,10 @@ const {TaskProcessor} = require("./task_processor");
 
 MemoryManager.init()
 
+global.hmm = () => {
+
+}
+
 module.exports.loop = function () {
     TaskProcessor.process()
     

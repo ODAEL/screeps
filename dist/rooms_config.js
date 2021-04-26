@@ -1,24 +1,26 @@
+const {MemoryManager} = require("./memory_manager");
 const {__} = require("./filters");
 const {Filters} = require("./filters");
 const {Blueprint} = require("./blueprints");
 
-let defaultCreepRoleData
-
-let config = {
+const config = {
     'E33N38': {
         creepsRoleData: {
+            'default': {
+                count: 5,
+            }
         },
     },
 };
 
-defaultCreepRoleData = {
+const defaultCreepRoleData = {
     count: 1,
     optimalBodyparts: [
         ..._.times(7, () => WORK),
         ..._.times(7, () => CARRY),
         ..._.times(7, () => MOVE),
     ],
-    taskBlueprints: [
+    afterHarvestTaskBlueprints: [
         ..._.times(8, () => (Blueprint.transfer(
             [Filters.structureType(__.in([STRUCTURE_SPAWN, STRUCTURE_EXTENSION])), Filters.my()]
         ))),
@@ -49,7 +51,37 @@ class RoomConfig {
 
     creepRoleData(creepRole) {
         let creepRoleData = this.config.creepsRoleData && this.config.creepsRoleData[creepRole]
-        return _.merge(defaultCreepRoleData, creepRoleData ? creepRoleData : {});
+        return _.merge({}, defaultCreepRoleData, creepRoleData ? creepRoleData : {});
+    }
+
+    neededCreepRoles(currentCreeps) {
+        let currentCreepRoles = _.reduce(currentCreeps, (result, creep) => {
+            let creepMemory = MemoryManager.creepMemory(creep)
+            let role = creepMemory.role || 'default'
+            result[role] = result[role] || 0
+            result[role]++
+            return result
+        }, {})
+
+        let configRoles = _.keys(this.config.creepsRoleData || {})
+        if (configRoles.length === 0) {
+            configRoles = ['default']
+        }
+
+        let configCreepRoles = _.reduce(configRoles, (result, role) => {
+            let creepRoleData = this.creepRoleData(role)
+            result[role] = creepRoleData.count
+            return result
+        }, {})
+
+        let neededCreepRoles = _.reduce(configCreepRoles, (result, count, role) => {
+            result[role] = _.max([0, count - currentCreepRoles[role]])
+            return result
+        }, {})
+
+        return _.reduce(neededCreepRoles, (result, count, role) => {
+            return [...result, ..._.times(count, () => role)]
+        }, [])
     }
 }
 
