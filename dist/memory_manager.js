@@ -25,6 +25,9 @@ module.exports.MemoryManager = {
         log(creepsCleared + ' creeps was cleared')
     },
 
+    tasks: () => {
+        return Memory.tasks
+    },
     pushTask: (task) => {
         Memory.tasks.push(task)
     },

@@ -1,3 +1,4 @@
+const {MemoryManager} = require("./memory_manager");
 const {Helpers} = require("helpers");
 
 class RoomWrapper {
@@ -155,7 +156,7 @@ class SourceWrapper {
 
     connectedCreeps() {
         const connectedCreeps = [];
-        for (let task of Memory.tasks) {
+        for (let task of MemoryManager.tasks()) {
             let subject = Game.getObjectById(task.subjectId)
             if (subject && task.sourceId && task.sourceId === this.source.id) {
                 connectedCreeps.push(subject)

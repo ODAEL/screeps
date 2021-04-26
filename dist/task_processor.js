@@ -46,7 +46,7 @@ class BaseTaskProcessor {
     currentTask(subjectParam) {
         const subject = Helpers.objectByParam(subjectParam)
 
-        for (let task of Memory.tasks) {
+        for (let task of MemoryManager.tasks()) {
             if (task.subjectId === subject.id) {
                 return Task.getTaskObject(task)
             }
