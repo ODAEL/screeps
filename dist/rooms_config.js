@@ -8,7 +8,20 @@ const config = {
         creepsRoleData: {
             'default': {
                 count: 5,
-            }
+            },
+            'harvester_right_1': {
+                optimalBodyparts: [
+                    ..._.times(10, () => WORK),
+                    ..._.times(6, () => CARRY),
+                    ..._.times(1, () => MOVE),
+                ],
+                harvestTaskBlueprints: [
+                    Blueprint.harvest([Filters.id('5bbcaeda9099fc012e639a7e')]),
+                ],
+                afterHarvestTaskBlueprints: [
+                    Blueprint.transfer([Filters.id('6081b75c41d68bc69620415b')])
+                ]
+            },
         },
     },
 };
@@ -54,7 +67,7 @@ class RoomConfig {
 
     creepRoleData(creepRole) {
         let creepRoleData = this.config.creepsRoleData && this.config.creepsRoleData[creepRole]
-        return _.merge({}, defaultCreepRoleData, creepRoleData ? creepRoleData : {});
+        return {...defaultCreepRoleData, ...(creepRoleData ? creepRoleData : {})};
     }
 
     neededCreepRoles(currentCreeps) {

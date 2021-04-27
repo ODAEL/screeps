@@ -1,11 +1,15 @@
 require('globals')
+const {RoomConfig} = require("./rooms_config");
 const {MemoryManager} = require("./memory_manager");
 const {TaskProcessor} = require("./task_processor");
 
 MemoryManager.init()
 
 global.hmm = () => {
+    let roomConfig = new RoomConfig('E33N38')
+    let data = roomConfig.creepRoleData('harvester_right_1')
 
+    debug(data)
 }
 
 module.exports.loop = function () {

@@ -156,7 +156,6 @@ class CreepTaskProcessor extends BaseTaskProcessor {
 
         do {
             if (numberOfIterations++ > taskBlueprints.length) {
-                log('Panic! numberOfIterations was ' + numberOfIterations + ' while iterating on ' + taskBlueprints.length + ' items')
                 return false
             }
 
