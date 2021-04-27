@@ -43,6 +43,8 @@ class Task {
             (task.type === TASK_TYPE_HEAL && TaskHeal) ||
             (task.type === TASK_TYPE_PICKUP && TaskPickup) ||
             (task.type === TASK_TYPE_WITHDRAW && TaskWithdraw) ||
+            (task.type === TASK_TYPE_MOVE_TO && TaskMoveTo) ||
+            (task.type === TASK_TYPE_CLAIM_CONTROLLER && TaskClaimController) ||
             (task.type === TASK_TYPE_TOWER_ATTACK && TaskTowerAttack) ||
             (task.type === TASK_TYPE_LINK_TRANSFER_ENERGY && TaskLinkTransferEnergy) ||
             (Task);
@@ -571,6 +573,108 @@ class TaskWithdraw extends Task {
     }
 }
 
+class TaskMoveTo extends Task {
+    constructor(creep, pos) {
+        super(TASK_SUBJECT_TYPE_CREEP, creep && creep.id, TASK_TYPE_MOVE_TO)
+
+        this.pos = (pos instanceof RoomPosition && pos) ||
+            (pos instanceof RoomObject && pos.pos) ||
+            null
+    }
+
+    run() {
+        const pos = this.pos;
+        if (!pos) {
+            log('No pos ' + pos)
+
+            return false
+        }
+
+        if (!pos.x || !pos.y || !pos.roomName) {
+            log('Found pos is not pos ' + pos)
+
+            return false
+        }
+
+        const creep = Game.getObjectById(this.subjectId);
+        if (!creep || !(creep instanceof Creep)) {
+            return false
+        }
+
+        creep.say(this.type)
+
+        creep.moveTo(pos, {visualizePathStyle: {stroke: '#ffffff'}});
+
+        if (!creep.pos.isNearTo(pos)) {
+            return true
+        }
+
+        creep.say('Done!')
+
+        return false
+    }
+
+    static deserialize(task) {
+        return super.deserialize(task, TaskMoveTo)
+    }
+}
+
+class TaskClaimController extends Task {
+    constructor(creep, controller) {
+        super(TASK_SUBJECT_TYPE_CREEP, creep && creep.id, TASK_TYPE_CLAIM_CONTROLLER)
+
+        this.controllerId = controller && controller.id
+    }
+
+    run() {
+        const controller = Game.getObjectById(this.controllerId);
+        if (!controller) {
+            log('Unable to find controller by id=' + this.controllerId)
+
+            return false
+        }
+
+        if (!(controller instanceof StructureController)) {
+            log('Found controller is not controller ' + controller)
+
+            return false
+        }
+
+        if (controller.owner) {
+            log('Found controller has owner ' + controller)
+
+            return false
+        }
+
+        const creep = Game.getObjectById(this.subjectId);
+        if (!creep || !(creep instanceof Creep)) {
+            return false
+        }
+
+        if (creep.getActiveBodyparts(CLAIM) === 0) {
+            log('Creep has no CLAIM bodypart ' + creep)
+
+            return false
+        }
+
+        creep.say(this.type)
+
+        if (creep.claimController(controller) === ERR_NOT_IN_RANGE) {
+            creep.moveTo(controller, {visualizePathStyle: {stroke: '#ffffff'}});
+
+            return true
+        }
+
+        creep.say('Done!')
+
+        return false
+    }
+
+    static deserialize(task) {
+        return super.deserialize(task, TaskClaimController)
+    }
+}
+
 class TaskTowerAttack extends Task {
     constructor(tower, target) {
         super(TASK_SUBJECT_TYPE_TOWER, tower && tower.id, TASK_TYPE_TOWER_ATTACK)
@@ -676,5 +780,7 @@ module.exports.TaskRepair = TaskRepair;
 module.exports.TaskHeal = TaskHeal;
 module.exports.TaskPickup = TaskPickup;
 module.exports.TaskWithdraw = TaskWithdraw;
+module.exports.TaskMoveTo = TaskMoveTo;
+module.exports.TaskClaimController = TaskClaimController;
 module.exports.TaskTowerAttack = TaskTowerAttack;
 module.exports.TaskLinkTransferEnergy = TaskLinkTransferEnergy;
