@@ -3,11 +3,8 @@ const {TaskRenewCreep} = require("./tasks");
 const {TaskSpawnCreep} = require("./tasks");
 const {Task} = require("./tasks");
 const {Helpers} = require("./helpers");
-const {__} = require("./filters");
-const {Filters} = require("./filters");
 const {MemoryManager} = require("./memory_manager");
 const {BlueprintManager} = require("./blueprints");
-const {Blueprint} = require("./blueprints");
 const {SpawnWrapper} = require("./wrappers");
 const {RoomWrapper} = require("./wrappers");
 
@@ -185,22 +182,12 @@ class TowerTaskProcessor extends BaseTaskProcessor {
             return false
         }
 
-        const taskBlueprints = [
-            ..._.times(2, () => (Blueprint.repair(
-                [Filters.structureType(__.eq(STRUCTURE_ROAD)), Filters.hitsPercentage(__.lt(0.50))]
-            ))),
-            ..._.times(1, () => (Blueprint.repair(
-                [Filters.structureType(__.eq(STRUCTURE_WALL)), Filters.hitsPercentage(__.lt(0.00001))]
-            ))),
-            ..._.times(1, () => (Blueprint.repair(
-                [Filters.structureType(__.eq(STRUCTURE_CONTAINER)), Filters.hitsPercentage(__.lt(0.2))]
-            ))),
-            ..._.times(1, () => (Blueprint.repair(
-                [Filters.structureType(__.eq(STRUCTURE_RAMPART)), Filters.hitsPercentage(__.lt(0.001))]
-            ))),
-            ..._.times(4, () => (Blueprint.towerAttack())),
-            ..._.times(2, () => (Blueprint.heal())),
-        ]
+        const role = MemoryManager.towerMemory(tower).role || 'default'
+        const taskBlueprints = (new RoomConfig(tower.room.name)).towerRoleData(role).taskBlueprints
+
+        if (taskBlueprints.length === 0) {
+            return
+        }
 
         let numberOfIterations = 0;
         let task

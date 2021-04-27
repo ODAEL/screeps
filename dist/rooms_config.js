@@ -11,6 +11,11 @@ class RoomConfig {
         return {...Config.defaultCreepRoleData, ...(creepRoleData ? creepRoleData : {})};
     }
 
+    towerRoleData(towerRole) {
+        let towerRoleData = this.config.towersRoleData && (this.config.towersRoleData[towerRole] || this.config.towersRoleData['default'])
+        return {...Config.defaultTowerRoleData, ...(towerRoleData ? towerRoleData : {})};
+    }
+
     linkRoleData(linkRole) {
         let linkRoleData = this.config.linksRoleData && (this.config.linksRoleData[linkRole] || this.config.linksRoleData['default'])
         return {...Config.defaultLinkRoleData, ...(linkRoleData ? linkRoleData : {})};
