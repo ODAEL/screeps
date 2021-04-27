@@ -1,73 +1,14 @@
+const {Config} = require("./config");
 const {MemoryManager} = require("./memory_manager");
-const {__} = require("./filters");
-const {Filters} = require("./filters");
-const {Blueprint} = require("./blueprints");
-
-const config = {
-    'E33N38': {
-        creepsRoleData: {
-            'default': {
-                count: 5,
-            },
-            'harvester_right_1': {
-                optimalBodyparts: [
-                    ..._.times(10, () => WORK),
-                    ..._.times(6, () => CARRY),
-                    ..._.times(1, () => MOVE),
-                ],
-                harvestTaskBlueprints: [
-                    Blueprint.harvest([Filters.id('5bbcaeda9099fc012e639a7e')]),
-                ],
-                afterHarvestTaskBlueprints: [
-                    Blueprint.transfer([Filters.id('6081b75c41d68bc69620415b')])
-                ]
-            },
-        },
-    },
-};
-
-const defaultCreepRoleData = {
-    count: 1,
-    optimalBodyparts: [
-        ..._.times(7, () => WORK),
-        ..._.times(7, () => CARRY),
-        ..._.times(7, () => MOVE),
-    ],
-    harvestTaskBlueprints: [
-        Blueprint.harvest(),
-    ],
-    afterHarvestTaskBlueprints: [
-        ..._.times(8, () => (Blueprint.transfer(
-            [Filters.structureType(__.in([STRUCTURE_SPAWN, STRUCTURE_EXTENSION])), Filters.my()]
-        ))),
-        ..._.times(1, () => (Blueprint.transfer(
-            [Filters.structureType(__.eq(STRUCTURE_TOWER)), Filters.my()]
-        ))),
-        ..._.times(1, () => (Blueprint.transfer(
-            [Filters.structureType(__.eq(STRUCTURE_CONTAINER))]
-        ))),
-        ..._.times(1, () => (Blueprint.upgradeController())),
-        ..._.times(3, () => (Blueprint.build())),
-        ..._.times(1, () => (Blueprint.repair(
-            [Filters.structureType(__.eq(STRUCTURE_ROAD)), Filters.hitsPercentage(__.lt(0.50))]
-        ))),
-        ..._.times(1, () => (Blueprint.repair(
-            [Filters.structureType(__.eq(STRUCTURE_WALL)), Filters.hitsPercentage(__.lt(0.000001))]
-        ))),
-        ..._.times(1, () => (Blueprint.repair(
-            [Filters.structureType(__.eq(STRUCTURE_CONTAINER)), Filters.hitsPercentage(__.lt(0.2))]
-        ))),
-    ],
-};
 
 class RoomConfig {
     constructor(roomName) {
-        this.config = config[roomName] || {}
+        this.config = Config.roomsConfig[roomName] || {}
     }
 
     creepRoleData(creepRole) {
         let creepRoleData = this.config.creepsRoleData && this.config.creepsRoleData[creepRole]
-        return {...defaultCreepRoleData, ...(creepRoleData ? creepRoleData : {})};
+        return {...Config.defaultCreepRoleData, ...(creepRoleData ? creepRoleData : {})};
     }
 
     neededCreepRoles(currentCreeps) {
