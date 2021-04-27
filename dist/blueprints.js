@@ -1,3 +1,4 @@
+const {TaskLinkTransferEnergy} = require("./tasks");
 const {TaskWithdraw} = require("./tasks");
 const {TaskPickup} = require("./tasks");
 const {TaskHeal} = require("./tasks");
@@ -40,7 +41,13 @@ const getDefaultFilters = (subject, type) => {
             ];
         case TASK_TYPE_WITHDRAW:
             return [
-                Filters.my(false)
+                Filters.my(false),
+            ];
+        case TASK_TYPE_LINK_TRANSFER_ENERGY:
+            return [
+                Filters.structureType(__.eq(STRUCTURE_LINK)),
+                Filters.my(true),
+                Filters.freeCapacityEnergy(__.gt(0))
             ];
         default:
             return [];
@@ -56,6 +63,7 @@ module.exports.BlueprintManager = {
             constructionSites, constructionSite,
             targets, target,
             resources, resource,
+            targetLinks, targetLink,
             controller
 
         const defaultFilters = getDefaultFilters(subject, blueprint.type);
@@ -174,6 +182,17 @@ module.exports.BlueprintManager = {
 
                 return new TaskTowerAttack(subject, target);
 
+            case TASK_TYPE_LINK_TRANSFER_ENERGY:
+                filter = Filters.combineFilters([...defaultFilters, ...blueprint.targetLinkFilters]);
+                targetLinks = getRoomWrapper(subject).structures(filter);
+                targetLink = Helpers.findClosest(subject, targetLinks);
+
+                if (!targetLink) {
+                    return null;
+                }
+
+                return new TaskLinkTransferEnergy(subject, targetLink);
+
             default:
                 return null;
         }
@@ -192,4 +211,5 @@ module.exports.Blueprint = {
     pickup: (resourceFilters = []) => ({type: TASK_TYPE_PICKUP, resourceFilters: resourceFilters}),
     withdraw: (targetFilters = []) => ({type: TASK_TYPE_WITHDRAW, targetFilters: targetFilters}),
     towerAttack: (targetFilters = []) => ({type: TASK_TYPE_TOWER_ATTACK, targetFilters: targetFilters}),
+    linkTransferEnergy: (targetLinkFilters = []) => ({type: TASK_TYPE_LINK_TRANSFER_ENERGY, targetLinkFilters: targetLinkFilters}),
 };
