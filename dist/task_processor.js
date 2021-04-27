@@ -110,11 +110,15 @@ class SpawnTaskProcessor extends BaseTaskProcessor {
 
 class CreepTaskProcessor extends BaseTaskProcessor {
     processNewTask() {
-        if (this.processHarvest()) {
-            return
+        if (MemoryManager.creepMemory(this.subject).automated === false) {
+            return;
         }
 
-        this.processAfterHarvest()
+        if (this.processHarvest()) {
+            return;
+        }
+
+        this.processAfterHarvest();
     }
 
     processHarvest() {
