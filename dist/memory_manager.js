@@ -1,6 +1,9 @@
 module.exports.MemoryManager = {
     init: () => {
         Memory.tasks = Memory.tasks || []
+
+        Memory.towers = Memory.towers || {}
+        Memory.links = Memory.links || {}
     },
     cleanUp: () => {
         let tasksCleared = 0;
@@ -23,7 +26,30 @@ module.exports.MemoryManager = {
         }
 
         log(creepsCleared + ' creeps was cleared')
+
+
+        let towersCleared = 0;
+        for (let id in Memory.towers) {
+            if (!Game.getObjectById(id)) {
+                towersCleared++
+                delete Memory.towers[id];
+            }
+        }
+
+        log(towersCleared + ' towers was cleared')
+
+
+        let linksCleared = 0;
+        for (let id in Memory.links) {
+            if (!Game.getObjectById(id)) {
+                linksCleared++
+                delete Memory.links[id];
+            }
+        }
+
+        log(linksCleared + ' links was cleared')
     },
+
 
     creeps: () => {
         return Memory.creeps
@@ -31,6 +57,32 @@ module.exports.MemoryManager = {
     creepMemory: (creep) => {
         return Memory.creeps[creep.name]
     },
+
+
+    towers: () => {
+        return Memory.towers
+    },
+    towerMemory: (tower) => {
+        return Memory.towers[tower.id] || {}
+    },
+    setTowerMemory: (tower, memory) => {
+        Memory.towers[tower.id] = Memory.towers[tower.id] || {}
+        Memory.towers[tower.id] = memory
+    },
+
+
+    links: () => {
+        return Memory.links
+    },
+    linkMemory: (link) => {
+        return Memory.links[link.id] || {}
+    },
+    setLinkMemory: (link, memory) => {
+        Memory.links[link.id] = Memory.links[link.id] || {}
+        Memory.links[link.id] = memory
+    },
+
+
     tasks: () => {
         return Memory.tasks
     },
@@ -45,6 +97,7 @@ module.exports.MemoryManager = {
             }
         }
     },
+
 
     blueprintsOrderPosition: (key, max) => {
         Memory.blueprintsOrderPosition = Memory.blueprintsOrderPosition || {}

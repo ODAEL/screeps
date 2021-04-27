@@ -209,6 +209,37 @@ class TowerTaskProcessor extends BaseTaskProcessor {
     }
 }
 
+class LinkTaskProcessor extends BaseTaskProcessor {
+    processNewTask() {
+        let link = this.subject
+        if (link.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
+            return
+        }
+
+        const role = MemoryManager.linkMemory(link).role || 'default'
+        const taskBlueprints = (new RoomConfig(link.room.name)).linkRoleData(role).taskBlueprints
+
+        if (taskBlueprints.length === 0) {
+            return
+        }
+
+        let numberOfIterations = 0;
+        let task
+        do {
+            if (numberOfIterations++ > taskBlueprints.length) {
+                return
+            }
+
+            task = BlueprintManager.taskByBlueprint(link, taskBlueprints[MemoryManager.blueprintsOrderPosition('link.' + link.id, taskBlueprints.length)])
+
+        } while (!task)
+
+        MemoryManager.pushTask(task)
+
+        return
+    }
+}
+
 module.exports.TaskProcessor = {
     process: function () {
         for (let name in Game.spawns) {
@@ -229,6 +260,14 @@ module.exports.TaskProcessor = {
             }
 
             (new TowerTaskProcessor(structure)).process()
+        }
+        for (let name in Game.structures) {
+            const structure = Game.structures[name];
+            if (!(structure instanceof StructureLink)) {
+                continue
+            }
+
+            (new LinkTaskProcessor(structure)).process()
         }
     },
 };

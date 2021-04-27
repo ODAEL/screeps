@@ -6,10 +6,9 @@ const {TaskProcessor} = require("./task_processor");
 MemoryManager.init()
 
 global.hmm = () => {
-    let roomConfig = new RoomConfig('E33N38')
-    let data = roomConfig.creepRoleData('harvester_right_1')
+    let link = Game.getObjectById('6081b75c41d68bc69620415b')
 
-    debug(data)
+    MemoryManager.setLinkMemory(link, {role: 'right'})
 }
 
 module.exports.loop = function () {

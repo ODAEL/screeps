@@ -11,6 +11,11 @@ class RoomConfig {
         return {...Config.defaultCreepRoleData, ...(creepRoleData ? creepRoleData : {})};
     }
 
+    linkRoleData(linkRole) {
+        let linkRoleData = this.config.linksRoleData && this.config.linksRoleData[linkRole]
+        return {...Config.defaultLinkRoleData, ...(linkRoleData ? linkRoleData : {})};
+    }
+
     neededCreepRoles(currentCreeps) {
         let currentCreepRoles = _.reduce(currentCreeps, (result, creep) => {
             let creepMemory = MemoryManager.creepMemory(creep)
