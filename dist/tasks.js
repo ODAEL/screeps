@@ -479,14 +479,16 @@ class TaskPickup extends Task {
     run() {
         const resource = Game.getObjectById(this.resourceId);
         if (!resource) {
-            log('Unable to find resource by id=' + this.resourceId)
-
             return false
         }
 
         if (!(resource instanceof Resource)) {
             log('Found resource is not resource ' + resource)
 
+            return false
+        }
+
+        if (resource.resourceType !== RESOURCE_ENERGY) {
             return false
         }
 
@@ -527,8 +529,6 @@ class TaskWithdraw extends Task {
     run() {
         const target = Game.getObjectById(this.targetId);
         if (!target) {
-            log('Unable to find target by id=' + this.targetId)
-
             return false
         }
 
@@ -545,8 +545,6 @@ class TaskWithdraw extends Task {
         }
 
         if (target.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
-            log('Found target has no energy ' + target)
-
             return false
         }
 

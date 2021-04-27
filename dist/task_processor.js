@@ -16,14 +16,21 @@ class BaseTaskProcessor {
     process() {
         let task = this.currentTask(this.subject);
         if (task) {
-            this.runTask(task);
-            task = this.currentTask(this.subject);
-        }
-        if (!task) {
-            this.processNewTask();
-            task = this.currentTask(this.subject);
+            // If not finished
+            if (this.runTask(task)) {
+                return;
+            }
         }
 
+        // If finished or no current task
+        task = this.processNewTask()
+        if (!task) {
+            return;
+        }
+
+        MemoryManager.pushTask(task);
+
+        // TODO Revise if I can run next task after previous
         this.runTask(task);
     }
 
@@ -33,6 +40,7 @@ class BaseTaskProcessor {
         }
 
         if (!task.run()) {
+            // If finished - destroy
             MemoryManager.destroyTask(task)
 
             return false
@@ -51,34 +59,35 @@ class BaseTaskProcessor {
         }
     };
 
-    processNewTask() {
-    }
+    processNewTask() {}
 }
 
 class SpawnTaskProcessor extends BaseTaskProcessor {
     processNewTask() {
         let spawn = this.subject
 
-        if (this.processSpawnCreep()) {
-            return;
+        let task = this.processSpawnCreep()
+        if (task) {
+            return task;
         }
 
         const spawnWrapper = new SpawnWrapper(spawn);
         const myCreepsNear = spawnWrapper.myCreepsNear((object) => {
             return object.ticksToLive < 800
         });
+
         if (myCreepsNear.length > 0) {
             // TODO Not renew low-level creeps
-            MemoryManager.pushTask(new TaskRenewCreep(spawn, myCreepsNear[0]))
-
-            return;
+            return new TaskRenewCreep(spawn, myCreepsNear[0]);
         }
+
+        return null
     }
 
     processSpawnCreep() {
         let spawn = this.subject
         if (spawn.spawning) {
-            return false;
+            return null;
         }
 
         const roomWrapper = new RoomWrapper(spawn.room);
@@ -86,7 +95,7 @@ class SpawnTaskProcessor extends BaseTaskProcessor {
 
         const neededCreepRoles = roomConfig.neededCreepRoles(roomWrapper.myCreeps())
         if (neededCreepRoles.length === 0) {
-            return false;
+            return null;
         }
 
         const creepRole = neededCreepRoles[[_.random(0, neededCreepRoles.length - 1)]]
@@ -97,36 +106,34 @@ class SpawnTaskProcessor extends BaseTaskProcessor {
             optimalBodyparts = [WORK, CARRY, MOVE]
         }
 
-        let task = new TaskSpawnCreep(
+        return new TaskSpawnCreep(
             spawn,
             {
                 optimalBodyparts: optimalBodyparts,
                 role: creepRole,
             }
-        )
-        MemoryManager.pushTask(task)
-
-        return true;
+        );
     }
 }
 
 class CreepTaskProcessor extends BaseTaskProcessor {
     processNewTask() {
         if (MemoryManager.creepMemory(this.subject).automated === false) {
-            return;
+            return null;
         }
 
-        if (this.processHarvest()) {
-            return;
+        let harvestTask = this.processHarvest();
+        if (harvestTask) {
+            return harvestTask;
         }
 
-        this.processAfterHarvest();
+        return this.processAfterHarvest();
     }
 
     processHarvest() {
         let creep = this.subject
         if (creep.store.getUsedCapacity(RESOURCE_ENERGY) !== 0) {
-            return false
+            return null
         }
 
         const role = MemoryManager.creepMemory(creep).role
@@ -136,22 +143,20 @@ class CreepTaskProcessor extends BaseTaskProcessor {
         let task
         do {
             if (numberOfIterations++ > taskBlueprints.length) {
-                return false
+                return null
             }
 
             task = BlueprintManager.taskByBlueprint(creep, taskBlueprints[MemoryManager.blueprintsOrderPosition('creep.harvest.' + creep.id, taskBlueprints.length)])
 
         } while (!task)
 
-        MemoryManager.pushTask(task)
-
-        return true
+        return task
     }
 
     processAfterHarvest() {
         let creep = this.subject
         if (creep.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
-            return false
+            return null
         }
 
         const role = MemoryManager.creepMemory(creep).role
@@ -162,16 +167,14 @@ class CreepTaskProcessor extends BaseTaskProcessor {
 
         do {
             if (numberOfIterations++ > taskBlueprints.length) {
-                return false
+                return null
             }
 
             task = BlueprintManager.taskByBlueprint(creep, taskBlueprints[MemoryManager.blueprintsOrderPosition('creep.afterHarvest.' + creep.id, taskBlueprints.length)])
 
         } while (!task)
 
-        MemoryManager.pushTask(task)
-
-        return true
+        return task
     }
 }
 
@@ -179,14 +182,14 @@ class TowerTaskProcessor extends BaseTaskProcessor {
     processNewTask() {
         let tower = this.subject
         if (tower.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
-            return false
+            return null
         }
 
         const role = MemoryManager.towerMemory(tower).role || 'default'
         const taskBlueprints = (new RoomConfig(tower.room.name)).towerRoleData(role).taskBlueprints
 
         if (taskBlueprints.length === 0) {
-            return
+            return null
         }
 
         let numberOfIterations = 0;
@@ -194,14 +197,12 @@ class TowerTaskProcessor extends BaseTaskProcessor {
 
         do {
             if (numberOfIterations++ > taskBlueprints.length) {
-                return false
+                return null
             }
             task = BlueprintManager.taskByBlueprint(tower, taskBlueprints[MemoryManager.blueprintsOrderPosition('tower', taskBlueprints.length)])
         } while (!task)
 
-        MemoryManager.pushTask(task);
-
-        return true
+        return task
     }
 }
 
@@ -209,30 +210,28 @@ class LinkTaskProcessor extends BaseTaskProcessor {
     processNewTask() {
         let link = this.subject
         if (link.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
-            return
+            return null
         }
 
         const role = MemoryManager.linkMemory(link).role || 'default'
         const taskBlueprints = (new RoomConfig(link.room.name)).linkRoleData(role).taskBlueprints
 
         if (taskBlueprints.length === 0) {
-            return
+            return null
         }
 
         let numberOfIterations = 0;
         let task
         do {
             if (numberOfIterations++ > taskBlueprints.length) {
-                return
+                return null
             }
 
             task = BlueprintManager.taskByBlueprint(link, taskBlueprints[MemoryManager.blueprintsOrderPosition('link.' + link.id, taskBlueprints.length)])
 
         } while (!task)
 
-        MemoryManager.pushTask(task)
-
-        return
+        return task
     }
 }
 
