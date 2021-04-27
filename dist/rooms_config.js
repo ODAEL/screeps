@@ -37,7 +37,7 @@ class RoomConfig {
         }, {})
 
         let neededCreepRoles = _.reduce(configCreepRoles, (result, count, role) => {
-            result[role] = _.max([0, count - currentCreepRoles[role]])
+            result[role] = _.max([0, count - (currentCreepRoles[role] || 0)])
             return result
         }, {})
 
