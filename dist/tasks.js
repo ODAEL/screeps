@@ -70,8 +70,11 @@ class TaskSpawnCreep extends Task {
         }
 
         let optimalBodyparts = this.data.optimalBodyparts || [WORK, CARRY, MOVE];
+        let bodyparts = Helpers.chooseBodyparts(roomWrapper.energyCapacityAvailable(), optimalBodyparts);
 
-        if (spawn.spawnCreep(Helpers.chooseBodyparts(roomWrapper.energyCapacityAvailable(), optimalBodyparts), 'Creep ' + Game.time, {memory: memory}) === OK) {
+        let name = 'Creep ' + Game.time + '_' + _.random(1000, 9999)
+
+        if (spawn.spawnCreep(bodyparts, name, {memory: memory}) === OK) {
             return false
         }
 

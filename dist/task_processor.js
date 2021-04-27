@@ -71,6 +71,7 @@ class SpawnTaskProcessor extends BaseTaskProcessor {
             return object.ticksToLive < 800
         });
         if (myCreepsNear.length > 0) {
+            // TODO Not renew low-level creeps
             MemoryManager.pushTask(new TaskRenewCreep(spawn, myCreepsNear[0]))
 
             return;

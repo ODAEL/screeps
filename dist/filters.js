@@ -7,13 +7,7 @@ module.exports.__ = {
 
 module.exports.Filters = {
     combineFilters: (filters) => ((object) => {
-        for (let filter of filters) {
-            if (!filter(object)) {
-                return false;
-            }
-        }
-
-        return true;
+        return _.every(filters, (fn) => fn(object))
     }),
 
     // Simple filters
