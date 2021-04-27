@@ -46,5 +46,11 @@ module.exports.Filters = {
     id: (id) => ((object) => {
         return object.id === id
     }),
+    withStore: () => ((object) => {
+        return object.store !== undefined
+    }),
+    instanceof: (type) => ((object) => {
+        return object instanceof type
+    }),
 
 };

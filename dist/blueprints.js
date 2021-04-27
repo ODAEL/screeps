@@ -41,7 +41,9 @@ const getDefaultFilters = (subject, type) => {
             ];
         case TASK_TYPE_WITHDRAW:
             return [
+                Filters.withStore(),
                 Filters.my(false),
+                Filters.usedCapacityEnergy(__.gt(0)),
             ];
         case TASK_TYPE_LINK_TRANSFER_ENERGY:
             return [

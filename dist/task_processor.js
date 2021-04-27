@@ -79,6 +79,10 @@ class SpawnTaskProcessor extends BaseTaskProcessor {
 
     processSpawnCreep() {
         let spawn = this.subject
+        if (spawn.spawning) {
+            return false;
+        }
+
         const roomWrapper = new RoomWrapper(spawn.room);
         const roomConfig = new RoomConfig(spawn.room.name)
 
@@ -87,7 +91,7 @@ class SpawnTaskProcessor extends BaseTaskProcessor {
             return false;
         }
 
-        const creepRole = neededCreepRoles[0]
+        const creepRole = neededCreepRoles[[_.random(0, neededCreepRoles.length - 1)]]
 
         const creepRoleData = roomConfig.creepRoleData(creepRole)
         let optimalBodyparts = creepRoleData.optimalBodyparts

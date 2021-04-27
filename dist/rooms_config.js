@@ -7,12 +7,12 @@ class RoomConfig {
     }
 
     creepRoleData(creepRole) {
-        let creepRoleData = this.config.creepsRoleData && this.config.creepsRoleData[creepRole]
+        let creepRoleData = this.config.creepsRoleData && (this.config.creepsRoleData[creepRole] || this.config.creepsRoleData['default'])
         return {...Config.defaultCreepRoleData, ...(creepRoleData ? creepRoleData : {})};
     }
 
     linkRoleData(linkRole) {
-        let linkRoleData = this.config.linksRoleData && this.config.linksRoleData[linkRole]
+        let linkRoleData = this.config.linksRoleData && (this.config.linksRoleData[linkRole] || this.config.linksRoleData['default'])
         return {...Config.defaultLinkRoleData, ...(linkRoleData ? linkRoleData : {})};
     }
 

@@ -580,7 +580,7 @@ class TaskMoveTo extends Task {
 
         this.pos = (pos instanceof RoomPosition && pos) ||
             (pos instanceof RoomObject && pos.pos) ||
-            null
+            pos
     }
 
     run() {
@@ -591,7 +591,7 @@ class TaskMoveTo extends Task {
             return false
         }
 
-        if (!pos.x || !pos.y || !pos.roomName) {
+        if (pos.x === undefined || pos.y === undefined || !pos.roomName) {
             log('Found pos is not pos ' + pos)
 
             return false
@@ -602,11 +602,21 @@ class TaskMoveTo extends Task {
             return false
         }
 
+        if (creep.room.name !== pos.roomName) {
+            return false
+        }
+
         creep.say(this.type)
 
-        creep.moveTo(pos, {visualizePathStyle: {stroke: '#ffffff'}});
+        let result = creep.moveTo(pos.x, pos.y, {visualizePathStyle: {stroke: '#ffffff'}});
+        // if (result !== OK) {
+        //     log('MoveTo - result ' + result)
+        //
+        //     return false
+        // }
 
         if (!creep.pos.isNearTo(pos)) {
+
             return true
         }
 
