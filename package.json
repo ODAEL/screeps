@@ -4,8 +4,8 @@
   "description": "My Screeps game script",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "screeps": "grunt screeps"
+    "grunt": "grunt",
+    "grunt copy": "grunt scopy"
   },
   "keywords": [
     "screeps"
@@ -16,6 +16,10 @@
     "@types/screeps": "^3.2.2",
     "dotenv": "^8.2.0",
     "grunt-screeps": "^1.5.0",
-    "lodash": "^3.10.1"
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "grunt-contrib-clean": "^2.0.0",
+    "grunt-contrib-copy": "^1.0.0"
   }
 }

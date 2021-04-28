@@ -3,5 +3,7 @@ node_modules
 .env
 
 # To hide my globaal strategy and one-time commands
-/dist/config.js
-/dist/commands.js
+/src/config.js
+/src/commands.js
+
+/dist/*.js
