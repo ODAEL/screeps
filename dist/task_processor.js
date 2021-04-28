@@ -4,7 +4,6 @@ const {TaskSpawnCreep} = require("./tasks");
 const {Task} = require("./tasks");
 const {Helpers} = require("./helpers");
 const {MemoryManager} = require("./memory_manager");
-const {BlueprintManager} = require("./blueprints");
 const {SpawnWrapper} = require("./wrappers");
 const {RoomWrapper} = require("./wrappers");
 
@@ -118,120 +117,37 @@ class SpawnTaskProcessor extends BaseTaskProcessor {
 
 class CreepTaskProcessor extends BaseTaskProcessor {
     processNewTask() {
-        if (MemoryManager.creepMemory(this.subject).automated === false) {
+        let creep = this.subject
+        if (MemoryManager.creepMemory(creep).automated === false) {
             return null;
         }
 
-        let harvestTask = this.processHarvest();
-        if (harvestTask) {
-            return harvestTask;
-        }
-
-        return this.processAfterHarvest();
-    }
-
-    processHarvest() {
-        let creep = this.subject
-        if (creep.store.getUsedCapacity(RESOURCE_ENERGY) !== 0) {
-            return null
-        }
-
         const role = MemoryManager.creepMemory(creep).role
-        const taskBlueprints = (new RoomConfig(creep.room.name)).creepRoleData(role).harvestTaskBlueprints
+        const blueprints = (new RoomConfig(creep.room.name)).creepRoleData(role).blueprints
 
-        let numberOfIterations = 0;
-        let task
-        do {
-            if (numberOfIterations++ > taskBlueprints.length) {
-                return null
-            }
-
-            task = BlueprintManager.taskByBlueprint(creep, taskBlueprints[MemoryManager.blueprintsOrderPosition('creep.harvest.' + creep.id, taskBlueprints.length)])
-
-        } while (!task)
-
-        return task
-    }
-
-    processAfterHarvest() {
-        let creep = this.subject
-        if (creep.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
-            return null
-        }
-
-        const role = MemoryManager.creepMemory(creep).role
-        const taskBlueprints = (new RoomConfig(creep.room.name)).creepRoleData(role).afterHarvestTaskBlueprints
-
-        let numberOfIterations = 0;
-        let task
-
-        do {
-            if (numberOfIterations++ > taskBlueprints.length) {
-                return null
-            }
-
-            task = BlueprintManager.taskByBlueprint(creep, taskBlueprints[MemoryManager.blueprintsOrderPosition('creep.afterHarvest.' + creep.id, taskBlueprints.length)])
-
-        } while (!task)
-
-        return task
+        return blueprints.chooseTask(creep);
     }
 }
 
 class TowerTaskProcessor extends BaseTaskProcessor {
     processNewTask() {
         let tower = this.subject
-        if (tower.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
-            return null
-        }
 
         const role = MemoryManager.towerMemory(tower).role || 'default'
-        const taskBlueprints = (new RoomConfig(tower.room.name)).towerRoleData(role).taskBlueprints
+        const blueprints = (new RoomConfig(tower.room.name)).towerRoleData(role).blueprints
 
-        if (taskBlueprints.length === 0) {
-            return null
-        }
-
-        let numberOfIterations = 0;
-        let task
-
-        do {
-            if (numberOfIterations++ > taskBlueprints.length) {
-                return null
-            }
-            task = BlueprintManager.taskByBlueprint(tower, taskBlueprints[MemoryManager.blueprintsOrderPosition('tower', taskBlueprints.length)])
-        } while (!task)
-
-        return task
+        return blueprints.chooseTask(tower)
     }
 }
 
 class LinkTaskProcessor extends BaseTaskProcessor {
     processNewTask() {
         let link = this.subject
-        if (link.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
-            return null
-        }
 
         const role = MemoryManager.linkMemory(link).role || 'default'
-        const taskBlueprints = (new RoomConfig(link.room.name)).linkRoleData(role).taskBlueprints
+        const blueprints = (new RoomConfig(link.room.name)).linkRoleData(role).blueprints
 
-        if (taskBlueprints.length === 0) {
-            return null
-        }
-
-        let numberOfIterations = 0;
-        let task
-        do {
-            if (numberOfIterations++ > taskBlueprints.length) {
-                return null
-            }
-
-            task = BlueprintManager.taskByBlueprint(link, taskBlueprints[MemoryManager.blueprintsOrderPosition('link.' + link.id, taskBlueprints.length)])
-
-        } while (!task)
-
-        return task
+        return blueprints.chooseTask(link)
     }
 }
 

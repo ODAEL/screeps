@@ -1,5 +1,6 @@
 module.exports.__ = {
     eq: (expected) => ((actual) => _.isEqual(actual, expected)),
+    neq: (expected) => ((actual) => !_.isEqual(actual, expected)),
     gt: (expected) => ((actual) => _.gt(actual, expected)),
     lt: (expected) => ((actual) => _.lt(actual, expected)),
     in: (expected) => ((actual) => expected.indexOf(actual) !== -1),
