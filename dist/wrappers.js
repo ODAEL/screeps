@@ -77,6 +77,10 @@ class RoomWrapper {
         return this.find(FIND_STRUCTURES, filter)
     }
 
+    minerals(filter) {
+        return this.find(FIND_MINERALS, filter)
+    }
+
     tombstones(filter) {
         return this.find(FIND_TOMBSTONES, filter)
     }

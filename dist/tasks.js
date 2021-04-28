@@ -140,8 +140,8 @@ class TaskHarvest extends Task {
             return false
         }
 
-        if (!(target instanceof Source) && !(target instanceof StructureExtractor)) {
-            log('Fount target is not source or extractor ' + target)
+        if (!(target instanceof Source) && !(target instanceof Mineral)) {
+            log('Fount target is not source or mineral ' + target)
 
             return false
         }
@@ -157,6 +157,18 @@ class TaskHarvest extends Task {
             return false
         }
 
+        if (target instanceof Mineral && harvestResult === ERR_TIRED) {
+            // log('Wait')
+
+            return true
+        }
+
+        if (harvestResult !== OK) {
+            log('Error while harvest ' + harvestResult)
+
+            return false
+        }
+
         return true
     }
 
@@ -166,10 +178,11 @@ class TaskHarvest extends Task {
 }
 
 class TaskTransfer extends Task {
-    constructor(creep, target) {
+    constructor(creep, target, data) {
         super(TASK_SUBJECT_TYPE_CREEP, creep && creep.id, TASK_TYPE_TRANSFER)
 
         this.targetId = target && target.id
+        this.data = data || {}
     }
 
     run() {
@@ -180,7 +193,9 @@ class TaskTransfer extends Task {
             return false
         }
 
-        if (target.store && target.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
+        const resourceType = this.data.resourceType || RESOURCE_ENERGY
+
+        if (target.store && target.store.getFreeCapacity(resourceType) === 0) {
             return false
         }
 
@@ -189,20 +204,20 @@ class TaskTransfer extends Task {
             return false
         }
 
-        if (creep.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
+        if (creep.store.getUsedCapacity(resourceType) === 0) {
             return false
         }
 
         creep.say(this.type)
 
-        if (creep.transfer(target, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+        if (creep.transfer(target, resourceType) === ERR_NOT_IN_RANGE) {
             creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
 
             return true
         }
 
-        if (creep.store.getUsedCapacity(RESOURCE_ENERGY) > 0) {
-            return true
+        if (creep.store.getUsedCapacity(resourceType) > 0) {
+            return false
         }
 
         creep.say('Done!')

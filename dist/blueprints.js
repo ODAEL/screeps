@@ -33,10 +33,10 @@ const getDefaultFilters = (subject, type) => {
                         Filters.instanceof(Source),
                         Filters.energy(__.gt(0)),
                     ),
-                    // __.and(
-                    //     Filters.instanceof(StructureExtension),
-                    //     Filters.freeCapacity(__.gt(0)),
-                    // ),
+                    __.and(
+                        Filters.instanceof(Mineral),
+                        // TODO Mineral amount
+                    ),
                 ),
             ];
         case TASK_TYPE_TRANSFER:
@@ -103,7 +103,7 @@ module.exports.BlueprintManager = {
             case TASK_TYPE_HARVEST:
                 filter = __.and(...defaultFilters, ...blueprint.targetFilters);
                 // TODO Refactor
-                targets = [...getRoomWrapper(subject).currentAvailableSources(filter), ...[]];
+                targets = [...getRoomWrapper(subject).currentAvailableSources(filter), ...getRoomWrapper(subject).minerals(filter)];
                 target = Helpers.findClosest(subject, targets);
 
                 if (!target) {
@@ -121,7 +121,7 @@ module.exports.BlueprintManager = {
                     return null;
                 }
 
-                return new TaskTransfer(subject, structure);
+                return new TaskTransfer(subject, structure, blueprint.data);
 
             case TASK_TYPE_BUILD:
                 filter = __.and(...defaultFilters, ...blueprint.constructionSiteFilters);
@@ -219,7 +219,7 @@ module.exports.Blueprint = {
     spawnCreep: (data) => ({type: TASK_TYPE_SPAWN_CREEP, data: data}),
     renewCreep: (creepFilters = []) => ({type: TASK_TYPE_RENEW_CREEP, creepFilters: creepFilters}),
     harvest: (targetFilters = []) => ({type: TASK_TYPE_HARVEST, targetFilters: targetFilters}),
-    transfer: (structureFilters = []) => ({type: TASK_TYPE_TRANSFER, structureFilters: structureFilters}),
+    transfer: (structureFilters = [], data) => ({type: TASK_TYPE_TRANSFER, structureFilters: structureFilters, data: data}),
     build: (constructionSiteFilters = []) => ({type: TASK_TYPE_BUILD, constructionSiteFilters: constructionSiteFilters}),
     upgradeController: () => ({type: TASK_TYPE_UPGRADE_CONTROLLER}),
     repair: (structureFilters = []) => ({type: TASK_TYPE_REPAIR, structureFilters: structureFilters}),

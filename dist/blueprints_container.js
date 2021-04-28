@@ -90,7 +90,6 @@ class BlueprintsContainer {
 
         } while (!task)
 
-
         return task
     }
 }

@@ -40,6 +40,9 @@ module.exports.Filters = {
     energy: (fn) => ((object) => {
         return fn(object.energy);
     }),
+    cooldown: (fn) => ((object) => {
+        return fn(object.cooldown);
+    }),
 
 
     my: (strict = true) => ((object) => {
