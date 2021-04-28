@@ -97,7 +97,12 @@ class SpawnTaskProcessor extends BaseTaskProcessor {
             return null;
         }
 
-        const creepRole = neededCreepRoles[[_.random(0, neededCreepRoles.length - 1)]]
+        let creepRole
+        if (neededCreepRoles.indexOf('default') !== -1) {
+            creepRole = 'default'
+        } else {
+            creepRole = neededCreepRoles[[_.random(0, neededCreepRoles.length - 1)]]
+        }
 
         const creepRoleData = roomConfig.creepRoleData(creepRole)
         let optimalBodyparts = creepRoleData.optimalBodyparts

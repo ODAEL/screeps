@@ -6,7 +6,7 @@ class RoomWrapper {
         const room = Helpers.roomByParam(roomParam);
 
         if (!room) {
-            debug('Unable to find source by roomParam=' + roomParam)
+            log('Unable to find source by roomParam=' + roomParam)
         }
 
         this.room = room
@@ -103,7 +103,7 @@ class SourceWrapper {
         const source = Helpers.sourceByParam(sourceParam);
 
         if (!source) {
-            debug('Unable to find source by sourceParam=' + sourceParam)
+            log('Unable to find source by sourceParam=' + sourceParam)
         }
 
         this.source = source
@@ -156,7 +156,7 @@ class SpawnWrapper {
         const spawn = Helpers.spawnByParam(spawnParam);
 
         if (!spawn) {
-            debug('Unable to find spawn by spawnParam=' + spawnParam)
+            log('Unable to find spawn by spawnParam=' + spawnParam)
         }
 
         this.spawn = spawn

@@ -26,9 +26,23 @@ const getDefaultFilters = (subject, type) => {
                 Filters.my(),
                 Filters.nearTo(subject),
             ];
+        case TASK_TYPE_HARVEST:
+            return [
+                __.or(
+                    __.and(
+                        Filters.instanceof(Source),
+                        Filters.energy(__.gt(0)),
+                    ),
+                    // __.and(
+                    //     Filters.instanceof(StructureExtension),
+                    //     Filters.freeCapacity(__.gt(0)),
+                    // ),
+                ),
+            ];
         case TASK_TYPE_TRANSFER:
             return [
-                Filters.freeCapacityEnergy(__.gt(0)),
+                Filters.withStore(),
+                Filters.freeCapacity(__.gt(0)),
             ];
         case TASK_TYPE_BUILD:
             return [
@@ -43,13 +57,13 @@ const getDefaultFilters = (subject, type) => {
             return [
                 Filters.withStore(),
                 Filters.my(false),
-                Filters.usedCapacityEnergy(__.gt(0)),
+                Filters.usedCapacity(__.gt(0)),
             ];
         case TASK_TYPE_LINK_TRANSFER_ENERGY:
             return [
                 Filters.structureType(__.eq(STRUCTURE_LINK)),
                 Filters.my(true),
-                Filters.freeCapacityEnergy(__.gt(0))
+                Filters.freeCapacity(__.gt(0))
             ];
         default:
             return [];
@@ -60,7 +74,6 @@ module.exports.BlueprintManager = {
     taskByBlueprint: (subject, blueprint) => {
         let filter,
             creeps, creep,
-            sources, source,
             structures, structure,
             constructionSites, constructionSite,
             targets, target,
@@ -76,7 +89,7 @@ module.exports.BlueprintManager = {
                 return new TaskSpawnCreep(subject);
 
             case TASK_TYPE_RENEW_CREEP:
-                filter = Filters.combineFilters([...defaultFilters, ...blueprint.creepFilters]);
+                filter = __.and(...defaultFilters, ...blueprint.creepFilters);
                 creeps = getRoomWrapper(subject).creeps(filter);
 
                 if (creeps.length === 0) {
@@ -88,18 +101,19 @@ module.exports.BlueprintManager = {
                 return new TaskRenewCreep(subject, creep);
 
             case TASK_TYPE_HARVEST:
-                filter = Filters.combineFilters([...defaultFilters, ...blueprint.sourceFilters]);
-                sources = getRoomWrapper(subject).currentAvailableSources(filter);
-                source = Helpers.findClosest(subject, sources);
+                filter = __.and(...defaultFilters, ...blueprint.targetFilters);
+                // TODO Refactor
+                targets = [...getRoomWrapper(subject).currentAvailableSources(filter), ...[]];
+                target = Helpers.findClosest(subject, targets);
 
-                if (!source) {
+                if (!target) {
                     return null;
                 }
 
-                return new TaskHarvest(subject, source);
+                return new TaskHarvest(subject, target);
 
             case TASK_TYPE_TRANSFER:
-                filter = Filters.combineFilters([...defaultFilters, ...blueprint.structureFilters]);
+                filter = __.and(...defaultFilters, ...blueprint.structureFilters);
                 structures = getRoomWrapper(subject).structures(filter);
                 structure = Helpers.findClosest(subject, structures);
 
@@ -110,7 +124,7 @@ module.exports.BlueprintManager = {
                 return new TaskTransfer(subject, structure);
 
             case TASK_TYPE_BUILD:
-                filter = Filters.combineFilters([...defaultFilters, ...blueprint.constructionSiteFilters]);
+                filter = __.and(...defaultFilters, ...blueprint.constructionSiteFilters);
                 constructionSites = getRoomWrapper(subject).constructionSites(filter);
                 constructionSite = Helpers.findClosest(subject, constructionSites);
 
@@ -130,7 +144,7 @@ module.exports.BlueprintManager = {
                 return new TaskUpgradeController(subject, controller)
 
             case TASK_TYPE_REPAIR:
-                filter = Filters.combineFilters([...defaultFilters, ...blueprint.structureFilters]);
+                filter = __.and(...defaultFilters, ...blueprint.structureFilters);
                 structures = getRoomWrapper(subject).structures(filter);
                 structure = Helpers.findClosest(subject, structures);
 
@@ -141,7 +155,7 @@ module.exports.BlueprintManager = {
                 return new TaskRepair(subject, structure);
 
             case TASK_TYPE_HEAL:
-                filter = Filters.combineFilters([...defaultFilters, ...blueprint.creepFilters]);
+                filter = __.and(...defaultFilters, ...blueprint.creepFilters);
                 creeps = getRoomWrapper(subject).creeps(filter);
                 creep = Helpers.findClosest(subject, creeps);
 
@@ -152,7 +166,7 @@ module.exports.BlueprintManager = {
                 return new TaskHeal(subject, creep);
 
             case TASK_TYPE_PICKUP:
-                filter = Filters.combineFilters([...defaultFilters, ...blueprint.resourceFilters]);
+                filter = __.and(...defaultFilters, ...blueprint.resourceFilters);
                 resources = getRoomWrapper(subject).droppedResources(filter);
                 resource = Helpers.findClosest(subject, resources);
 
@@ -163,7 +177,7 @@ module.exports.BlueprintManager = {
                 return new TaskPickup(subject, resource);
 
             case TASK_TYPE_WITHDRAW:
-                filter = Filters.combineFilters([...defaultFilters, ...blueprint.targetFilters]);
+                filter = __.and(...defaultFilters, ...blueprint.targetFilters);
                 targets = [...getRoomWrapper(subject).structures(filter), ...getRoomWrapper(subject).tombstones(filter)];
                 target = Helpers.findClosest(subject, targets);
 
@@ -174,7 +188,7 @@ module.exports.BlueprintManager = {
                 return new TaskWithdraw(subject, target);
 
             case TASK_TYPE_TOWER_ATTACK:
-                filter = Filters.combineFilters([...defaultFilters, ...blueprint.targetFilters]);
+                filter = __.and(...defaultFilters, ...blueprint.targetFilters);
                 targets = getRoomWrapper(subject).hostileCreeps(filter);
                 target = Helpers.findClosest(subject, targets);
 
@@ -185,7 +199,7 @@ module.exports.BlueprintManager = {
                 return new TaskTowerAttack(subject, target);
 
             case TASK_TYPE_LINK_TRANSFER_ENERGY:
-                filter = Filters.combineFilters([...defaultFilters, ...blueprint.targetLinkFilters]);
+                filter = __.and(...defaultFilters, ...blueprint.targetLinkFilters);
                 targetLinks = getRoomWrapper(subject).structures(filter);
                 targetLink = Helpers.findClosest(subject, targetLinks);
 
@@ -204,7 +218,7 @@ module.exports.BlueprintManager = {
 module.exports.Blueprint = {
     spawnCreep: (data) => ({type: TASK_TYPE_SPAWN_CREEP, data: data}),
     renewCreep: (creepFilters = []) => ({type: TASK_TYPE_RENEW_CREEP, creepFilters: creepFilters}),
-    harvest: (sourceFilters = []) => ({type: TASK_TYPE_HARVEST, sourceFilters: sourceFilters}),
+    harvest: (targetFilters = []) => ({type: TASK_TYPE_HARVEST, targetFilters: targetFilters}),
     transfer: (structureFilters = []) => ({type: TASK_TYPE_TRANSFER, structureFilters: structureFilters}),
     build: (constructionSiteFilters = []) => ({type: TASK_TYPE_BUILD, constructionSiteFilters: constructionSiteFilters}),
     upgradeController: () => ({type: TASK_TYPE_UPGRADE_CONTROLLER}),

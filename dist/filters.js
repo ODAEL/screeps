@@ -1,4 +1,11 @@
 module.exports.__ = {
+    and: (...fns) => ((actual) => {
+        return _.every(fns, (fn) => fn(actual))
+    }),
+    or: (...fns) => ((actual) => {
+        return _.some(fns, (fn) => fn(actual))
+    }),
+
     eq: (expected) => ((actual) => _.isEqual(actual, expected)),
     neq: (expected) => ((actual) => !_.isEqual(actual, expected)),
     gt: (expected) => ((actual) => _.gt(actual, expected)),
@@ -7,10 +14,6 @@ module.exports.__ = {
 }
 
 module.exports.Filters = {
-    combineFilters: (filters) => ((object) => {
-        return _.every(filters, (fn) => fn(object))
-    }),
-
     // Simple filters
     hits: (fn) => ((object) => {
         return fn(object.hits);
@@ -24,11 +27,18 @@ module.exports.Filters = {
     ticksToLive: (fn) => ((object) => {
         return fn(object.ticksToLive);
     }),
-    freeCapacityEnergy: (fn) => ((object) => {
-        return !object.store || fn(object.store.getFreeCapacity(RESOURCE_ENERGY));
+    freeCapacity: (fn, resource) => ((object) => {
+        let capacity = object.store.getFreeCapacity(resource)
+        capacity = (capacity !== null) ? capacity : object.store.getFreeCapacity(RESOURCE_ENERGY)
+        return fn(capacity);
     }),
-    usedCapacityEnergy: (fn) => ((object) => {
-        return fn(object.store.getUsedCapacity(RESOURCE_ENERGY));
+    usedCapacity: (fn, resource) => ((object) => {
+        let capacity = object.store.getUsedCapacity(resource)
+        capacity = (capacity !== null) ? capacity : object.store.getUsedCapacity(RESOURCE_ENERGY)
+        return fn(capacity);
+    }),
+    energy: (fn) => ((object) => {
+        return fn(object.energy);
     }),
 
 

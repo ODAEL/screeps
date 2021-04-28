@@ -10,7 +10,7 @@ class Task {
     }
 
     run() {
-        debug('Not implemented')
+        log('Not implemented')
 
         return false
     }
@@ -119,39 +119,45 @@ class TaskRenewCreep extends Task {
 }
 
 class TaskHarvest extends Task {
-    constructor(creep, source) {
+    constructor(creep, target) {
         super(TASK_SUBJECT_TYPE_CREEP, creep && creep.id, TASK_TYPE_HARVEST)
 
-        this.sourceId = source && source.id
+        this.targetId = target && target.id
     }
 
     run() {
         const creep = Game.getObjectById(this.subjectId);
+        if (!creep || !(creep instanceof Creep)) {
+            return false
+        }
 
-        if (!creep) {
-            debug('Unable to find creep by id=' + this.subjectId)
+        if (creep.store.getFreeCapacity() === 0) {
+            return false
+        }
+
+        const target = Game.getObjectById(this.targetId);
+        if (!target) {
+            return false
+        }
+
+        if (!(target instanceof Source) && !(target instanceof StructureExtractor)) {
+            log('Fount target is not source or extractor ' + target)
 
             return false
         }
 
         creep.say(this.type)
 
-        if(creep.store.getFreeCapacity() > 0) {
-            const source = Game.getObjectById(this.sourceId);
-
-            const harvestResult = creep.harvest(source);
-            if (harvestResult === ERR_NOT_IN_RANGE) {
-                creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
-                return true
-            }
-            if (harvestResult === ERR_NOT_ENOUGH_RESOURCES) {
-                return false
-            }
-
+        const harvestResult = creep.harvest(target);
+        if (harvestResult === ERR_NOT_IN_RANGE) {
+            creep.moveTo(target, {visualizePathStyle: {stroke: '#ffaa00'}});
             return true
         }
+        if (harvestResult === ERR_NOT_ENOUGH_RESOURCES) {
+            return false
+        }
 
-        return false
+        return true
     }
 
     static deserialize(task) {
@@ -169,7 +175,7 @@ class TaskTransfer extends Task {
     run() {
         const target = Game.getObjectById(this.targetId);
         if (!target) {
-            debug('Unable to find target by id=' + this.targetId)
+            log('Unable to find target by id=' + this.targetId)
 
             return false
         }
@@ -196,7 +202,6 @@ class TaskTransfer extends Task {
         }
 
         if (creep.store.getUsedCapacity(RESOURCE_ENERGY) > 0) {
-            // debug(creep.store.getCapacity(RESOURCE_ENERGY))
             return true
         }
 
@@ -224,7 +229,7 @@ class TaskBuild extends Task {
         }
 
         if (!(constructionSite instanceof ConstructionSite)) {
-            debug('Target is not a construction site')
+            log('Target is not a construction site')
 
             return false
         }
@@ -275,13 +280,13 @@ class TaskUpgradeController extends Task {
     run() {
         const controller = Game.getObjectById(this.controllerId);
         if (!controller) {
-            debug('Unable to find controller by id=' + this.controllerId)
+            log('Unable to find controller by id=' + this.controllerId)
 
             return false
         }
 
         if (!(controller instanceof StructureController)) {
-            debug('Found object is not a controller ' + controller)
+            log('Found object is not a controller ' + controller)
 
             return false
         }
@@ -304,7 +309,6 @@ class TaskUpgradeController extends Task {
         }
 
         if (creep.store.getUsedCapacity(RESOURCE_ENERGY) > 0) {
-            // debug(creep.store.getCapacity(RESOURCE_ENERGY))
             return true
         }
 
@@ -337,19 +341,19 @@ class TaskRepair extends Task {
         const structure = Game.getObjectById(this.structureId);
         if (!structure) {
             log(2)
-            debug('Unable to find target by id=' + this.structureId)
+            log('Unable to find target by id=' + this.structureId)
 
             return false
         }
 
         if (!(structure instanceof Structure)) {
-            debug('Found object is not structure ' + structure)
+            log('Found object is not structure ' + structure)
 
             return false
         }
 
         if (structure.hitsMax === structure.hits) {
-            debug('Structure has maximum hist ' + structure)
+            log('Structure has maximum hist ' + structure)
 
             return false
         }
@@ -412,19 +416,19 @@ class TaskHeal extends Task {
     run() {
         const creep = Game.getObjectById(this.creepId);
         if (!creep) {
-            debug('Unable to find creep by id=' + this.creepId)
+            log('Unable to find creep by id=' + this.creepId)
 
             return false
         }
 
         if (!(creep instanceof Creep)) {
-            debug('Found object is not creep ' + creep)
+            log('Found object is not creep ' + creep)
 
             return false
         }
 
         if (creep.hitsMax === creep.hits) {
-            debug('Creep has maximum hits ' + creep)
+            log('Creep has maximum hits ' + creep)
 
             return false
         }
@@ -697,13 +701,13 @@ class TaskTowerAttack extends Task {
     run() {
         const target = Game.getObjectById(this.targetId);
         if (!target) {
-            debug('Unable to find target by id=' + this.targetId)
+            log('Unable to find target by id=' + this.targetId)
 
             return false
         }
 
         if (target.my) {
-            debug('Found object is yours ' + target)
+            log('Found object is yours ' + target)
 
             return false
         }

@@ -101,8 +101,11 @@ module.exports.MemoryManager = {
 
     blueprintsOrderPosition: (key, max) => {
         Memory.blueprintsOrderPosition = Memory.blueprintsOrderPosition || {}
-        Memory.blueprintsOrderPosition[key] = Memory.blueprintsOrderPosition[key] || 0
-        Memory.blueprintsOrderPosition[key] =  (Memory.blueprintsOrderPosition[key]) < max ? Memory.blueprintsOrderPosition[key] : 0
-        return Memory.blueprintsOrderPosition[key]++
+
+        let position = Memory.blueprintsOrderPosition[key] || 0
+        position =  (position < max) ? position : 0
+
+        Memory.blueprintsOrderPosition[key] = position + 1
+        return position
     }
 };

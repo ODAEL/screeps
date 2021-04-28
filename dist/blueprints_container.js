@@ -37,7 +37,7 @@ class BlueprintsContainer {
         }
     }
 
-    chooseTask(subject, branchId = 0) {
+    chooseTask(subject, branchId = 1) {
         if (!this.checkSubject(subject)) {
             return null
         }
@@ -79,7 +79,7 @@ class BlueprintsContainer {
 
             let index
             if (this.chooseLogic === BLUEPRINT_CHOOSE_LOGIC_ORDER) {
-                index = MemoryManager.blueprintsOrderPosition((typeof subject) + '_' + subject.id + '_' + branchId, this.blueprints.length)
+                index = MemoryManager.blueprintsOrderPosition(subject.id + '_' + branchId, this.blueprints.length)
             } else {
                 index = numberOfIterations
             }
@@ -89,6 +89,7 @@ class BlueprintsContainer {
             numberOfIterations++
 
         } while (!task)
+
 
         return task
     }
