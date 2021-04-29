@@ -8,7 +8,7 @@ module.exports.Blueprint = {
     repair: (structureFilters = []) => ({type: TASK_TYPE_REPAIR, structureFilters: structureFilters}),
     heal: (creepFilters = []) => ({type: TASK_TYPE_HEAL, creepFilters: creepFilters}),
     pickup: (resourceFilters = []) => ({type: TASK_TYPE_PICKUP, resourceFilters: resourceFilters}),
-    withdraw: (targetFilters = []) => ({type: TASK_TYPE_WITHDRAW, targetFilters: targetFilters}),
+    withdraw: (targetFilters = [], data) => ({type: TASK_TYPE_WITHDRAW, targetFilters: targetFilters, data: data}),
     // moveTo: (targetFilters = []) => ({type: TASK_TYPE_MOVE_TO, targetFilters: targetFilters}), No need
     // claimController: (controllerFilters = []) => ({type: TASK_TYPE_CLAIM_CONTROLLER, controllerFilters: controllerFilters}), No need
     towerAttack: (targetFilters = []) => ({type: TASK_TYPE_TOWER_ATTACK, targetFilters: targetFilters}),

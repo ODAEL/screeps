@@ -185,7 +185,7 @@ module.exports.BlueprintProcessor = {
                     return null;
                 }
 
-                return new TaskWithdraw(subject, target);
+                return new TaskWithdraw(subject, target, blueprint.data);
 
             case TASK_TYPE_TOWER_ATTACK:
                 filter = __.and(...defaultFilters, ...blueprint.targetFilters);

@@ -1,13 +1,15 @@
 const {Task} = require("./task");
 
 module.exports.TaskWithdraw = class TaskWithdraw extends Task {
-    constructor(creep, target) {
+    constructor(creep, target, data) {
         super(creep && creep.id, TASK_TYPE_WITHDRAW)
 
         this.targetId = target && target.id
+        this.data = data || {}
     }
 
     run() {
+        const resourceType = this.data.resourceType || RESOURCE_ENERGY
         const target = Game.getObjectById(this.targetId);
         if (!target) {
             return false
@@ -25,7 +27,7 @@ module.exports.TaskWithdraw = class TaskWithdraw extends Task {
             return false
         }
 
-        if (target.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
+        if (target.store.getUsedCapacity(resourceType) === 0) {
             return false
         }
 
@@ -34,13 +36,13 @@ module.exports.TaskWithdraw = class TaskWithdraw extends Task {
             return false
         }
 
-        if (creep.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
+        if (creep.store.getFreeCapacity(resourceType) === 0) {
             return false
         }
 
         creep.say(this.type)
 
-        if (creep.withdraw(target, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+        if (creep.withdraw(target, resourceType) === ERR_NOT_IN_RANGE) {
             creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
 
             return true
