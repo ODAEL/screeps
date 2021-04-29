@@ -35,7 +35,7 @@ module.exports = function(grunt) {
                     },
                 }],
                 options: {
-                    // Kill me please, I am a shitcoder
+                    // OMG, I am a shitcoder
                     process: function (content, srcpath) {
                         let requiresIterator = content.matchAll(/require\(.*\)/g)
 

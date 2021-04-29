@@ -1,10 +1,9 @@
 require('./globals')
-require('./prototypes')
+require('./prototypes/prototypes')
 require('./commands')
+
 const {MemoryManager} = require("./memory_manager");
 const {TaskProcessor} = require("./tasks/processors/processor");
-
-MemoryManager.init()
 
 module.exports.loop = function () {
     TaskProcessor.process()

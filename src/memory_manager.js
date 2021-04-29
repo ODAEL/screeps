@@ -1,15 +1,3 @@
-const cleanUpTasks = () => {
-    let tasksCleared = 0;
-    for (let i = 0; i < Memory.tasks.length; i++) {
-        if (!Game.getObjectById(Memory.tasks[i].subjectId)) {
-            tasksCleared++
-            Memory.tasks.splice(i--, 1);
-        }
-    }
-
-    log(tasksCleared + ' tasks was cleared')
-};
-
 const cleanUpObjectsMemory = () => {
     cleanUpBuiltInMemory('spawns');
     cleanUpBuiltInMemory('creeps');
@@ -42,11 +30,7 @@ const cleanUpCustomMemory = (memoryKey) => {
 };
 
 module.exports.MemoryManager = {
-    init: () => {
-        Memory.tasks = Memory.tasks || []
-    },
     cleanUp: () => {
-        cleanUpTasks();
         cleanUpObjectsMemory();
     },
 };
