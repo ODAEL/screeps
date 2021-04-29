@@ -1,5 +1,6 @@
 const {RoomConfig} = require("../../rooms_config");
 const {BaseTaskProcessor} = require("./base");
+
 module.exports.LinkTaskProcessor = class LinkTaskProcessor extends BaseTaskProcessor {
     processNewTask() {
         let link = this.subject
@@ -9,4 +10,4 @@ module.exports.LinkTaskProcessor = class LinkTaskProcessor extends BaseTaskProce
 
         return blueprints.chooseTask(link)
     }
-}
+};

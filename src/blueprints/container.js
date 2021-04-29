@@ -1,5 +1,5 @@
-const {BlueprintManager} = require("./blueprints");
-const {MemoryManager} = require("./memory_manager");
+const {BlueprintProcessor} = require("./processor");
+const {MemoryManager} = require("../memory_manager");
 const BLUEPRINT_CHOOSE_LOGIC_ORDER = 'blueprint_choose_logic_order'
 const BLUEPRINT_CHOOSE_LOGIC_PRIORITY = 'blueprint_choose_logic_priority'
 
@@ -8,7 +8,7 @@ const BLUEPRINT_CHOOSE_LOGICS = [
     BLUEPRINT_CHOOSE_LOGIC_PRIORITY,
 ]
 
-class BlueprintsContainer {
+class BlueprintContainer {
     // TODO Separate tasks choosing and logic containing
     constructor(...args) {
         // Defaults
@@ -31,7 +31,7 @@ class BlueprintsContainer {
                 this.blueprints = arg
             }
 
-            if (arg instanceof BlueprintsContainer) {
+            if (arg instanceof BlueprintContainer) {
                 this.containers.push(arg)
             }
         }
@@ -84,7 +84,7 @@ class BlueprintsContainer {
                 index = numberOfIterations
             }
 
-            task = BlueprintManager.taskByBlueprint(subject, this.blueprints[index])
+            task = BlueprintProcessor.taskByBlueprint(subject, this.blueprints[index])
 
             numberOfIterations++
 
@@ -96,4 +96,4 @@ class BlueprintsContainer {
 
 module.exports.BLUEPRINT_CHOOSE_LOGIC_ORDER = BLUEPRINT_CHOOSE_LOGIC_ORDER
 module.exports.BLUEPRINT_CHOOSE_LOGIC_PRIORITY = BLUEPRINT_CHOOSE_LOGIC_PRIORITY
-module.exports.BlueprintsContainer = BlueprintsContainer
+module.exports.BlueprintContainer = BlueprintContainer

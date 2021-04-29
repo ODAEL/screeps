@@ -1,19 +1,19 @@
-const {TaskLinkTransferEnergy} = require("./tasks/link_transfer_energy");
-const {TaskWithdraw} = require("./tasks/withdraw");
-const {TaskPickup} = require("./tasks/pickup");
-const {TaskHeal} = require("./tasks/heal");
-const {TaskTowerAttack} = require("./tasks/tower_attack");
-const {TaskRepair} = require("./tasks/repair");
-const {TaskUpgradeController} = require("./tasks/upgrade_controller");
-const {TaskBuild} = require("./tasks/build");
-const {TaskTransfer} = require("./tasks/transfer");
-const {TaskHarvest} = require("./tasks/harvest");
-const {TaskRenewCreep} = require("./tasks/renew_creep");
-const {TaskSpawnCreep} = require("./tasks/spawn_creep");
-const {__} = require("./filters");
-const {Helpers} = require("./helpers");
-const {Filters} = require("./filters");
-const {RoomWrapper} = require("./wrappers");
+const {TaskLinkTransferEnergy} = require("../tasks/link_transfer_energy");
+const {TaskWithdraw} = require("../tasks/withdraw");
+const {TaskPickup} = require("../tasks/pickup");
+const {TaskHeal} = require("../tasks/heal");
+const {TaskTowerAttack} = require("../tasks/tower_attack");
+const {TaskRepair} = require("../tasks/repair");
+const {TaskUpgradeController} = require("../tasks/upgrade_controller");
+const {TaskBuild} = require("../tasks/build");
+const {TaskTransfer} = require("../tasks/transfer");
+const {TaskHarvest} = require("../tasks/harvest");
+const {TaskRenewCreep} = require("../tasks/renew_creep");
+const {TaskSpawnCreep} = require("../tasks/spawn_creep");
+const {__} = require("../filters");
+const {Helpers} = require("../helpers");
+const {Filters} = require("../filters");
+const {RoomWrapper} = require("../wrappers");
 
 const getRoomWrapper = (subject) => {
     return new RoomWrapper(subject.room)
@@ -70,7 +70,7 @@ const getDefaultFilters = (subject, type) => {
     }
 }
 
-module.exports.BlueprintManager = {
+module.exports.BlueprintProcessor = {
     taskByBlueprint: (subject, blueprint) => {
         let filter,
             creeps, creep,
@@ -213,21 +213,4 @@ module.exports.BlueprintManager = {
                 return null;
         }
     }
-};
-
-module.exports.Blueprint = {
-    spawnCreep: (data) => ({type: TASK_TYPE_SPAWN_CREEP, data: data}),
-    renewCreep: (creepFilters = []) => ({type: TASK_TYPE_RENEW_CREEP, creepFilters: creepFilters}),
-    harvest: (targetFilters = []) => ({type: TASK_TYPE_HARVEST, targetFilters: targetFilters}),
-    transfer: (structureFilters = [], data) => ({type: TASK_TYPE_TRANSFER, structureFilters: structureFilters, data: data}),
-    build: (constructionSiteFilters = []) => ({type: TASK_TYPE_BUILD, constructionSiteFilters: constructionSiteFilters}),
-    upgradeController: () => ({type: TASK_TYPE_UPGRADE_CONTROLLER}),
-    repair: (structureFilters = []) => ({type: TASK_TYPE_REPAIR, structureFilters: structureFilters}),
-    heal: (creepFilters = []) => ({type: TASK_TYPE_HEAL, creepFilters: creepFilters}),
-    pickup: (resourceFilters = []) => ({type: TASK_TYPE_PICKUP, resourceFilters: resourceFilters}),
-    withdraw: (targetFilters = []) => ({type: TASK_TYPE_WITHDRAW, targetFilters: targetFilters}),
-    // moveTo: (targetFilters = []) => ({type: TASK_TYPE_MOVE_TO, targetFilters: targetFilters}), No need
-    // claimController: (controllerFilters = []) => ({type: TASK_TYPE_CLAIM_CONTROLLER, controllerFilters: controllerFilters}), No need
-    towerAttack: (targetFilters = []) => ({type: TASK_TYPE_TOWER_ATTACK, targetFilters: targetFilters}),
-    linkTransferEnergy: (targetLinkFilters = []) => ({type: TASK_TYPE_LINK_TRANSFER_ENERGY, targetLinkFilters: targetLinkFilters}),
 };
