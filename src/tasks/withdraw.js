@@ -2,7 +2,7 @@ const {Task} = require("./task");
 
 module.exports.TaskWithdraw = class TaskWithdraw extends Task {
     constructor(creep, target) {
-        super(TASK_SUBJECT_TYPE_CREEP, creep && creep.id, TASK_TYPE_WITHDRAW)
+        super(creep && creep.id, TASK_TYPE_WITHDRAW)
 
         this.targetId = target && target.id
     }

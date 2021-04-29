@@ -1,7 +1,6 @@
 module.exports.Task = class Task {
-    constructor(subjectType, subjectId, type) {
+    constructor(subjectId, type) {
         this.id = Game.time + '_' + Math.abs(Math.random() * 2e8 | 0)
-        this.subjectType = subjectType
         this.subjectId = subjectId
         this.type = type
     }

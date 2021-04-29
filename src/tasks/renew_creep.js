@@ -2,7 +2,7 @@ const {Task} = require("./task");
 
 module.exports.TaskRenewCreep = class TaskRenewCreep extends Task {
     constructor(spawn, creep) {
-        super(TASK_SUBJECT_TYPE_SPAWN, spawn && spawn.id, TASK_TYPE_RENEW_CREEP)
+        super(spawn && spawn.id, TASK_TYPE_RENEW_CREEP)
 
         this.creepId = creep && creep.id
     }

@@ -4,11 +4,6 @@ global.debug = (something) => {
 }
 global.log = debug
 
-global.TASK_SUBJECT_TYPE_SPAWN = 'spawn'
-global.TASK_SUBJECT_TYPE_CREEP = 'creep'
-global.TASK_SUBJECT_TYPE_TOWER = 'tower'
-global.TASK_SUBJECT_TYPE_LINK = 'link'
-
 global.TASK_TYPE_SPAWN_CREEP = 'spawn_creep'
 global.TASK_TYPE_RENEW_CREEP = 'renew_creep'
 global.TASK_TYPE_HARVEST = 'harvest'

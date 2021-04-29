@@ -2,7 +2,7 @@ const {Task} = require("./task");
 
 module.exports.TaskTowerAttack = class TaskTowerAttack extends Task {
     constructor(tower, target) {
-        super(TASK_SUBJECT_TYPE_TOWER, tower && tower.id, TASK_TYPE_TOWER_ATTACK)
+        super(tower && tower.id, TASK_TYPE_TOWER_ATTACK)
 
         this.targetId = target && target.id
     }

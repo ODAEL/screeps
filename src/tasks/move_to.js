@@ -2,7 +2,7 @@ const {Task} = require("./task");
 
 module.exports.TaskMoveTo = class TaskMoveTo extends Task {
     constructor(creep, pos) {
-        super(TASK_SUBJECT_TYPE_CREEP, creep && creep.id, TASK_TYPE_MOVE_TO)
+        super(creep && creep.id, TASK_TYPE_MOVE_TO)
 
         this.pos = (pos instanceof RoomPosition && pos) ||
             (pos instanceof RoomObject && pos.pos) ||

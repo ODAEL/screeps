@@ -2,17 +2,9 @@ const {Task} = require("./task");
 
 module.exports.TaskRepair = class TaskRepair extends Task {
     constructor(subject, structure) {
-        super(TaskRepair.getSubjectType(subject), subject && subject.id, TASK_TYPE_REPAIR)
+        super(subject && subject.id, TASK_TYPE_REPAIR)
 
         this.structureId = structure && structure.id
-    }
-
-    static getSubjectType(subject) {
-        return !subject ? null : (
-            (subject instanceof Creep && TASK_SUBJECT_TYPE_CREEP) ||
-            (subject instanceof StructureTower && TASK_SUBJECT_TYPE_TOWER) ||
-            null
-        )
     }
 
     run() {

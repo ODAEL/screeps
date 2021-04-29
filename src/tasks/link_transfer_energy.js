@@ -2,7 +2,7 @@ const {Task} = require("./task");
 
 module.exports.TaskLinkTransferEnergy = class TaskLinkTransferEnergy extends Task {
     constructor(tower, targetLink) {
-        super(TASK_SUBJECT_TYPE_LINK, tower && tower.id, TASK_TYPE_LINK_TRANSFER_ENERGY)
+        super(tower && tower.id, TASK_TYPE_LINK_TRANSFER_ENERGY)
 
         this.targetLinkId = targetLink && targetLink.id
     }

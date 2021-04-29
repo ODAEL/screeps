@@ -2,7 +2,7 @@ const {Task} = require("./task");
 
 module.exports.TaskHarvest = class TaskHarvest extends Task {
     constructor(creep, target) {
-        super(TASK_SUBJECT_TYPE_CREEP, creep && creep.id, TASK_TYPE_HARVEST)
+        super(creep && creep.id, TASK_TYPE_HARVEST)
 
         this.targetId = target && target.id
     }

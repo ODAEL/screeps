@@ -2,7 +2,7 @@ const {Task} = require("./task");
 
 module.exports.TaskTransfer = class TaskTransfer extends Task {
     constructor(creep, target, data) {
-        super(TASK_SUBJECT_TYPE_CREEP, creep && creep.id, TASK_TYPE_TRANSFER)
+        super(creep && creep.id, TASK_TYPE_TRANSFER)
 
         this.targetId = target && target.id
         this.data = data || {}

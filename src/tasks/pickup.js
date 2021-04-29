@@ -2,7 +2,7 @@ const {Task} = require("./task");
 
 module.exports.TaskPickup = class TaskPickup extends Task {
     constructor(creep, resource) {
-        super(TASK_SUBJECT_TYPE_CREEP, creep && creep.id, TASK_TYPE_PICKUP)
+        super(creep && creep.id, TASK_TYPE_PICKUP)
 
         this.resourceId = resource && resource.id
     }

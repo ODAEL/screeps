@@ -2,7 +2,7 @@ const {Task} = require("./task");
 
 module.exports.TaskClaimController = class TaskClaimController extends Task {
     constructor(creep, controller) {
-        super(TASK_SUBJECT_TYPE_CREEP, creep && creep.id, TASK_TYPE_CLAIM_CONTROLLER)
+        super(creep && creep.id, TASK_TYPE_CLAIM_CONTROLLER)
 
         this.controllerId = controller && controller.id
     }

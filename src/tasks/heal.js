@@ -2,18 +2,11 @@ const {Task} = require("./task");
 
 module.exports.TaskHeal = class TaskHeal extends Task {
     constructor(subject, creep) {
-        super(TaskHeal.getSubjectType(subject), subject && subject.id, TASK_TYPE_HEAL)
+        super(subject && subject.id, TASK_TYPE_HEAL)
 
         this.creepId = creep && creep.id
     }
 
-    static getSubjectType(subject) {
-        return !subject ? null : (
-            (subject instanceof Creep && TASK_SUBJECT_TYPE_CREEP) ||
-            (subject instanceof StructureTower && TASK_SUBJECT_TYPE_TOWER) ||
-            null
-        )
-    }
 
     run() {
         const creep = Game.getObjectById(this.creepId);

@@ -1,7 +1,7 @@
 const {Task} = require("./task");
 module.exports.TaskBuild = class TaskBuild extends Task {
     constructor(creep, constructionSite) {
-        super(TASK_SUBJECT_TYPE_CREEP, creep && creep.id, TASK_TYPE_BUILD)
+        super(creep && creep.id, TASK_TYPE_BUILD)
 
         this.constructionSiteId = constructionSite && constructionSite.id
     }
