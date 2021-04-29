@@ -13,4 +13,4 @@ module.exports.CreepTaskProcessor = class CreepTaskProcessor extends BaseTaskPro
 
         return blueprints.chooseTask(creep);
     }
-}
+};

@@ -9,4 +9,4 @@ module.exports.TowerTaskProcessor = class TowerTaskProcessor extends BaseTaskPro
 
         return blueprints.chooseTask(tower)
     }
-}
+};

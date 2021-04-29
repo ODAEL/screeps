@@ -1,4 +1,4 @@
-const {Task} = require("./tasks");
+const {Deserializer} = require("./tasks/deserializer");
 const customMemoryAttributesCallback = (memoryKey) => ({
     configurable: true,
     get: function() {
@@ -59,7 +59,7 @@ const currentTaskAttributes = {
         if (!task) {
             return null
         }
-        return Task.getTaskObject(task)
+        return Deserializer.deserialize(task)
     },
 }
 

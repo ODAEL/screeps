@@ -40,5 +40,6 @@ module.exports.BaseTaskProcessor = class BaseTaskProcessor {
         return true
     }
 
-    processNewTask() {}
-}
+    processNewTask() {
+    }
+};

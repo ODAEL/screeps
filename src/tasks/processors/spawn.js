@@ -1,7 +1,7 @@
-const {TaskSpawnCreep} = require("../../tasks");
+const {TaskSpawnCreep} = require("../spawn_creep");
+const {TaskRenewCreep} = require("../renew_creep");
 const {RoomConfig} = require("../../rooms_config");
 const {RoomWrapper} = require("../../wrappers");
-const {TaskRenewCreep} = require("../../tasks");
 const {BaseTaskProcessor} = require("./base");
 const {SpawnWrapper} = require("../../wrappers");
 
@@ -62,4 +62,4 @@ module.exports.SpawnTaskProcessor = class SpawnTaskProcessor extends BaseTaskPro
             }
         );
     }
-}
+};
