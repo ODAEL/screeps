@@ -1,8 +1,6 @@
 const {RoomConfig} = require("./rooms_config");
 const {TaskRenewCreep} = require("./tasks");
 const {TaskSpawnCreep} = require("./tasks");
-const {Task} = require("./tasks");
-const {Helpers} = require("./helpers");
 const {MemoryManager} = require("./memory_manager");
 const {SpawnWrapper} = require("./wrappers");
 const {RoomWrapper} = require("./wrappers");
@@ -13,7 +11,7 @@ class BaseTaskProcessor {
     }
 
     process() {
-        let task = this.currentTask(this.subject);
+        let task = this.subject.currentTask;
         if (task) {
             // If not finished
             if (this.runTask(task)) {
@@ -27,7 +25,7 @@ class BaseTaskProcessor {
             return;
         }
 
-        MemoryManager.pushTask(task);
+        this.subject.tasks.push(task);
 
         // TODO Revise if I can run next task after previous
         this.runTask(task);
@@ -47,16 +45,6 @@ class BaseTaskProcessor {
 
         return true
     }
-
-    currentTask(subjectParam) {
-        const subject = Helpers.objectByParam(subjectParam)
-
-        for (let task of MemoryManager.tasks()) {
-            if (task.subjectId === subject.id) {
-                return Task.getTaskObject(task)
-            }
-        }
-    };
 
     processNewTask() {}
 }

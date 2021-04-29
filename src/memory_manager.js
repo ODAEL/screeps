@@ -53,13 +53,11 @@ module.exports.MemoryManager = {
     tasks: () => {
         return Memory.tasks
     },
-    pushTask: (task) => {
-        Memory.tasks.push(task)
-    },
     destroyTask: (task) => {
-        for (let i = 0; i < Memory.tasks.length; i++) {
-            if (Memory.tasks[i].id === task.id) {
-                Memory.tasks.splice(i, 1);
+        let object = Game.getObjectById(task.subjectId)
+        for (let i = 0; i < object.tasks.length; i++) {
+            if (object.tasks[i].id === task.id) {
+                object.tasks.splice(i, 1);
                 return
             }
         }

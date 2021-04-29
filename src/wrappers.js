@@ -136,10 +136,13 @@ class SourceWrapper {
 
     connectedCreeps() {
         const connectedCreeps = [];
-        for (let task of MemoryManager.tasks()) {
-            let subject = Game.getObjectById(task.subjectId)
-            if (subject && task.sourceId && task.sourceId === this.source.id) {
+
+        for (let name in Game.creeps) {
+            let creep = Game.creeps[name]
+            let currentTask = creep.tasks[0] || {}
+            if (currentTask.sourceId && currentTask.sourceId === this.source.id) {
                 connectedCreeps.push(subject)
+
             }
         }
 
