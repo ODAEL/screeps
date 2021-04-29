@@ -1,5 +1,4 @@
 const {Config} = require("./config");
-const {MemoryManager} = require("./memory_manager");
 
 class RoomConfig {
     constructor(roomName) {

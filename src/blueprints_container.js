@@ -9,7 +9,7 @@ const BLUEPRINT_CHOOSE_LOGICS = [
 ]
 
 class BlueprintsContainer {
-    // TODO Separate task choosing and logic containing
+    // TODO Separate tasks choosing and logic containing
     constructor(...args) {
         // Defaults
         this.chooseLogic = BLUEPRINT_CHOOSE_LOGIC_ORDER

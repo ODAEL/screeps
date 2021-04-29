@@ -2,7 +2,7 @@ require('./globals')
 require('./prototypes')
 require('./commands')
 const {MemoryManager} = require("./memory_manager");
-const {TaskProcessor} = require("./task_processor");
+const {TaskProcessor} = require("./tasks/processors/processor");
 
 MemoryManager.init()
 

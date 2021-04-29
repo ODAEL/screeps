@@ -61,7 +61,7 @@ module.exports = function(grunt) {
 
                         let newFiles = []
                         for (let file of files) {
-                            let specificPathArray = pathArray
+                            let specificPathArray = [...pathArray]
 
                             while (file !== file.replace('.', '')) {
                                 specificPathArray.splice(specificPathArray.length - 1, 1)

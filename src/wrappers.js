@@ -1,4 +1,3 @@
-const {MemoryManager} = require("./memory_manager");
 const {Helpers} = require("helpers");
 
 class RoomWrapper {
