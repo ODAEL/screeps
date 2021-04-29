@@ -23,8 +23,7 @@ class RoomConfig {
 
     neededCreepRoles(currentCreeps, deb = false) {
         let currentCreepRoles = _.reduce(currentCreeps, (result, creep) => {
-            let creepMemory = MemoryManager.creepMemory(creep)
-            let role = creepMemory.role || 'default'
+            let role = creep.memory.role || 'default'
             result[role] = result[role] || 0
             result[role]++
             return result

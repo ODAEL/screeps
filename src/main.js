@@ -1,5 +1,6 @@
-require('globals')
-require('commands')
+require('./globals')
+require('./prototypes')
+require('./commands')
 const {MemoryManager} = require("./memory_manager");
 const {TaskProcessor} = require("./task_processor");
 

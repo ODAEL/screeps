@@ -123,11 +123,11 @@ class SpawnTaskProcessor extends BaseTaskProcessor {
 class CreepTaskProcessor extends BaseTaskProcessor {
     processNewTask() {
         let creep = this.subject
-        if (MemoryManager.creepMemory(creep).automated === false) {
+        if (creep.memory.automated === false) {
             return null;
         }
 
-        const role = MemoryManager.creepMemory(creep).role
+        const role = creep.memory.role
         const blueprints = (new RoomConfig(creep.room.name)).creepRoleData(role).blueprints
 
         return blueprints.chooseTask(creep);
@@ -138,7 +138,7 @@ class TowerTaskProcessor extends BaseTaskProcessor {
     processNewTask() {
         let tower = this.subject
 
-        const role = MemoryManager.towerMemory(tower).role || 'default'
+        const role = tower.memory.role || 'default'
         const blueprints = (new RoomConfig(tower.room.name)).towerRoleData(role).blueprints
 
         return blueprints.chooseTask(tower)
@@ -149,7 +149,7 @@ class LinkTaskProcessor extends BaseTaskProcessor {
     processNewTask() {
         let link = this.subject
 
-        const role = MemoryManager.linkMemory(link).role || 'default'
+        const role = link.memory.role || 'default'
         const blueprints = (new RoomConfig(link.room.name)).linkRoleData(role).blueprints
 
         return blueprints.chooseTask(link)
