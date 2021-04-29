@@ -31,8 +31,8 @@ module.exports.BaseTaskProcessor = class BaseTaskProcessor {
         }
 
         if (!task.run()) {
-            // If finished - destroy
-            MemoryManager.destroyTask(task)
+            // If finished - end
+            this.subject.endCurrentTask()
 
             return false
         }

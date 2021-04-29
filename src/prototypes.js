@@ -68,16 +68,31 @@ Object.defineProperty(Creep.prototype, 'currentTask', currentTaskAttributes);
 Object.defineProperty(StructureTower.prototype, 'currentTask', currentTaskAttributes);
 Object.defineProperty(StructureLink.prototype, 'currentTask', currentTaskAttributes);
 
-
-const endCurrentTask = () => {
-    if (this.memory.tasks.length === 0) {
+const endCurrentTask = function () {
+    if (this.tasks.length === 0) {
         return
     }
 
-    this.memory.tasks.splice(0, 1);
+    this.tasks.splice(0, 1);
 }
 
 StructureSpawn.prototype.endCurrentTask = endCurrentTask
 Creep.prototype.endCurrentTask = endCurrentTask
 StructureTower.prototype.endCurrentTask = endCurrentTask
 StructureLink.prototype.endCurrentTask = endCurrentTask
+
+const blueprintsOrderPosition = function (key, max) {
+    this.memory.blueprintsOrderPosition = this.memory.blueprintsOrderPosition || {}
+
+    let position = this.memory.blueprintsOrderPosition[key] || 0
+    position =  (position < max) ? position : 0
+
+    this.memory.blueprintsOrderPosition[key] = position + 1
+    return position
+}
+
+
+StructureSpawn.prototype.blueprintsOrderPosition = blueprintsOrderPosition
+Creep.prototype.blueprintsOrderPosition = blueprintsOrderPosition
+StructureTower.prototype.blueprintsOrderPosition = blueprintsOrderPosition
+StructureLink.prototype.blueprintsOrderPosition = blueprintsOrderPosition

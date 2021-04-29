@@ -79,7 +79,7 @@ class BlueprintContainer {
 
             let index
             if (this.chooseLogic === BLUEPRINT_CHOOSE_LOGIC_ORDER) {
-                index = MemoryManager.blueprintsOrderPosition(subject.id + '_' + branchId, this.blueprints.length)
+                index = subject.blueprintsOrderPosition(branchId, this.blueprints.length)
             } else {
                 index = numberOfIterations
             }

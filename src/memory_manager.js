@@ -49,28 +49,4 @@ module.exports.MemoryManager = {
         cleanUpTasks();
         cleanUpObjectsMemory();
     },
-
-    tasks: () => {
-        return Memory.tasks
-    },
-    destroyTask: (task) => {
-        let object = Game.getObjectById(task.subjectId)
-        for (let i = 0; i < object.tasks.length; i++) {
-            if (object.tasks[i].id === task.id) {
-                object.tasks.splice(i, 1);
-                return
-            }
-        }
-    },
-
-
-    blueprintsOrderPosition: (key, max) => {
-        Memory.blueprintsOrderPosition = Memory.blueprintsOrderPosition || {}
-
-        let position = Memory.blueprintsOrderPosition[key] || 0
-        position =  (position < max) ? position : 0
-
-        Memory.blueprintsOrderPosition[key] = position + 1
-        return position
-    }
 };
