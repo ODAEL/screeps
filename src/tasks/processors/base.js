@@ -1,4 +1,3 @@
-const {MemoryManager} = require("../../memory_manager");
 module.exports.BaseTaskProcessor = class BaseTaskProcessor {
     constructor(subject) {
         this.subject = subject;
