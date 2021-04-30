@@ -1,5 +1,30 @@
 const {Deserializer} = require("../tasks/deserializer");
 
+/**
+ * @property StructureTower.memory
+ * @property StructureLink.memory
+ *
+ * @property StructureSpawn.tasks
+ * @property Creep.tasks
+ * @property StructureTower.tasks
+ * @property StructureLink.tasks
+ *
+ * @property StructureSpawn.currentTask
+ * @property Creep.currentTask
+ * @property StructureTower.currentTask
+ * @property StructureLink.currentTask
+ *
+ * @function StructureSpawn.endCurrentTask
+ * @function Creep.endCurrentTask
+ * @function StructureTower.endCurrentTask
+ * @function StructureLink.endCurrentTask
+ *
+ * @function StructureSpawn.blueprintsOrderPosition
+ * @function Creep.blueprintsOrderPosition
+ * @function StructureTower.blueprintsOrderPosition
+ * @function StructureLink.blueprintsOrderPosition
+ */
+
 const TYPES_WITH_MEMORY = [
     StructureSpawn,
     Creep,
