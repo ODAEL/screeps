@@ -10,13 +10,13 @@ module.exports.TaskUpgradeController = class TaskUpgradeController extends Task 
     run() {
         const controller = Game.getObjectById(this.controllerId);
         if (!controller) {
-            log('Unable to find controller by id=' + this.controllerId)
+            Log.error('Unable to find controller by id=' + this.controllerId)
 
             return false
         }
 
         if (!(controller instanceof StructureController)) {
-            log('Found object is not a controller ' + controller)
+            Log.error('Found object is not a controller ' + controller)
 
             return false
         }

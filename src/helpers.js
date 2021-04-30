@@ -17,7 +17,7 @@ const bodypartCost = (bodypart) => {
         case TOUGH:
             return 10;
         default:
-            log('bodypartCost undefined bodypart ' + bodypart);
+            Log.error('bodypartCost undefined bodypart ' + bodypart);
             return 9999
     }
 };
@@ -31,7 +31,7 @@ module.exports.Helpers = {
             ((objectById = Game.getObjectById(objectParam)) && objectById instanceof Object && objectById);
 
         if (withLogIfNotFound && !object) {
-            log('Unable to find object by param=' + objectParam)
+            Log.error('Unable to find object by param=' + objectParam)
         }
             
         return object ? object : null
@@ -44,7 +44,7 @@ module.exports.Helpers = {
             ((roomByName = Game.rooms[roomParam]) && roomByName);
 
         if (withLogIfNotFound && !room) {
-            log('Unable to find room by param=' + roomParam)
+            Log.error('Unable to find room by param=' + roomParam)
         }
             
         return room ? room : null
@@ -56,7 +56,7 @@ module.exports.Helpers = {
             ((sourceById = Game.getObjectById(sourceParam)) && sourceById instanceof Source && sourceById);
 
         if (withLogIfNotFound && !source) {
-            log('Unable to find source by param=' + sourceParam)
+            Log.error('Unable to find source by param=' + sourceParam)
         }
             
         return source ? source : null
@@ -69,7 +69,7 @@ module.exports.Helpers = {
             ((spawnByName = Game.spawns[spawnParam]) && spawnByName);
 
         if (withLogIfNotFound && !spawn) {
-            log('Unable to find spawn by param=' + spawnParam)
+            Log.error('Unable to find spawn by param=' + spawnParam)
         }
             
         return spawn ? spawn : null
@@ -82,7 +82,7 @@ module.exports.Helpers = {
             ((creepByName = Game.creeps[creepParam]) && creepByName);
 
         if (withLogIfNotFound && !creep) {
-            log('Unable to find creep by param=' + creepParam)
+            Log.error('Unable to find creep by param=' + creepParam)
         }
             
         return creep ? creep : null
@@ -95,7 +95,7 @@ module.exports.Helpers = {
             ((structureByName = Game.creeps[structureParam]) && structureByName);
 
         if (withLogIfNotFound && !structure) {
-            log('Unable to find structure by param=' + structureParam)
+            Log.error('Unable to find structure by param=' + structureParam)
         }
             
         return structure ? structure : null
@@ -107,7 +107,7 @@ module.exports.Helpers = {
             ((controllerById = Game.getObjectById(controllerParam)) && controllerById instanceof StructureController && controllerById);
 
         if (withLogIfNotFound && !controller) {
-            log('Unable to find controller by param=' + controllerParam)
+            Log.error('Unable to find controller by param=' + controllerParam)
         }
             
         return controller ? controller : null
@@ -119,7 +119,7 @@ module.exports.Helpers = {
             ((constructionSiteById = Game.getObjectById(constructionSiteParam)) && constructionSiteById instanceof ConstructionSite && constructionSiteById);
 
         if (withLogIfNotFound && !constructionSite) {
-            log('Unable to find construction site by param=' + constructionSiteParam)
+            Log.error('Unable to find construction site by param=' + constructionSiteParam)
         }
             
         return constructionSite ? constructionSite : null

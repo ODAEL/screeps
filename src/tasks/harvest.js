@@ -23,7 +23,7 @@ module.exports.TaskHarvest = class TaskHarvest extends Task {
         }
 
         if (!(target instanceof Source) && !(target instanceof Mineral)) {
-            log('Fount target is not source or mineral ' + target)
+            Log.error('Fount target is not source or mineral ' + target)
 
             return false
         }
@@ -40,13 +40,13 @@ module.exports.TaskHarvest = class TaskHarvest extends Task {
         }
 
         if (target instanceof Mineral && harvestResult === ERR_TIRED) {
-            // log('Wait')
+            // Log.error('Wait')
 
             return true
         }
 
         if (harvestResult !== OK) {
-            log('Error while harvest ' + harvestResult)
+            Log.error('Error while harvest ' + harvestResult)
 
             return false
         }

@@ -10,20 +10,20 @@ module.exports.TaskRepair = class TaskRepair extends Task {
     run() {
         const structure = Game.getObjectById(this.structureId);
         if (!structure) {
-            log(2)
-            log('Unable to find target by id=' + this.structureId)
+            Log.error(2)
+            Log.error('Unable to find target by id=' + this.structureId)
 
             return false
         }
 
         if (!(structure instanceof Structure)) {
-            log('Found object is not structure ' + structure)
+            Log.error('Found object is not structure ' + structure)
 
             return false
         }
 
         if (structure.hitsMax === structure.hits) {
-            log('Structure has maximum hist ' + structure)
+            Log.error('Structure has maximum hist ' + structure)
 
             return false
         }

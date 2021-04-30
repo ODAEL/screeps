@@ -14,7 +14,7 @@ const cleanUpBuiltInMemory = (memoryKey) => {
         }
     }
 
-    log(objectsCleared + ' ' + memoryKey + ' was cleared')
+    Log.info(objectsCleared + ' ' + memoryKey + ' was cleared')
 };
 
 const cleanUpCustomMemory = (memoryKey) => {
@@ -26,7 +26,7 @@ const cleanUpCustomMemory = (memoryKey) => {
         }
     }
 
-    log(objectsCleared + ' ' + memoryKey + ' was cleared')
+    Log.info(objectsCleared + ' ' + memoryKey + ' was cleared')
 };
 
 module.exports.MemoryManager = {

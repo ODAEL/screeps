@@ -1,8 +1,9 @@
 global._ = require('lodash')
-global.debug = (something) => {
+global.cl = (something) => {
     console.log(JSON.stringify(something))
 }
-global.log = debug
+
+global.Log = require('./log')
 
 global.TASK_TYPE_SPAWN_CREEP = 'spawn_creep'
 global.TASK_TYPE_RENEW_CREEP = 'renew_creep'

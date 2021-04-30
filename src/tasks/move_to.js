@@ -12,13 +12,13 @@ module.exports.TaskMoveTo = class TaskMoveTo extends Task {
     run() {
         const pos = this.pos;
         if (!pos) {
-            log('No pos ' + pos)
+            Log.error('No pos ' + pos)
 
             return false
         }
 
         if (pos.x === undefined || pos.y === undefined || !pos.roomName) {
-            log('Found pos is not pos ' + pos)
+            Log.error('Found pos is not pos ' + pos)
 
             return false
         }
@@ -36,7 +36,7 @@ module.exports.TaskMoveTo = class TaskMoveTo extends Task {
 
         let result = creep.moveTo(pos.x, pos.y, {visualizePathStyle: {stroke: '#ffffff'}});
         // if (result !== OK) {
-        //     log('MoveTo - result ' + result)
+        //     Log.error('MoveTo - result ' + result)
         //
         //     return false
         // }

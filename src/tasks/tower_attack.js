@@ -10,13 +10,13 @@ module.exports.TaskTowerAttack = class TaskTowerAttack extends Task {
     run() {
         const target = Game.getObjectById(this.targetId);
         if (!target) {
-            log('Unable to find target by id=' + this.targetId)
+            Log.error('Unable to find target by id=' + this.targetId)
 
             return false
         }
 
         if (target.my) {
-            log('Found object is yours ' + target)
+            Log.error('Found object is yours ' + target)
 
             return false
         }

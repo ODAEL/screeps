@@ -6,7 +6,7 @@ module.exports.Task = class Task {
     }
 
     run() {
-        log('Not implemented')
+        Log.error('Not implemented')
 
         return false
     }
@@ -14,7 +14,7 @@ module.exports.Task = class Task {
     getObjectById(id) {
         const object = Game.getObjectById(id);
         if (!object) {
-            log('Unable to find object by id=' + id)
+            Log.error('Unable to find object by id=' + id)
         }
 
         return object

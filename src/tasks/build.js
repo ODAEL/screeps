@@ -13,7 +13,7 @@ module.exports.TaskBuild = class TaskBuild extends Task {
         }
 
         if (!(constructionSite instanceof ConstructionSite)) {
-            log('Target is not a construction site')
+            Log.error('Target is not a construction site')
 
             return false
         }

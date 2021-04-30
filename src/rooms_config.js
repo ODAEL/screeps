@@ -27,26 +27,26 @@ class RoomConfig {
             result[role]++
             return result
         }, {})
-        deb && debug(currentCreepRoles)
+        deb && cl(currentCreepRoles)
 
         let configRoles = _.keys(this.config.creepsRoleData || {})
         if (configRoles.length === 0) {
             configRoles = ['default']
         }
-        deb && debug(configRoles)
+        deb && cl(configRoles)
 
         let configCreepRoles = _.reduce(configRoles, (result, role) => {
             let creepRoleData = this.creepRoleData(role)
             result[role] = creepRoleData.count
             return result
         }, {})
-        deb && debug(configCreepRoles)
+        deb && cl(configCreepRoles)
 
         let neededCreepRoles = _.reduce(configCreepRoles, (result, count, role) => {
             result[role] = _.max([0, count - (currentCreepRoles[role] || 0)])
             return result
         }, {})
-        deb && debug(neededCreepRoles)
+        deb && cl(neededCreepRoles)
 
         return _.reduce(neededCreepRoles, (result, count, role) => {
             return [...result, ..._.times(count, () => role)]

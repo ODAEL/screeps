@@ -10,19 +10,19 @@ module.exports.TaskLinkTransferEnergy = class TaskLinkTransferEnergy extends Tas
     run() {
         const targetLink = Game.getObjectById(this.targetLinkId);
         if (!targetLink) {
-            log('Unable to find target link by id=' + this.targetLinkId)
+            Log.error('Unable to find target link by id=' + this.targetLinkId)
 
             return false
         }
 
         if (!(targetLink instanceof StructureLink)) {
-            log('Found object is not link ' + targetLink)
+            Log.error('Found object is not link ' + targetLink)
 
             return false
         }
 
         if (!targetLink.my) {
-            log('Found object is yours ' + targetLink)
+            Log.error('Found object is yours ' + targetLink)
 
             return false
         }

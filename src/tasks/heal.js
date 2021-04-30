@@ -11,19 +11,19 @@ module.exports.TaskHeal = class TaskHeal extends Task {
     run() {
         const creep = Game.getObjectById(this.creepId);
         if (!creep) {
-            log('Unable to find creep by id=' + this.creepId)
+            Log.error('Unable to find creep by id=' + this.creepId)
 
             return false
         }
 
         if (!(creep instanceof Creep)) {
-            log('Found object is not creep ' + creep)
+            Log.error('Found object is not creep ' + creep)
 
             return false
         }
 
         if (creep.hitsMax === creep.hits) {
-            log('Creep has maximum hits ' + creep)
+            Log.error('Creep has maximum hits ' + creep)
 
             return false
         }

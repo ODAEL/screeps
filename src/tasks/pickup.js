@@ -14,7 +14,7 @@ module.exports.TaskPickup = class TaskPickup extends Task {
         }
 
         if (!(resource instanceof Resource)) {
-            log('Found resource is not resource ' + resource)
+            Log.error('Found resource is not resource ' + resource)
 
             return false
         }
