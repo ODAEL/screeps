@@ -1,3 +1,4 @@
+const {Blueprint} = require("./blueprint");
 const BLUEPRINT_CHOOSE_LOGIC_ORDER = 'blueprint_choose_logic_order'
 const BLUEPRINT_CHOOSE_LOGIC_PRIORITY = 'blueprint_choose_logic_priority'
 
@@ -9,11 +10,10 @@ const BLUEPRINT_CHOOSE_LOGICS = [
 class BlueprintContainer {
     constructor(...args) {
         // Defaults
-        this.chooseLogic = BLUEPRINT_CHOOSE_LOGIC_ORDER
+        this.chooseLogic = BLUEPRINT_CHOOSE_LOGIC_PRIORITY
         // TODO Change to specific object to use global game state in filtering
         this.subjectFilter = (subject) => true
         this.blueprints = []
-        this.subContainers = []
 
         for (let arg of args) {
             if (_.isString(arg) && BLUEPRINT_CHOOSE_LOGICS.indexOf(arg) !== -1) {
@@ -24,12 +24,12 @@ class BlueprintContainer {
                 this.subjectFilter = arg
             }
 
-            if (arg instanceof Array) {
-                this.blueprints = arg
+            if (arg instanceof Blueprint) {
+                this.blueprints.push(arg)
             }
 
             if (arg instanceof BlueprintContainer) {
-                this.subContainers.push(arg)
+                this.blueprints.push(arg)
             }
         }
     }
