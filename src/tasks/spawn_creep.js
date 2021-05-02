@@ -19,7 +19,8 @@ module.exports.TaskSpawnCreep = class TaskSpawnCreep extends Task {
         }
 
         let optimalBodyparts = this.data.optimalBodyparts || [WORK, CARRY, MOVE];
-        let bodyparts = Helpers.chooseBodyparts(roomWrapper.energyCapacityAvailable(), optimalBodyparts);
+        let energy = roomWrapper.myCreeps().length === 0 ? roomWrapper.energyAvailable() : roomWrapper.energyCapacityAvailable()
+        let bodyparts = Helpers.chooseBodyparts(energy, optimalBodyparts);
 
         let name = 'Creep ' + Game.time + '_' + _.random(1000, 9999)
 

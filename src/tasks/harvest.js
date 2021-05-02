@@ -32,7 +32,7 @@ module.exports.TaskHarvest = class TaskHarvest extends Task {
 
         const harvestResult = creep.harvest(target);
         if (harvestResult === ERR_NOT_IN_RANGE) {
-            creep.moveTo(target, {visualizePathStyle: {stroke: '#ffaa00'}});
+            creep.moveTo(target, {visualizePathStyle: {stroke: '#ffaa00'}, reusePath: 4});
             return true
         }
         if (harvestResult === ERR_NOT_ENOUGH_RESOURCES) {
