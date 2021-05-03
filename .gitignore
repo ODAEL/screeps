@@ -5,5 +5,6 @@ node_modules
 # To hide my globaal strategy and one-time commands
 /src/config.js
 /src/commands.js
+/src/cron.js
 
 /dist/*.js
