@@ -1,14 +1,21 @@
 const {Task} = require("./task");
 
 module.exports.TaskHeal = class TaskHeal extends Task {
-    constructor(subject, creep) {
-        super(subject && subject.id, TASK_TYPE_HEAL)
+    constructor(creep) {
+        super(TASK_TYPE_HEAL)
 
         this.creepId = creep && creep.id
     }
 
+    run(subject) {
+        if (!subject || !(subject instanceof Creep || subject instanceof StructureTower)) {
+            return false
+        }
 
-    run() {
+        if (subject.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
+            return false
+        }
+
         const creep = Game.getObjectById(this.creepId);
         if (!creep) {
             Log.error('Unable to find creep by id=' + this.creepId)
@@ -25,15 +32,6 @@ module.exports.TaskHeal = class TaskHeal extends Task {
         if (creep.hitsMax === creep.hits) {
             Log.error('Creep has maximum hits ' + creep)
 
-            return false
-        }
-
-        const subject = Game.getObjectById(this.subjectId);
-        if (!subject || !(subject instanceof Creep || subject instanceof StructureTower)) {
-            return false
-        }
-
-        if (subject.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
             return false
         }
 

@@ -1,13 +1,21 @@
 const {Task} = require("./task");
 
 module.exports.TaskPickup = class TaskPickup extends Task {
-    constructor(creep, resource) {
-        super(creep && creep.id, TASK_TYPE_PICKUP)
+    constructor(resource) {
+        super(TASK_TYPE_PICKUP)
 
         this.resourceId = resource && resource.id
     }
 
-    run() {
+    run(creep) {
+        if (!creep || !(creep instanceof Creep)) {
+            return false
+        }
+
+        if (creep.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
+            return false
+        }
+
         const resource = Game.getObjectById(this.resourceId);
         if (!resource) {
             return false
@@ -20,15 +28,6 @@ module.exports.TaskPickup = class TaskPickup extends Task {
         }
 
         if (resource.resourceType !== RESOURCE_ENERGY) {
-            return false
-        }
-
-        const creep = Game.getObjectById(this.subjectId);
-        if (!creep || !(creep instanceof Creep)) {
-            return false
-        }
-
-        if (creep.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
             return false
         }
 

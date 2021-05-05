@@ -1,14 +1,13 @@
 const {Task} = require("./task");
 
 module.exports.TaskHarvest = class TaskHarvest extends Task {
-    constructor(creep, target) {
-        super(creep && creep.id, TASK_TYPE_HARVEST)
+    constructor(target) {
+        super(TASK_TYPE_HARVEST)
 
         this.targetId = target && target.id
     }
 
-    run() {
-        const creep = Game.getObjectById(this.subjectId);
+    run(creep) {
         if (!creep || !(creep instanceof Creep)) {
             return false
         }
@@ -53,4 +52,4 @@ module.exports.TaskHarvest = class TaskHarvest extends Task {
 
         return true
     }
-}
+};

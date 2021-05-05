@@ -1,14 +1,13 @@
 const {Task} = require("./task");
 
 module.exports.TaskRenewCreep = class TaskRenewCreep extends Task {
-    constructor(spawn, creep) {
-        super(spawn && spawn.id, TASK_TYPE_RENEW_CREEP)
+    constructor(creep) {
+        super(TASK_TYPE_RENEW_CREEP)
 
         this.creepId = creep && creep.id
     }
 
-    run() {
-        const spawn = Game.getObjectById(this.subjectId);
+    run(spawn) {
         if (!spawn) {
             return false
         }
@@ -26,4 +25,4 @@ module.exports.TaskRenewCreep = class TaskRenewCreep extends Task {
 
         return false
     }
-}
+};

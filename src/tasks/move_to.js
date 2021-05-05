@@ -1,15 +1,19 @@
 const {Task} = require("./task");
 
 module.exports.TaskMoveTo = class TaskMoveTo extends Task {
-    constructor(creep, pos) {
-        super(creep && creep.id, TASK_TYPE_MOVE_TO)
+    constructor(pos) {
+        super(TASK_TYPE_MOVE_TO)
 
         this.pos = (pos instanceof RoomPosition && pos) ||
             (pos instanceof RoomObject && pos.pos) ||
             pos
     }
 
-    run() {
+    run(creep) {
+        if (!creep || !(creep instanceof Creep)) {
+            return false
+        }
+
         const pos = this.pos;
         if (!pos) {
             Log.error('No pos ' + pos)
@@ -20,11 +24,6 @@ module.exports.TaskMoveTo = class TaskMoveTo extends Task {
         if (pos.x === undefined || pos.y === undefined || !pos.roomName) {
             Log.error('Found pos is not pos ' + pos)
 
-            return false
-        }
-
-        const creep = Game.getObjectById(this.subjectId);
-        if (!creep || !(creep instanceof Creep)) {
             return false
         }
 

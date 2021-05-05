@@ -1,13 +1,21 @@
 const {Task} = require("./task");
 
 module.exports.TaskTowerAttack = class TaskTowerAttack extends Task {
-    constructor(tower, target) {
-        super(tower && tower.id, TASK_TYPE_TOWER_ATTACK)
+    constructor(target) {
+        super(TASK_TYPE_TOWER_ATTACK)
 
         this.targetId = target && target.id
     }
 
-    run() {
+    run(tower) {
+        if (!tower || !(tower instanceof StructureTower)) {
+            return false
+        }
+
+        if (tower.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
+            return false
+        }
+
         const target = Game.getObjectById(this.targetId);
         if (!target) {
             Log.error('Unable to find target by id=' + this.targetId)
@@ -18,15 +26,6 @@ module.exports.TaskTowerAttack = class TaskTowerAttack extends Task {
         if (target.my) {
             Log.error('Found object is yours ' + target)
 
-            return false
-        }
-
-        const tower = Game.getObjectById(this.subjectId);
-        if (!tower || !(tower instanceof StructureTower)) {
-            return false
-        }
-
-        if (tower.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
             return false
         }
 

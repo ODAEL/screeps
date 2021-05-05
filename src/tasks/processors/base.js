@@ -37,7 +37,7 @@ module.exports.BaseTaskProcessor = class BaseTaskProcessor {
             return false
         }
 
-        if (!task.run()) {
+        if (!task.run(this.subject)) {
             // If finished - end
             this.subject.endCurrentTask()
 

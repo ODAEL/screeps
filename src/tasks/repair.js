@@ -1,13 +1,21 @@
 const {Task} = require("./task");
 
 module.exports.TaskRepair = class TaskRepair extends Task {
-    constructor(subject, structure) {
-        super(subject && subject.id, TASK_TYPE_REPAIR)
+    constructor(structure) {
+        super(TASK_TYPE_REPAIR)
 
         this.structureId = structure && structure.id
     }
 
-    run() {
+    run(subject) {
+        if (!subject || !(subject instanceof Creep || subject instanceof StructureTower)) {
+            return false
+        }
+
+        if (subject.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
+            return false
+        }
+
         const structure = Game.getObjectById(this.structureId);
         if (!structure) {
             Log.error(2)
@@ -25,15 +33,6 @@ module.exports.TaskRepair = class TaskRepair extends Task {
         if (structure.hitsMax === structure.hits) {
             Log.error('Structure has maximum hist ' + structure)
 
-            return false
-        }
-
-        const subject = Game.getObjectById(this.subjectId);
-        if (!subject || !(subject instanceof Creep || subject instanceof StructureTower)) {
-            return false
-        }
-
-        if (subject.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
             return false
         }
 
@@ -62,4 +61,4 @@ module.exports.TaskRepair = class TaskRepair extends Task {
 
         return false
     }
-}
+};

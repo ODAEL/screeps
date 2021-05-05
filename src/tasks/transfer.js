@@ -1,14 +1,24 @@
 const {Task} = require("./task");
 
 module.exports.TaskTransfer = class TaskTransfer extends Task {
-    constructor(creep, target, data) {
-        super(creep && creep.id, TASK_TYPE_TRANSFER)
+    constructor(target, data) {
+        super(TASK_TYPE_TRANSFER)
 
         this.targetId = target && target.id
         this.data = data || {}
     }
 
-    run() {
+    run(creep) {
+        if (!creep || !(creep instanceof Creep)) {
+            return false
+        }
+
+        const resourceType = this.data.resourceType || RESOURCE_ENERGY
+
+        if (creep.store.getUsedCapacity(resourceType) === 0) {
+            return false
+        }
+
         const target = Game.getObjectById(this.targetId);
         if (!target) {
             Log.error('Unable to find target by id=' + this.targetId)
@@ -16,18 +26,7 @@ module.exports.TaskTransfer = class TaskTransfer extends Task {
             return false
         }
 
-        const resourceType = this.data.resourceType || RESOURCE_ENERGY
-
         if (target.store && target.store.getFreeCapacity(resourceType) === 0) {
-            return false
-        }
-
-        const creep = Game.getObjectById(this.subjectId);
-        if (!creep || !(creep instanceof Creep)) {
-            return false
-        }
-
-        if (creep.store.getUsedCapacity(resourceType) === 0) {
             return false
         }
 

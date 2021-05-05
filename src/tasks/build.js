@@ -1,13 +1,22 @@
 const {Task} = require("./task");
+
 module.exports.TaskBuild = class TaskBuild extends Task {
-    constructor(creep, constructionSite) {
-        super(creep && creep.id, TASK_TYPE_BUILD)
+    constructor(constructionSite) {
+        super(TASK_TYPE_BUILD)
 
         this.constructionSiteId = constructionSite && constructionSite.id
     }
 
-    run() {
-        const constructionSite = this.getObjectById(this.constructionSiteId);
+    run(creep) {
+        if (!creep || !(creep instanceof Creep)) {
+            return false
+        }
+
+        if (creep.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
+            return false
+        }
+
+        const constructionSite = Game.getObjectById(this.constructionSiteId);
         if (!constructionSite) {
             return false
         }
@@ -15,15 +24,6 @@ module.exports.TaskBuild = class TaskBuild extends Task {
         if (!(constructionSite instanceof ConstructionSite)) {
             Log.error('Target is not a construction site')
 
-            return false
-        }
-
-        const creep = Game.getObjectById(this.subjectId);
-        if (!creep || !(creep instanceof Creep)) {
-            return false
-        }
-
-        if (creep.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
             return false
         }
 

@@ -3,14 +3,13 @@ const {Helpers} = require("../helpers");
 const {Task} = require("./task");
 
 module.exports.TaskSpawnCreep = class TaskSpawnCreep extends Task {
-    constructor(spawn, data) {
-        super(spawn && spawn.id, TASK_TYPE_SPAWN_CREEP)
+    constructor(data) {
+        super(TASK_TYPE_SPAWN_CREEP)
 
         this.data = data || {}
     }
 
-    run() {
-        const spawn = Game.getObjectById(this.subjectId);
+    run(spawn) {
         const roomWrapper = new RoomWrapper(Game.getObjectById(this.subjectId).room);
 
         let memory = {

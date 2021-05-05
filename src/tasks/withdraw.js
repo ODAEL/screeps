@@ -1,15 +1,24 @@
 const {Task} = require("./task");
 
 module.exports.TaskWithdraw = class TaskWithdraw extends Task {
-    constructor(creep, target, data) {
-        super(creep && creep.id, TASK_TYPE_WITHDRAW)
+    constructor(target, data) {
+        super(TASK_TYPE_WITHDRAW)
 
         this.targetId = target && target.id
         this.data = data || {}
     }
 
-    run() {
+    run(creep) {
+        if (!creep || !(creep instanceof Creep)) {
+            return false
+        }
+
         const resourceType = this.data.resourceType || RESOURCE_ENERGY
+
+        if (creep.store.getFreeCapacity(resourceType) === 0) {
+            return false
+        }
+
         const target = Game.getObjectById(this.targetId);
         if (!target) {
             return false
@@ -28,15 +37,6 @@ module.exports.TaskWithdraw = class TaskWithdraw extends Task {
         }
 
         if (target.store.getUsedCapacity(resourceType) === 0) {
-            return false
-        }
-
-        const creep = Game.getObjectById(this.subjectId);
-        if (!creep || !(creep instanceof Creep)) {
-            return false
-        }
-
-        if (creep.store.getFreeCapacity(resourceType) === 0) {
             return false
         }
 

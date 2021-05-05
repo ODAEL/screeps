@@ -21,7 +21,7 @@ module.exports.SpawnTaskProcessor = class SpawnTaskProcessor extends BaseTaskPro
 
         if (myCreepsNear.length > 0) {
             // TODO Not renew low-level creeps
-            return new TaskRenewCreep(spawn, myCreepsNear[0]);
+            return new TaskRenewCreep(myCreepsNear[0]);
         }
 
         return null
@@ -65,7 +65,6 @@ module.exports.SpawnTaskProcessor = class SpawnTaskProcessor extends BaseTaskPro
         }
 
         return new TaskSpawnCreep(
-            spawn,
             {
                 optimalBodyparts: optimalBodyparts,
                 role: creepRole,

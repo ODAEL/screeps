@@ -1,13 +1,23 @@
 const {Task} = require("./task");
 
 module.exports.TaskClaimController = class TaskClaimController extends Task {
-    constructor(creep, controller) {
-        super(creep && creep.id, TASK_TYPE_CLAIM_CONTROLLER)
+    constructor(controller) {
+        super(TASK_TYPE_CLAIM_CONTROLLER)
 
         this.controllerId = controller && controller.id
     }
 
-    run() {
+    run(creep) {
+        if (!creep || !(creep instanceof Creep)) {
+            return false
+        }
+
+        if (creep.getActiveBodyparts(CLAIM) === 0) {
+            Log.error('Creep has no CLAIM bodypart ' + creep)
+
+            return false
+        }
+
         const controller = Game.getObjectById(this.controllerId);
         if (!controller) {
             Log.error('Unable to find controller by id=' + this.controllerId)
@@ -23,17 +33,6 @@ module.exports.TaskClaimController = class TaskClaimController extends Task {
 
         if (controller.owner) {
             Log.error('Found controller has owner ' + controller)
-
-            return false
-        }
-
-        const creep = Game.getObjectById(this.subjectId);
-        if (!creep || !(creep instanceof Creep)) {
-            return false
-        }
-
-        if (creep.getActiveBodyparts(CLAIM) === 0) {
-            Log.error('Creep has no CLAIM bodypart ' + creep)
 
             return false
         }

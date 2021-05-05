@@ -1,22 +1,21 @@
 const {Task} = require("./task");
 
 module.exports.TaskComplexMoveTo = class TaskComplexMoveTo extends Task {
-    constructor(creep, positions) {
-        super(creep && creep.id, TASK_TYPE_COMPLEX_MOVE_TO)
+    constructor(positions) {
+        super(TASK_TYPE_COMPLEX_MOVE_TO)
 
         this.positions = positions
     }
 
-    run() {
+    run(creep) {
+        if (!creep || !(creep instanceof Creep)) {
+            return false
+        }
+
         const positions = this.positions;
         if (!positions) {
             Log.error('No positions ' + positions)
 
-            return false
-        }
-
-        const creep = Game.getObjectById(this.subjectId);
-        if (!creep || !(creep instanceof Creep)) {
             return false
         }
 

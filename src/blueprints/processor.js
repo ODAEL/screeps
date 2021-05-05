@@ -86,7 +86,7 @@ module.exports.BlueprintProcessor = {
         switch (blueprint.type) {
             // TODO Support data
             case TASK_TYPE_SPAWN_CREEP:
-                return new TaskSpawnCreep(subject);
+                return new TaskSpawnCreep();
 
             case TASK_TYPE_RENEW_CREEP:
                 filter = __.and(...defaultFilters, ...blueprint.filters.creepFilters);
@@ -98,7 +98,7 @@ module.exports.BlueprintProcessor = {
 
                 creep = creeps[0];
 
-                return new TaskRenewCreep(subject, creep);
+                return new TaskRenewCreep(creep);
 
             case TASK_TYPE_HARVEST:
                 filter = __.and(...defaultFilters, ...blueprint.filters.targetFilters);
@@ -110,7 +110,7 @@ module.exports.BlueprintProcessor = {
                     return null;
                 }
 
-                return new TaskHarvest(subject, target);
+                return new TaskHarvest(target);
 
             case TASK_TYPE_TRANSFER:
                 filter = __.and(...defaultFilters, ...blueprint.filters.structureFilters);
@@ -121,7 +121,7 @@ module.exports.BlueprintProcessor = {
                     return null;
                 }
 
-                return new TaskTransfer(subject, structure, blueprint.data);
+                return new TaskTransfer(structure, blueprint.data);
 
             case TASK_TYPE_BUILD:
                 filter = __.and(...defaultFilters, ...blueprint.filters.constructionSiteFilters);
@@ -132,7 +132,7 @@ module.exports.BlueprintProcessor = {
                     return null;
                 }
 
-                return new TaskBuild(subject, constructionSite);
+                return new TaskBuild(constructionSite);
 
             case TASK_TYPE_UPGRADE_CONTROLLER:
                 controller = getRoomWrapper(subject).controller()
@@ -141,7 +141,7 @@ module.exports.BlueprintProcessor = {
                     return null;
                 }
 
-                return new TaskUpgradeController(subject, controller)
+                return new TaskUpgradeController(controller)
 
             case TASK_TYPE_REPAIR:
                 filter = __.and(...defaultFilters, ...blueprint.filters.structureFilters);
@@ -152,7 +152,7 @@ module.exports.BlueprintProcessor = {
                     return null;
                 }
 
-                return new TaskRepair(subject, structure);
+                return new TaskRepair(structure);
 
             case TASK_TYPE_HEAL:
                 filter = __.and(...defaultFilters, ...blueprint.filters.creepFilters);
@@ -163,7 +163,7 @@ module.exports.BlueprintProcessor = {
                     return null;
                 }
 
-                return new TaskHeal(subject, creep);
+                return new TaskHeal(creep);
 
             case TASK_TYPE_PICKUP:
                 filter = __.and(...defaultFilters, ...blueprint.filters.resourceFilters);
@@ -174,7 +174,7 @@ module.exports.BlueprintProcessor = {
                     return null;
                 }
 
-                return new TaskPickup(subject, resource);
+                return new TaskPickup(resource);
 
             case TASK_TYPE_WITHDRAW:
                 filter = __.and(...defaultFilters, ...blueprint.filters.targetFilters);
@@ -185,7 +185,7 @@ module.exports.BlueprintProcessor = {
                     return null;
                 }
 
-                return new TaskWithdraw(subject, target, blueprint.data);
+                return new TaskWithdraw(target, blueprint.data);
 
             case TASK_TYPE_TOWER_ATTACK:
                 filter = __.and(...defaultFilters, ...blueprint.filters.targetFilters);
@@ -196,7 +196,7 @@ module.exports.BlueprintProcessor = {
                     return null;
                 }
 
-                return new TaskTowerAttack(subject, target);
+                return new TaskTowerAttack(target);
 
             case TASK_TYPE_LINK_TRANSFER_ENERGY:
                 filter = __.and(...defaultFilters, ...blueprint.filters.targetLinkFilters);
@@ -207,7 +207,7 @@ module.exports.BlueprintProcessor = {
                     return null;
                 }
 
-                return new TaskLinkTransferEnergy(subject, targetLink);
+                return new TaskLinkTransferEnergy(targetLink);
 
             default:
                 return null;
