@@ -54,11 +54,23 @@ module.exports.SpawnTaskProcessor = class SpawnTaskProcessor extends BaseTaskPro
             optimalBodyparts = [WORK, CARRY, MOVE]
         }
 
+        let automated = creepRoleData.automated
+        if (automated === undefined) {
+            automated = true
+        }
+
+        let initialTasks = creepRoleData.initialTasks
+        if (!initialTasks) {
+            initialTasks = []
+        }
+
         return new TaskSpawnCreep(
             spawn,
             {
                 optimalBodyparts: optimalBodyparts,
                 role: creepRole,
+                automated: automated,
+                initialTasks: initialTasks,
             }
         );
     }

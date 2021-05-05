@@ -16,6 +16,7 @@ module.exports.TaskSpawnCreep = class TaskSpawnCreep extends Task {
         let memory = {
             role: this.data.role || 'default',
             automated: (this.data.automated !== undefined) ? this.data.automated : true,
+            tasks: (this.data.initialTasks !== undefined) ? this.data.initialTasks : [],
         }
 
         let optimalBodyparts = this.data.optimalBodyparts || [WORK, CARRY, MOVE];
