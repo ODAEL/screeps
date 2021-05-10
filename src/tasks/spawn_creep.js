@@ -10,7 +10,7 @@ module.exports.TaskSpawnCreep = class TaskSpawnCreep extends Task {
     }
 
     run(spawn) {
-        const roomWrapper = new RoomWrapper(Game.getObjectById(this.subjectId).room);
+        const roomWrapper = new RoomWrapper(spawn.room);
 
         let memory = {
             role: this.data.role || 'default',

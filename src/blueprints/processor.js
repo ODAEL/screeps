@@ -1,3 +1,5 @@
+const {TaskRangedAttack} = require("../tasks/ranged_attack");
+const {TaskAttack} = require("../tasks/attack");
 const {TaskLinkTransferEnergy} = require("../tasks/link_transfer_energy");
 const {TaskWithdraw} = require("../tasks/withdraw");
 const {TaskPickup} = require("../tasks/pickup");
@@ -178,7 +180,7 @@ module.exports.BlueprintProcessor = {
 
             case TASK_TYPE_WITHDRAW:
                 filter = __.and(...defaultFilters, ...blueprint.filters.targetFilters);
-                targets = [...getRoomWrapper(subject).structures(filter), ...getRoomWrapper(subject).tombstones(filter)];
+                targets = [...getRoomWrapper(subject).structures(filter), ...getRoomWrapper(subject).tombstones(filter), ...getRoomWrapper(subject).ruins(filter)];
                 target = Helpers.findClosest(subject, targets);
 
                 if (!target) {
@@ -186,6 +188,31 @@ module.exports.BlueprintProcessor = {
                 }
 
                 return new TaskWithdraw(target, blueprint.data);
+
+            case TASK_TYPE_ATTACK:
+                filter = __.and(...defaultFilters, ...blueprint.filters.targetFilters);
+                targets = [...getRoomWrapper(subject).hostileCreeps(filter), ...getRoomWrapper(subject).hostileStructures(filter)];
+                target = Helpers.findClosest(subject, targets);
+
+                if (!target) {
+                    return null;
+                }
+
+                return new TaskAttack(target);
+
+            case TASK_TYPE_RANGED_ATTACK:
+                filter = __.and(...defaultFilters, ...blueprint.filters.targetFilters);
+                targets = [...getRoomWrapper(subject).hostileCreeps(filter), ...getRoomWrapper(subject).hostileStructures(filter)];
+                target = Helpers.findClosest(subject, targets);
+
+                if (!target) {
+                    return null;
+                }
+
+                return new TaskRangedAttack(target);
+
+            case TASK_TYPE_MOVE:
+                return new TaskRangedAttack(blueprint.data.direction);
 
             case TASK_TYPE_TOWER_ATTACK:
                 filter = __.and(...defaultFilters, ...blueprint.filters.targetFilters);

@@ -43,6 +43,12 @@ module.exports.Filters = {
     cooldown: (fn) => ((object) => {
         return fn(object.cooldown);
     }),
+    posX: (fn) => ((object) => {
+        return fn(object.pos.x);
+    }),
+    posY: (fn) => ((object) => {
+        return fn(object.pos.y);
+    }),
 
 
     my: (strict = true) => ((object) => {

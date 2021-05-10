@@ -1,10 +1,11 @@
 const {Task} = require("./task");
 
 module.exports.TaskComplexMoveTo = class TaskComplexMoveTo extends Task {
-    constructor(positions) {
+    constructor(positions, data) {
         super(TASK_TYPE_COMPLEX_MOVE_TO)
 
         this.positions = positions
+        this.data = data || {}
     }
 
     run(creep) {
@@ -20,7 +21,12 @@ module.exports.TaskComplexMoveTo = class TaskComplexMoveTo extends Task {
         }
 
         let pos
-        for (let position of positions) {
+        let last = false
+        for (let i = 0; i < positions.length; i++) {
+            let position = positions[i]
+            if (i === positions.length - 1) {
+                last = true
+            }
             if (creep.room.name === position.roomName) {
                 pos = position
 
@@ -47,7 +53,9 @@ module.exports.TaskComplexMoveTo = class TaskComplexMoveTo extends Task {
         //     return false
         // }
 
-        if (!creep.pos.isNearTo(pos)) {
+        let range = this.data.range || 1
+
+        if (!last || !creep.pos.inRangeTo(pos.x, pos.y, range)) {
 
             return true
         }

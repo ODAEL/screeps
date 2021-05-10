@@ -76,12 +76,20 @@ class RoomWrapper {
         return this.find(FIND_STRUCTURES, filter)
     }
 
+    hostileStructures(filter) {
+        return this.find(FIND_HOSTILE_STRUCTURES, filter)
+    }
+
     minerals(filter) {
         return this.find(FIND_MINERALS, filter)
     }
 
     tombstones(filter) {
         return this.find(FIND_TOMBSTONES, filter)
+    }
+
+    ruins(filter) {
+        return this.find(FIND_RUINS, filter)
     }
 
     droppedResources(filter) {

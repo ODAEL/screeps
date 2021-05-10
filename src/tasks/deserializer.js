@@ -1,3 +1,6 @@
+const {TaskMove} = require("./move");
+const {TaskRangedAttack} = require("./ranged_attack");
+const {TaskAttack} = require("./attack");
 const {TaskComplexMoveTo} = require("./complex_move_to");
 const {Task} = require("./task");
 const {TaskLinkTransferEnergy} = require("./link_transfer_energy");
@@ -30,6 +33,9 @@ module.exports.Deserializer = {
             (taskData.type === TASK_TYPE_WITHDRAW && TaskWithdraw) ||
             (taskData.type === TASK_TYPE_MOVE_TO && TaskMoveTo) ||
             (taskData.type === TASK_TYPE_COMPLEX_MOVE_TO && TaskComplexMoveTo) ||
+            (taskData.type === TASK_TYPE_ATTACK && TaskAttack) ||
+            (taskData.type === TASK_TYPE_RANGED_ATTACK && TaskRangedAttack) ||
+            (taskData.type === TASK_TYPE_MOVE && TaskMove) ||
             (taskData.type === TASK_TYPE_CLAIM_CONTROLLER && TaskClaimController) ||
             (taskData.type === TASK_TYPE_TOWER_ATTACK && TaskTowerAttack) ||
             (taskData.type === TASK_TYPE_LINK_TRANSFER_ENERGY && TaskLinkTransferEnergy) ||

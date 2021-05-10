@@ -11,7 +11,7 @@ module.exports.loop = function () {
 
     TaskProcessor.process()
     
-    if (Game.time % 500 === 0) {
+    if (Game.time % 200 === 0) {
         MemoryManager.cleanUp()
     }
     

@@ -24,8 +24,8 @@ module.exports.TaskWithdraw = class TaskWithdraw extends Task {
             return false
         }
 
-        if (!(target instanceof Structure) && !(target instanceof Tombstone)) {
-            Log.error('Found target is not structure or tombstone ' + target)
+        if (!(target instanceof Structure) && !(target instanceof Tombstone) && !(target instanceof Ruin)) {
+            Log.error('Found target is not structure or tombstone or ruin ' + target)
 
             return false
         }

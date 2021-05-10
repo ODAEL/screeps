@@ -20,6 +20,9 @@ module.exports.BlueprintBuilder = {
     withdraw: (targetFilters = [], data) => new Blueprint(TASK_TYPE_WITHDRAW, {targetFilters: targetFilters}, data),
     // moveTo: (targetFilters = []) => new Blueprint(TASK_TYPE_MOVE_TO, {targetFilters: targetFilters}), No need
     // claimController: (controllerFilters = []) => new Blueprint(TASK_TYPE_CLAIM_CONTROLLER, {controllerFilters: controllerFilters}), No need
+    attack: (targetFilters = []) => new Blueprint(TASK_TYPE_ATTACK, {targetFilters: targetFilters}),
+    rangedAttack: (targetFilters = []) => new Blueprint(TASK_TYPE_RANGED_ATTACK, {targetFilters: targetFilters}),
+    move: (direction) => new Blueprint(TASK_TYPE_MOVE, {}, {direction: direction}),
     towerAttack: (targetFilters = []) => new Blueprint(TASK_TYPE_TOWER_ATTACK, {targetFilters: targetFilters}),
     linkTransferEnergy: (targetLinkFilters = []) => new Blueprint(TASK_TYPE_LINK_TRANSFER_ENERGY, {targetLinkFilters: targetLinkFilters}),
 };
