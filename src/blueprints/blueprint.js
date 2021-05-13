@@ -15,13 +15,13 @@ module.exports.BlueprintBuilder = {
     build: (constructionSiteFilters = []) => new Blueprint(TASK_TYPE_BUILD, {constructionSiteFilters: constructionSiteFilters}),
     upgradeController: () => new Blueprint(TASK_TYPE_UPGRADE_CONTROLLER),
     repair: (structureFilters = []) => new Blueprint(TASK_TYPE_REPAIR, {structureFilters: structureFilters}),
-    heal: (creepFilters = []) => new Blueprint(TASK_TYPE_HEAL, {creepFilters: creepFilters}),
+    heal: (creepFilters = [], data) => new Blueprint(TASK_TYPE_HEAL, {creepFilters: creepFilters}, data),
     pickup: (resourceFilters = []) => new Blueprint(TASK_TYPE_PICKUP, {resourceFilters: resourceFilters}),
     withdraw: (targetFilters = [], data) => new Blueprint(TASK_TYPE_WITHDRAW, {targetFilters: targetFilters}, data),
     // moveTo: (targetFilters = []) => new Blueprint(TASK_TYPE_MOVE_TO, {targetFilters: targetFilters}), No need
     // claimController: (controllerFilters = []) => new Blueprint(TASK_TYPE_CLAIM_CONTROLLER, {controllerFilters: controllerFilters}), No need
     attack: (targetFilters = []) => new Blueprint(TASK_TYPE_ATTACK, {targetFilters: targetFilters}),
-    rangedAttack: (targetFilters = []) => new Blueprint(TASK_TYPE_RANGED_ATTACK, {targetFilters: targetFilters}),
+    rangedAttack: (targetFilters = [], data) => new Blueprint(TASK_TYPE_RANGED_ATTACK, {targetFilters: targetFilters}, data),
     move: (direction) => new Blueprint(TASK_TYPE_MOVE, {}, {direction: direction}),
     towerAttack: (targetFilters = []) => new Blueprint(TASK_TYPE_TOWER_ATTACK, {targetFilters: targetFilters}),
     linkTransferEnergy: (targetLinkFilters = []) => new Blueprint(TASK_TYPE_LINK_TRANSFER_ENERGY, {targetLinkFilters: targetLinkFilters}),

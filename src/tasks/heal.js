@@ -1,63 +1,70 @@
 const {Task} = require("./task");
 
 module.exports.TaskHeal = class TaskHeal extends Task {
-    constructor(creep) {
+    constructor(creep, data) {
         super(TASK_TYPE_HEAL)
 
         this.creepId = creep && creep.id
+        this.data = data || {}
     }
 
     run(subject) {
+        let restrictMove = this.data.restrictMove || false
+
         if (!subject || !(subject instanceof Creep || subject instanceof StructureTower)) {
-            return false
+            return this.finish()
         }
 
-        if (subject.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
-            return false
+        if ((subject instanceof StructureTower) && subject.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
+            return this.finish()
         }
 
         const creep = Game.getObjectById(this.creepId);
         if (!creep) {
             Log.error('Unable to find creep by id=' + this.creepId)
 
-            return false
+            return this.finish()
         }
 
         if (!(creep instanceof Creep)) {
             Log.error('Found object is not creep ' + creep)
 
-            return false
+            return this.finish()
         }
 
         if (creep.hitsMax === creep.hits) {
             Log.error('Creep has maximum hits ' + creep)
 
-            return false
+            return this.finish()
         }
 
         subject instanceof Creep && subject.say(this.type)
 
-        if (subject.heal(creep) === ERR_NOT_IN_RANGE) {
-            if (subject instanceof Creep) {
-                subject.moveTo(creep, {visualizePathStyle: {stroke: '#ffffff'}});
-            } else {
-                return false
+        let healResult = subject.heal(creep)
+
+        if (healResult === ERR_NOT_IN_RANGE) {
+            // WTF?
+            if (subject instanceof StructureTower) {
+                return this.finish()
             }
 
-            return true
-        }
+            let rangedHealResult = subject.rangedHeal(creep)
 
-        if (creep.hitsMax === creep.hits) {
-            return false
-        }
+            if (rangedHealResult !== ERR_NOT_IN_RANGE) {
+                return this.finish()
+            }
 
-        // TODO Uncomment and do something with tower long healing
-        // if (subject.store.getUsedCapacity(RESOURCE_ENERGY) > 0) {
-        //     return true
-        // }
+            if (restrictMove) {
+                return this.finish()
+            }
+
+            subject.moveTo(creep, {visualizePathStyle: {stroke: '#ffffff'}});
+
+            return this.continue()
+        }
 
         subject instanceof Creep && subject.say('Done!')
 
-        return false
+        return this.finish()
     }
 };

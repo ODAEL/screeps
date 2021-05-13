@@ -53,15 +53,16 @@ module.exports.TaskComplexMoveTo = class TaskComplexMoveTo extends Task {
         //     return false
         // }
 
-        let range = this.data.range || 1
+        let range = this.data.range || 0
 
-        if (!last || !creep.pos.inRangeTo(pos.x, pos.y, range)) {
+        if (last && (
+            (range === 0 && creep.pos.x === pos.x && creep.pos.y === pos.y) || creep.pos.inRangeTo(pos.x, pos.y, range)
+        )) {
+            creep.say('Done!')
 
-            return true
+            return false
         }
 
-        creep.say('Done!')
-
-        return false
+        return true
     }
 };

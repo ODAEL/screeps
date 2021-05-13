@@ -1,3 +1,4 @@
+const {TaskRequestRecycle} = require("./request_recycle");
 const {TaskMove} = require("./move");
 const {TaskRangedAttack} = require("./ranged_attack");
 const {TaskAttack} = require("./attack");
@@ -37,6 +38,7 @@ module.exports.Deserializer = {
             (taskData.type === TASK_TYPE_RANGED_ATTACK && TaskRangedAttack) ||
             (taskData.type === TASK_TYPE_MOVE && TaskMove) ||
             (taskData.type === TASK_TYPE_CLAIM_CONTROLLER && TaskClaimController) ||
+            (taskData.type === TASK_TYPE_REQUEST_RECYCLE && TaskRequestRecycle) ||
             (taskData.type === TASK_TYPE_TOWER_ATTACK && TaskTowerAttack) ||
             (taskData.type === TASK_TYPE_LINK_TRANSFER_ENERGY && TaskLinkTransferEnergy) ||
             (Task);

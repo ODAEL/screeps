@@ -165,7 +165,7 @@ module.exports.BlueprintProcessor = {
                     return null;
                 }
 
-                return new TaskHeal(creep);
+                return new TaskHeal(creep, blueprint.data);
 
             case TASK_TYPE_PICKUP:
                 filter = __.and(...defaultFilters, ...blueprint.filters.resourceFilters);
@@ -191,7 +191,7 @@ module.exports.BlueprintProcessor = {
 
             case TASK_TYPE_ATTACK:
                 filter = __.and(...defaultFilters, ...blueprint.filters.targetFilters);
-                targets = [...getRoomWrapper(subject).hostileCreeps(filter), ...getRoomWrapper(subject).hostileStructures(filter)];
+                targets = [...getRoomWrapper(subject).hostileCreeps(filter), ...getRoomWrapper(subject).structures(filter)];
                 target = Helpers.findClosest(subject, targets);
 
                 if (!target) {
@@ -202,14 +202,14 @@ module.exports.BlueprintProcessor = {
 
             case TASK_TYPE_RANGED_ATTACK:
                 filter = __.and(...defaultFilters, ...blueprint.filters.targetFilters);
-                targets = [...getRoomWrapper(subject).hostileCreeps(filter), ...getRoomWrapper(subject).hostileStructures(filter)];
-                target = Helpers.findClosest(subject, targets);
+                targets = [...getRoomWrapper(subject).hostileCreeps(filter), ...getRoomWrapper(subject).structures(filter)];
+                target = Helpers.findClosestByRange(subject, targets);
 
                 if (!target) {
                     return null;
                 }
 
-                return new TaskRangedAttack(target);
+                return new TaskRangedAttack(target, blueprint.data);
 
             case TASK_TYPE_MOVE:
                 return new TaskRangedAttack(blueprint.data.direction);

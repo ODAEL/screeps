@@ -66,5 +66,8 @@ module.exports.Filters = {
     instanceof: (type) => ((object) => {
         return object instanceof type
     }),
+    pos: (x, y) => ((object) => {
+        return object.pos.x === x && object.pos.y === y
+    }),
 
 };

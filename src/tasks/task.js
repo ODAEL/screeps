@@ -9,4 +9,12 @@ module.exports.Task = class Task {
 
         return false
     }
+
+    continue() {
+        return true
+    }
+
+    finish() {
+        return false
+    }
 }

@@ -1,32 +1,44 @@
 const {Task} = require("./task");
 
 module.exports.TaskRangedAttack = class TaskRangedAttack extends Task {
-    constructor(target) {
+    constructor(target, data) {
         super(TASK_TYPE_RANGED_ATTACK)
 
         this.targetId = target && target.id
+        this.data = data || {}
     }
 
     run(creep) {
+        let restrictMove = this.data.restrictMove || false
+        let pursue = this.data.pursue || false
+
         if (!creep || !(creep instanceof Creep)) {
-            return false
+            return this.finish()
         }
 
         const target = Game.getObjectById(this.targetId);
         if (!target) {
-            return false
+            return this.finish()
         }
 
         creep.say(this.type)
 
         if (creep.rangedAttack(target) === ERR_NOT_IN_RANGE) {
+            if (restrictMove) {
+                return this.finish()
+            }
+
             creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
 
-            return true
+            if (pursue) {
+                return this.continue()
+            }
+
+            return this.finish()
         }
 
         creep.say('Done!')
 
-        return false
+        return this.finish()
     }
 };

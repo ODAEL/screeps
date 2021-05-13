@@ -139,6 +139,20 @@ module.exports.Helpers = {
         return fromObject.pos.findClosestByPath(toObjects)
     },
 
+
+    findClosestByRange: (fromObject, toObjects) => {
+        if (toObjects.length === 0) {
+            return null
+        }
+
+        if (toObjects.length === 1) {
+            return toObjects[0]
+        }
+
+        // TODO Change to findClosestByRange for CPU-save mode
+        return fromObject.pos.findClosestByRange(toObjects)
+    },
+
     chooseBodyparts: (energyCapacityAvailable, optimalBodyparts) => {
         if (!optimalBodyparts) {
             optimalBodyparts = [WORK, CARRY, MOVE];
