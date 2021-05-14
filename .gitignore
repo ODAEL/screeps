@@ -2,9 +2,9 @@
 node_modules
 .env
 
-# To hide my globaal strategy and one-time commands
-/src/config.js
-/src/commands.js
-/src/cron.js
+# To hide my global strategy and one-time commands
+/src/custom/config.js
+/src/custom/commands.js
+/src/custom/cron.js
 
 /dist/*.js

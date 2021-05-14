@@ -1,10 +1,10 @@
 require('./globals')
 require('./prototypes/prototypes')
-require('./commands')
+require('./custom/commands')
 
 const {MemoryManager} = require("./memory_manager");
 const {TaskProcessor} = require("./tasks/processors/processor");
-const cron = require('./cron')
+const cron = require('./custom/cron')
 
 module.exports.loop = function () {
     cron()

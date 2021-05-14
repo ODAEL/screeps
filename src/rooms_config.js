@@ -1,4 +1,4 @@
-const {Config} = require("./config");
+const {Config} = require("./custom/config");
 
 class RoomConfig {
     constructor(roomName) {
