@@ -1,3 +1,5 @@
+const {TaskDismantle} = require("../tasks/dismantle");
+const {TaskRequestRecycle} = require("../tasks/request_recycle");
 const {TaskRangedAttack} = require("../tasks/ranged_attack");
 const {TaskAttack} = require("../tasks/attack");
 const {TaskLinkTransferEnergy} = require("../tasks/link_transfer_energy");
@@ -61,6 +63,13 @@ const getDefaultFilters = (subject, type) => {
                 Filters.my(false),
                 Filters.usedCapacity(__.gt(0)),
             ];
+        case TASK_TYPE_REQUEST_RECYCLE:
+            return [
+                Filters.my(),
+                Filters.instanceof(StructureSpawn),
+            ];
+        case TASK_TYPE_DISMANTLE:
+            return [];
         case TASK_TYPE_LINK_TRANSFER_ENERGY:
             return [
                 Filters.structureType(__.eq(STRUCTURE_LINK)),
@@ -213,6 +222,28 @@ module.exports.BlueprintProcessor = {
 
             case TASK_TYPE_MOVE:
                 return new TaskRangedAttack(blueprint.data.direction);
+
+            case TASK_TYPE_REQUEST_RECYCLE:
+                filter = __.and(...defaultFilters, ...blueprint.filters.spawnFilters);
+                targets = getRoomWrapper(subject).structures(filter);
+                target = Helpers.findClosest(subject, targets);
+
+                if (!target) {
+                    return null;
+                }
+
+                return new TaskRequestRecycle(target);
+
+            case TASK_TYPE_DISMANTLE:
+                filter = __.and(...defaultFilters, ...blueprint.filters.structureFilters);
+                targets = getRoomWrapper(subject).structures(filter);
+                target = Helpers.findClosest(subject, targets);
+
+                if (!target) {
+                    return null;
+                }
+
+                return new TaskDismantle(target);
 
             case TASK_TYPE_TOWER_ATTACK:
                 filter = __.and(...defaultFilters, ...blueprint.filters.targetFilters);
