@@ -9,12 +9,12 @@ module.exports.TaskAttack = class TaskAttack extends Task {
 
     run(creep) {
         if (!creep || !(creep instanceof Creep)) {
-            return false
+            return this.skip()
         }
 
         const target = Game.getObjectById(this.targetId);
         if (!target) {
-            return false
+            return this.skip()
         }
 
         creep.say(this.type)
@@ -22,11 +22,11 @@ module.exports.TaskAttack = class TaskAttack extends Task {
         if (creep.attack(target) === ERR_NOT_IN_RANGE) {
             creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
 
-            return true
+            return this.continue()
         }
 
         creep.say('Done!')
 
-        return false
+        return this.finish()
     }
 };

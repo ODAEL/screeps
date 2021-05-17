@@ -9,32 +9,32 @@ module.exports.TaskClaimController = class TaskClaimController extends Task {
 
     run(creep) {
         if (!creep || !(creep instanceof Creep)) {
-            return false
+            return this.skip()
         }
 
         if (creep.getActiveBodyparts(CLAIM) === 0) {
             Log.error('Creep has no CLAIM bodypart ' + creep)
 
-            return false
+            return this.skip()
         }
 
         const controller = Game.getObjectById(this.controllerId);
         if (!controller) {
             Log.error('Unable to find controller by id=' + this.controllerId)
 
-            return false
+            return this.skip()
         }
 
         if (!(controller instanceof StructureController)) {
             Log.error('Found controller is not controller ' + controller)
 
-            return false
+            return this.skip()
         }
 
         if (controller.owner) {
             Log.error('Found controller has owner ' + controller)
 
-            return false
+            return this.skip()
         }
 
         creep.say(this.type)
@@ -42,11 +42,11 @@ module.exports.TaskClaimController = class TaskClaimController extends Task {
         if (creep.claimController(controller) === ERR_NOT_IN_RANGE) {
             creep.moveTo(controller, {visualizePathStyle: {stroke: '#ffffff'}});
 
-            return true
+            return this.continue()
         }
 
         creep.say('Done!')
 
-        return false
+        return this.finish()
     }
 };

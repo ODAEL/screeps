@@ -10,12 +10,12 @@ module.exports.TaskDismantle = class TaskDismantle extends Task {
     run(creep) {
         if (!creep || !(creep instanceof Creep)) {
             cl(1)
-            return this.finish()
+            return this.skip()
         }
 
         if (creep.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
             cl(2)
-            return this.finish()
+            return this.skip()
         }
 
         const structure = Game.getObjectById(this.structureId);
@@ -23,14 +23,14 @@ module.exports.TaskDismantle = class TaskDismantle extends Task {
             cl(3)
             Log.error('Unable to find target by id=' + this.structureId)
 
-            return this.finish()
+            return this.skip()
         }
 
         if (!(structure instanceof Structure)) {
             cl(4)
             Log.error('Found object is not structure ' + structure)
 
-            return this.finish()
+            return this.skip()
         }
 
         creep.say(this.type)
@@ -42,10 +42,8 @@ module.exports.TaskDismantle = class TaskDismantle extends Task {
             return this.continue()
         }
 
-        cl(result)
-
         creep.say('Done!')
 
-        return false
+        return this.finish()
     }
 };

@@ -12,30 +12,30 @@ module.exports.TaskHeal = class TaskHeal extends Task {
         let restrictMove = this.data.restrictMove || false
 
         if (!subject || !(subject instanceof Creep || subject instanceof StructureTower)) {
-            return this.finish()
+            return this.skip()
         }
 
         if ((subject instanceof StructureTower) && subject.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
-            return this.finish()
+            return this.skip()
         }
 
         const creep = Game.getObjectById(this.creepId);
         if (!creep) {
             Log.error('Unable to find creep by id=' + this.creepId)
 
-            return this.finish()
+            return this.skip()
         }
 
         if (!(creep instanceof Creep)) {
             Log.error('Found object is not creep ' + creep)
 
-            return this.finish()
+            return this.skip()
         }
 
         if (creep.hitsMax === creep.hits) {
             Log.error('Creep has maximum hits ' + creep)
 
-            return this.finish()
+            return this.skip()
         }
 
         subject instanceof Creep && subject.say(this.type)
@@ -45,17 +45,17 @@ module.exports.TaskHeal = class TaskHeal extends Task {
         if (healResult === ERR_NOT_IN_RANGE) {
             // WTF?
             if (subject instanceof StructureTower) {
-                return this.finish()
+                return this.skip()
             }
 
             let rangedHealResult = subject.rangedHeal(creep)
 
             if (rangedHealResult !== ERR_NOT_IN_RANGE) {
-                return this.finish()
+                return this.skip()
             }
 
             if (restrictMove) {
-                return this.finish()
+                return this.skip()
             }
 
             subject.moveTo(creep, {visualizePathStyle: {stroke: '#ffffff'}});

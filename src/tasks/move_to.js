@@ -11,24 +11,24 @@ module.exports.TaskMoveTo = class TaskMoveTo extends Task {
 
     run(creep) {
         if (!creep || !(creep instanceof Creep)) {
-            return false
+            return this.skip()
         }
 
         const pos = this.pos;
         if (!pos) {
             Log.error('No pos ' + pos)
 
-            return false
+            return this.skip()
         }
 
         if (pos.x === undefined || pos.y === undefined || !pos.roomName) {
             Log.error('Found pos is not pos ' + pos)
 
-            return false
+            return this.skip()
         }
 
         if (creep.room.name !== pos.roomName) {
-            return false
+            return this.skip()
         }
 
         creep.say(this.type)
@@ -37,16 +37,16 @@ module.exports.TaskMoveTo = class TaskMoveTo extends Task {
         // if (result !== OK) {
         //     Log.error('MoveTo - result ' + result)
         //
-        //     return false
+        //     return this.finish()
         // }
 
         if (!creep.pos.isNearTo(pos)) {
 
-            return true
+            return this.continue()
         }
 
         creep.say('Done!')
 
-        return false
+        return this.skip()
     }
 };

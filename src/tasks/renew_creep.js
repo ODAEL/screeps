@@ -9,20 +9,20 @@ module.exports.TaskRenewCreep = class TaskRenewCreep extends Task {
 
     run(spawn) {
         if (!spawn) {
-            return false
+            return this.skip()
         }
 
         if (spawn.spawning) {
-            return false
+            return this.skip()
         }
 
         const creep = Game.getObjectById(this.creepId);
         if (!creep) {
-            return false
+            return this.skip()
         }
 
         spawn.renewCreep(creep)
 
-        return false
+        return this.finish()
     }
 };

@@ -13,19 +13,19 @@ module.exports.TaskRangedAttack = class TaskRangedAttack extends Task {
         let pursue = this.data.pursue || false
 
         if (!creep || !(creep instanceof Creep)) {
-            return this.finish()
+            return this.skip()
         }
 
         const target = Game.getObjectById(this.targetId);
         if (!target) {
-            return this.finish()
+            return this.skip()
         }
 
         creep.say(this.type)
 
         if (creep.rangedAttack(target) === ERR_NOT_IN_RANGE) {
             if (restrictMove) {
-                return this.finish()
+                return this.skip()
             }
 
             creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
@@ -34,7 +34,7 @@ module.exports.TaskRangedAttack = class TaskRangedAttack extends Task {
                 return this.continue()
             }
 
-            return this.finish()
+            return this.skip()
         }
 
         creep.say('Done!')

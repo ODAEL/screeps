@@ -9,19 +9,19 @@ module.exports.TaskRequestRecycle = class TaskRequestRecycle extends Task {
 
     run(creep) {
         if (!creep || !(creep instanceof Creep)) {
-            return this.finish()
+            return this.skip()
         }
 
         const spawn = Game.getObjectById(this.spawnId);
         if (!spawn) {
             Log.error('Unable to find spawn ' + this.spawnId)
 
-            return this.finish()
+            return this.skip()
         }
         if (!(spawn instanceof StructureSpawn)) {
             Log.error('Found spawn is not spawn ' + spawn)
 
-            return this.finish()
+            return this.skip()
         }
 
         creep.say(this.type)

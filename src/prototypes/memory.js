@@ -116,12 +116,12 @@ for (let type of TYPES_WITH_MEMORY) {
 
 for (let type of TYPES_WITH_MEMORY) {
     type.prototype.blueprintsOrderPosition = function (key, max) {
-        this.memory.blueprintsOrderPosition = this.memory.blueprintsOrderPosition || {}
+        this.memory.bop = this.memory.bop || {}
 
-        let position = this.memory.blueprintsOrderPosition[key] || 0
+        let position = this.memory.bop[key] || 0
         position =  (position < max) ? position : 0
 
-        this.memory.blueprintsOrderPosition[key] = position + 1
+        this.memory.bop[key] = position + 1
         return position
     };
 }

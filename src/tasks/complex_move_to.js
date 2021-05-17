@@ -10,14 +10,14 @@ module.exports.TaskComplexMoveTo = class TaskComplexMoveTo extends Task {
 
     run(creep) {
         if (!creep || !(creep instanceof Creep)) {
-            return false
+            return this.skip()
         }
 
         const positions = this.positions;
         if (!positions) {
             Log.error('No positions ' + positions)
 
-            return false
+            return this.skip()
         }
 
         let pos
@@ -35,13 +35,13 @@ module.exports.TaskComplexMoveTo = class TaskComplexMoveTo extends Task {
         }
 
         if (!pos) {
-            return false
+            return this.skip()
         }
 
         if (pos.x === undefined || pos.y === undefined || !pos.roomName) {
             Log.error('Found pos is not pos ' + pos)
 
-            return false
+            return this.skip()
         }
 
         creep.say(this.type)
@@ -50,7 +50,7 @@ module.exports.TaskComplexMoveTo = class TaskComplexMoveTo extends Task {
         // if (result !== OK) {
         //     Log.error('MoveTo - result ' + result)
         //
-        //     return false
+        //     return this.finish()
         // }
 
         let range = this.data.range || 0
@@ -60,9 +60,9 @@ module.exports.TaskComplexMoveTo = class TaskComplexMoveTo extends Task {
         )) {
             creep.say('Done!')
 
-            return false
+            return this.skip()
         }
 
-        return true
+        return this.continue()
     }
 };

@@ -9,26 +9,26 @@ module.exports.TaskPickup = class TaskPickup extends Task {
 
     run(creep) {
         if (!creep || !(creep instanceof Creep)) {
-            return false
+            return this.skip()
         }
 
         if (creep.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
-            return false
+            return this.skip()
         }
 
         const resource = Game.getObjectById(this.resourceId);
         if (!resource) {
-            return false
+            return this.skip()
         }
 
         if (!(resource instanceof Resource)) {
             Log.error('Found resource is not resource ' + resource)
 
-            return false
+            return this.skip()
         }
 
         if (resource.resourceType !== RESOURCE_ENERGY) {
-            return false
+            return this.skip()
         }
 
         creep.say(this.type)
@@ -36,11 +36,11 @@ module.exports.TaskPickup = class TaskPickup extends Task {
         if (creep.pickup(resource) === ERR_NOT_IN_RANGE) {
             creep.moveTo(resource, {visualizePathStyle: {stroke: '#ffffff'}});
 
-            return true
+            return this.continue()
         }
 
         creep.say('Done!')
 
-        return false
+        return this.finish()
     }
 };

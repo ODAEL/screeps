@@ -9,11 +9,11 @@ module.exports.BaseTaskProcessor = class BaseTaskProcessor {
         if (task) {
             Log.debug(this.subject, 'Task found', task)
             // If not finished
-            if (this.runTask(task)) {
-                Log.debug(this.subject, 'Continue task')
+            if (!this.runTask(task)) {
+                Log.debug(this.subject, 'Continue or finish task')
                 return;
             }
-            Log.debug(this.subject, 'Task is finished')
+            Log.debug(this.subject, 'Task is skipped')
         }
 
         Log.debug(this.subject, 'Process new task')
@@ -32,19 +32,33 @@ module.exports.BaseTaskProcessor = class BaseTaskProcessor {
         this.runTask(task);
     }
 
+    /**
+     * @param task
+     * @returns {boolean} new task needed
+     */
     runTask(task) {
         if (!task) {
+            return true
+        }
+
+        let runResult = task.run(this.subject)
+
+        if (runResult === TASK_CODE_CONTINUE) {
+            // If continue - new task not needed
             return false
         }
 
-        if (!task.run(this.subject)) {
-            // If finished - end
-            this.subject.endCurrentTask()
+        this.subject.endCurrentTask()
 
-            return false
+        if (runResult === TASK_CODE_SKIP) {
+            // If skipped - new task needed
+            return true
         }
 
-        return true
+        if (runResult === TASK_CODE_FINISH) {
+            // If finished - new task not needed
+            return true
+        }
     }
 
     processNewTask() {

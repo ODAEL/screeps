@@ -9,22 +9,22 @@ module.exports.TaskBuild = class TaskBuild extends Task {
 
     run(creep) {
         if (!creep || !(creep instanceof Creep)) {
-            return false
+            return this.skip()
         }
 
         if (creep.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
-            return false
+            return this.skip()
         }
 
         const constructionSite = Game.getObjectById(this.constructionSiteId);
         if (!constructionSite) {
-            return false
+            return this.skip()
         }
 
         if (!(constructionSite instanceof ConstructionSite)) {
             Log.error('Target is not a construction site')
 
-            return false
+            return this.skip()
         }
 
         creep.say(this.type)
@@ -32,20 +32,11 @@ module.exports.TaskBuild = class TaskBuild extends Task {
         if (creep.build(constructionSite) === ERR_NOT_IN_RANGE) {
             creep.moveTo(constructionSite, {visualizePathStyle: {stroke: '#ffffff'}});
 
-            return true
-        }
-
-        // If have built
-        if (!Game.getObjectById(this.constructionSiteId)) {
-            return false
-        }
-
-        if (creep.store.getUsedCapacity(RESOURCE_ENERGY) > 0) {
-            return true
+            return this.continue()
         }
 
         creep.say('Done!')
 
-        return false
+        return this.finish()
     }
 };

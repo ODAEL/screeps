@@ -9,28 +9,28 @@ module.exports.TaskTowerAttack = class TaskTowerAttack extends Task {
 
     run(tower) {
         if (!tower || !(tower instanceof StructureTower)) {
-            return false
+            return this.skip()
         }
 
         if (tower.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
-            return false
+            return this.skip()
         }
 
         const target = Game.getObjectById(this.targetId);
         if (!target) {
             Log.error('Unable to find target by id=' + this.targetId)
 
-            return false
+            return this.skip()
         }
 
         if (target.my) {
             Log.error('Found object is yours ' + target)
 
-            return false
+            return this.skip()
         }
 
         tower.attack(target)
 
-        return false
+        return this.finish()
     }
 };

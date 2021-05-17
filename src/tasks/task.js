@@ -7,14 +7,18 @@ module.exports.Task = class Task {
     run(subject) {
         Log.error('Not implemented')
 
-        return false
+        return this.skip()
     }
 
     continue() {
-        return true
+        return TASK_CODE_CONTINUE
+    }
+
+    skip() {
+        return TASK_CODE_SKIP
     }
 
     finish() {
-        return false
+        return TASK_CODE_FINISH
     }
 }

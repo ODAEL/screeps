@@ -9,11 +9,11 @@ module.exports.TaskRepair = class TaskRepair extends Task {
 
     run(subject) {
         if (!subject || !(subject instanceof Creep || subject instanceof StructureTower)) {
-            return false
+            return this.skip()
         }
 
         if (subject.store.getUsedCapacity(RESOURCE_ENERGY) === 0) {
-            return false
+            return this.skip()
         }
 
         const structure = Game.getObjectById(this.structureId);
@@ -21,19 +21,19 @@ module.exports.TaskRepair = class TaskRepair extends Task {
             Log.error(2)
             Log.error('Unable to find target by id=' + this.structureId)
 
-            return false
+            return this.skip()
         }
 
         if (!(structure instanceof Structure)) {
             Log.error('Found object is not structure ' + structure)
 
-            return false
+            return this.skip()
         }
 
         if (structure.hitsMax === structure.hits) {
-            Log.error('Structure has maximum hist ' + structure)
+            Log.error('Structure has maximum hits ' + structure)
 
-            return false
+            return this.skip()
         }
 
         subject instanceof Creep && subject.say(this.type)
@@ -42,23 +42,14 @@ module.exports.TaskRepair = class TaskRepair extends Task {
             if (subject instanceof Creep) {
                 subject.moveTo(structure, {visualizePathStyle: {stroke: '#ffffff'}});
             } else {
-                return false
+                return this.skip()
             }
 
-            return true
+            return this.continue()
         }
-
-        if (structure.hitsMax === structure.hits) {
-            return false
-        }
-
-        // TODO Uncomment and do something with tower long repairing
-        // if (subject.store.getUsedCapacity(RESOURCE_ENERGY) > 0) {
-        //     return true
-        // }
 
         subject instanceof Creep && subject.say('Done!')
 
-        return false
+        return this.finish()
     }
 };

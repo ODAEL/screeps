@@ -10,34 +10,34 @@ module.exports.TaskWithdraw = class TaskWithdraw extends Task {
 
     run(creep) {
         if (!creep || !(creep instanceof Creep)) {
-            return false
+            return this.skip()
         }
 
         const resourceType = this.data.resourceType || RESOURCE_ENERGY
 
         if (creep.store.getFreeCapacity(resourceType) === 0) {
-            return false
+            return this.skip()
         }
 
         const target = Game.getObjectById(this.targetId);
         if (!target) {
-            return false
+            return this.skip()
         }
 
         if (!(target instanceof Structure) && !(target instanceof Tombstone) && !(target instanceof Ruin)) {
             Log.error('Found target is not structure or tombstone or ruin ' + target)
 
-            return false
+            return this.skip()
         }
 
         if (!target.store) {
             Log.error('Found target has no store ' + target)
 
-            return false
+            return this.skip()
         }
 
         if (target.store.getUsedCapacity(resourceType) === 0) {
-            return false
+            return this.skip()
         }
 
         creep.say(this.type)
@@ -45,11 +45,11 @@ module.exports.TaskWithdraw = class TaskWithdraw extends Task {
         if (creep.withdraw(target, resourceType) === ERR_NOT_IN_RANGE) {
             creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
 
-            return true
+            return this.continue()
         }
 
         creep.say('Done!')
 
-        return false
+        return this.finish()
     }
 };

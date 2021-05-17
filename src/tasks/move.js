@@ -9,14 +9,14 @@ module.exports.TaskMove = class TaskMove extends Task {
 
     run(creep) {
         if (!creep || !(creep instanceof Creep)) {
-            return false
+            return this.skip()
         }
 
         const direction = this.direction;
         if (!direction) {
             Log.error('No direction ' + direction)
 
-            return false
+            return this.skip()
         }
 
         creep.say(this.type)
@@ -25,11 +25,11 @@ module.exports.TaskMove = class TaskMove extends Task {
         // if (result !== OK) {
         //     Log.error('MoveTo - result ' + result)
         //
-        //     return false
+        //     return this.finish()
         // }
 
         creep.say('Done!')
 
-        return false
+        return this.skip()
     }
 };
