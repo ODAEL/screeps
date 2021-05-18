@@ -1,10 +1,12 @@
 const {Blueprint} = require("./blueprint");
 const BLUEPRINT_CHOOSE_LOGIC_ORDER = 'blueprint_choose_logic_order'
 const BLUEPRINT_CHOOSE_LOGIC_PRIORITY = 'blueprint_choose_logic_priority'
+const BLUEPRINT_CHOOSE_LOGIC_ALL = 'blueprint_choose_logic_all'
 
 const BLUEPRINT_CHOOSE_LOGICS = [
     BLUEPRINT_CHOOSE_LOGIC_ORDER,
     BLUEPRINT_CHOOSE_LOGIC_PRIORITY,
+    BLUEPRINT_CHOOSE_LOGIC_ALL,
 ]
 
 class BlueprintContainer {

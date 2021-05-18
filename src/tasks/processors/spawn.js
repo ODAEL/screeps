@@ -6,7 +6,7 @@ const {BaseTaskProcessor} = require("./base");
 const {SpawnWrapper} = require("../../wrappers");
 
 module.exports.SpawnTaskProcessor = class SpawnTaskProcessor extends BaseTaskProcessor {
-    processNewTask() {
+    processNewTasks() {
         let spawn = this.subject
 
         let task = this.processSpawnCreep()

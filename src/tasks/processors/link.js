@@ -3,7 +3,7 @@ const {RoomConfig} = require("../../rooms_config");
 const {BaseTaskProcessor} = require("./base");
 
 module.exports.LinkTaskProcessor = class LinkTaskProcessor extends BaseTaskProcessor {
-    processNewTask() {
+    processNewTasks() {
         let link = this.subject
 
         const role = link.memory.role || 'default'

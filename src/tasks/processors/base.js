@@ -17,19 +17,27 @@ module.exports.BaseTaskProcessor = class BaseTaskProcessor {
         }
 
         Log.debug(this.subject, 'Process new task')
+        
         // If finished or no current tasks
-        task = this.processNewTask()
-        if (!task) {
+        let tasks = this.processNewTasks()
+        if (!tasks) {
             Log.debug(this.subject, 'New task not chosen')
             return;
         }
 
-        Log.debug(this.subject, 'New task chosen', task)
-        this.subject.tasks.push(task);
+        if (!_.isArray(tasks)) {
+
+            tasks = [tasks]
+        }
+
+        Log.debug(this.subject, 'New tasks chosen')
+
+        for (let task of tasks) {
+            this.subject.tasks.push(task);
+        }
 
         Log.debug(this.subject, 'Current tasks', this.subject.tasks)
-        // TODO Revise if I can run next tasks after previous
-        this.runTask(task);
+        this.runTask(this.subject.currentTask);
     }
 
     /**
@@ -61,6 +69,6 @@ module.exports.BaseTaskProcessor = class BaseTaskProcessor {
         }
     }
 
-    processNewTask() {
+    processNewTasks() {
     }
 };

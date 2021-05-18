@@ -3,7 +3,7 @@ const {RoomConfig} = require("../../rooms_config");
 const {BaseTaskProcessor} = require("./base");
 
 module.exports.CreepTaskProcessor = class CreepTaskProcessor extends BaseTaskProcessor {
-    processNewTask() {
+    processNewTasks() {
         let creep = this.subject
         if (creep.memory.automated === false) {
             return null;

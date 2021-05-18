@@ -2,7 +2,7 @@ const {BlueprintContainerProcessor} = require("../../blueprints/container_proces
 const {BaseTaskProcessor} = require("./base");
 const {RoomConfig} = require("../../rooms_config");
 module.exports.TowerTaskProcessor = class TowerTaskProcessor extends BaseTaskProcessor {
-    processNewTask() {
+    processNewTasks() {
         let tower = this.subject
 
         const role = tower.memory.role || 'default'

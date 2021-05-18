@@ -1,7 +1,8 @@
 const {BLUEPRINT_CHOOSE_LOGIC_PRIORITY} = require("./container");
+const {BLUEPRINT_CHOOSE_LOGIC_ALL} = require("./container");
+const {BLUEPRINT_CHOOSE_LOGIC_ORDER} = require("./container");
 const {BlueprintContainer} = require("./container");
 const {Blueprint} = require("./blueprint");
-const {BLUEPRINT_CHOOSE_LOGIC_ORDER} = require("./container");
 const {BlueprintProcessor} = require("./processor");
 
 
@@ -23,6 +24,28 @@ class BlueprintContainerProcessor {
     }
 
     processBlueprints(blueprints, chooseLogic, branchId) {
+        if (chooseLogic === BLUEPRINT_CHOOSE_LOGIC_ALL) {
+            let tasks = []
+            let task
+
+            for (let index = 0; index < blueprints.length; index++) {
+                let item = blueprints[index]
+
+                if (item instanceof Blueprint) {
+                    task = BlueprintProcessor.taskByBlueprint(this.subject, item)
+                } else if (item instanceof BlueprintContainer) {
+                    task = this.process(item, branchId * 10 + index)
+                } else {
+                    Log.error('Unknown item type in blueprints', item)
+                    continue
+                }
+
+                tasks.push(task)
+            }
+
+            return tasks !== [] ? tasks : null
+        }
+
         let numberOfIterations = 0;
         let task
 
