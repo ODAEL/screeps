@@ -71,22 +71,22 @@ for (let type of TYPES_WITH_MEMORY) {
     Object.defineProperty(type.prototype, 'tasks', {
         configurable: true,
         get: function() {
-            if(_.isUndefined(this.memory.tasks)) {
-                this.memory.tasks = [];
+            if(_.isUndefined(this.memory.t)) {
+                this.memory.t = [];
             }
-            if(!_.isArray(this.memory.tasks)) {
+            if(!_.isArray(this.memory.t)) {
                 return undefined;
             }
-            return this.memory.tasks || [];
+            return this.memory.t || [];
         },
         set: function(value) {
-            if(_.isUndefined(this.memory.tasks)) {
-                this.memory.tasks = [];
+            if(_.isUndefined(this.memory.t)) {
+                this.memory.t = [];
             }
-            if(!_.isArray(this.memory.tasks)) {
+            if(!_.isArray(this.memory.t)) {
                 throw new Error('Could not set tasks');
             }
-            this.memory.tasks = value;
+            this.memory.t = value;
         },
     });
 }

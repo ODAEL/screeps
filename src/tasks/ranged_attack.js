@@ -34,7 +34,7 @@ module.exports.TaskRangedAttack = class TaskRangedAttack extends Task {
                 return this.continue()
             }
 
-            return this.skip()
+            return this.finish()
         }
 
         creep.say('Done!')

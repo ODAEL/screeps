@@ -1,20 +1,23 @@
 const {Task} = require("./task");
 
 module.exports.TaskHarvest = class TaskHarvest extends Task {
-    constructor(target) {
+    constructor(target, data) {
         super(TASK_TYPE_HARVEST)
 
         this.targetId = target && target.id
+        this.data = data || {}
     }
 
     run(creep) {
+        let ignoreFreeCapacity = this.data.ignoreFreeCapacity || false
+
         if (!creep || !(creep instanceof Creep)) {
             return this.skip()
         }
 
         let workBodyparts = creep.getActiveBodyparts(WORK)
 
-        if (creep.store.getFreeCapacity() < workBodyparts * 2) {
+        if (!ignoreFreeCapacity && creep.store.getFreeCapacity() < workBodyparts * 2) {
             return this.skip()
         }
 

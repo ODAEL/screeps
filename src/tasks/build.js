@@ -30,13 +30,14 @@ module.exports.TaskBuild = class TaskBuild extends Task {
         creep.say(this.type)
 
         if (creep.build(constructionSite) === ERR_NOT_IN_RANGE) {
-            creep.moveTo(constructionSite, {visualizePathStyle: {stroke: '#ffffff'}});
+            creep.moveTo(constructionSite, {visualizePathStyle: {stroke: '#ffffff'}, range: 3});
 
             return this.continue()
         }
 
-        creep.say('Done!')
+        // creep.say('Done!')
 
-        return this.finish()
+        // TODO Check finishing properly
+        return this.continue()
     }
 };

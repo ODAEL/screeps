@@ -1,3 +1,7 @@
+let f = (fn) => {
+    return fn instanceof Function ? fn : (actual) => _.isEqual(actual, fn) // eq
+}
+
 module.exports.__ = {
     and: (...fns) => ((actual) => {
         return _.every(fns, (fn) => fn(actual))
@@ -16,38 +20,48 @@ module.exports.__ = {
 module.exports.Filters = {
     // Simple filters
     hits: (fn) => ((object) => {
-        return fn(object.hits);
+        return f(fn)(object.hits);
     }),
     hitsPercentage: (fn) => ((object) => {
-        return fn(object.hits / object.hitsMax);
+        return f(fn)(object.hits / object.hitsMax);
     }),
     structureType: (fn) => ((object) => {
-        return fn(object.structureType);
+        return f(fn)(object.structureType);
     }),
     ticksToLive: (fn) => ((object) => {
-        return fn(object.ticksToLive);
+        return f(fn)(object.ticksToLive);
     }),
     freeCapacity: (fn, resource) => ((object) => {
         let capacity = object.store.getFreeCapacity(resource)
         capacity = (capacity !== null) ? capacity : object.store.getFreeCapacity(RESOURCE_ENERGY)
-        return fn(capacity);
+        return f(fn)(capacity);
     }),
     usedCapacity: (fn, resource) => ((object) => {
         let capacity = object.store.getUsedCapacity(resource)
         capacity = (capacity !== null) ? capacity : object.store.getUsedCapacity(RESOURCE_ENERGY)
-        return fn(capacity);
+        return f(fn)(capacity);
     }),
     energy: (fn) => ((object) => {
-        return fn(object.energy);
+        return f(fn)(object.energy);
     }),
     cooldown: (fn) => ((object) => {
-        return fn(object.cooldown);
+        return f(fn)(object.cooldown);
     }),
     posX: (fn) => ((object) => {
-        return fn(object.pos.x);
+        return f(fn)(object.pos.x);
     }),
     posY: (fn) => ((object) => {
-        return fn(object.pos.y);
+        return f(fn)(object.pos.y);
+    }),
+    pos: (fn) => ((object) => {
+        return f(fn)({x: object.pos.x, y: object.pos.y})
+    }),
+    role: (fn) => ((object) => {
+        let memory = object.memory
+        if (!memory) {
+            return false
+        }
+        return f(fn)(memory.role || 'default');
     }),
 
 
@@ -66,8 +80,4 @@ module.exports.Filters = {
     instanceof: (type) => ((object) => {
         return object instanceof type
     }),
-    pos: (x, y) => ((object) => {
-        return object.pos.x === x && object.pos.y === y
-    }),
-
 };

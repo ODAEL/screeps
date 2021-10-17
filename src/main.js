@@ -10,11 +10,11 @@ module.exports.loop = function () {
     cron()
 
     TaskProcessor.process()
-    
+
     if (Game.time % 200 === 0) {
         MemoryManager.cleanUp()
     }
-    
+
     if (Game.cpu.bucket === 10000) {
         Game.cpu.generatePixel()
     }

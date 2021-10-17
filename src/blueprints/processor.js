@@ -60,7 +60,7 @@ const getDefaultFilters = (subject, type) => {
         case TASK_TYPE_WITHDRAW:
             return [
                 Filters.withStore(),
-                Filters.my(false),
+                // Filters.my(false),
                 Filters.usedCapacity(__.gt(0)),
             ];
         case TASK_TYPE_REQUEST_RECYCLE:
@@ -83,6 +83,10 @@ const getDefaultFilters = (subject, type) => {
 
 module.exports.BlueprintProcessor = {
     taskByBlueprint: (subject, blueprint) => {
+        if (blueprint.type === BLUEPRINT_TYPE_RAW) {
+            return blueprint.data.task
+        }
+
         let filter,
             creeps, creep,
             structures, structure,
@@ -121,7 +125,7 @@ module.exports.BlueprintProcessor = {
                     return null;
                 }
 
-                return new TaskHarvest(target);
+                return new TaskHarvest(target, blueprint.data);
 
             case TASK_TYPE_TRANSFER:
                 filter = __.and(...defaultFilters, ...blueprint.filters.structureFilters);
@@ -200,7 +204,7 @@ module.exports.BlueprintProcessor = {
 
             case TASK_TYPE_ATTACK:
                 filter = __.and(...defaultFilters, ...blueprint.filters.targetFilters);
-                targets = [...getRoomWrapper(subject).hostileCreeps(filter), ...getRoomWrapper(subject).structures(filter)];
+                targets = [...getRoomWrapper(subject).hostileCreeps(filter), ...getRoomWrapper(subject).structures(filter), ...getRoomWrapper(subject).constructionSites(filter)];
                 target = Helpers.findClosest(subject, targets);
 
                 if (!target) {
