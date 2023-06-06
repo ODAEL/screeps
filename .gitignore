@@ -1,6 +1,7 @@
 .idea
 node_modules
 .env
+package-lock.json
 
 # To hide my global strategy and one-time commands
 /src/custom/config.js
