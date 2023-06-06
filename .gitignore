@@ -7,5 +7,6 @@ package-lock.json
 /src/custom/config.js
 /src/custom/commands.js
 /src/custom/cron.js
+/src/custom/room_construction_config.js
 
 /dist/*.js
