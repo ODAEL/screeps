@@ -18,9 +18,10 @@ module.exports.BlueprintBuilder = {
     heal: (creepFilters = [], data) => new Blueprint(TASK_TYPE_HEAL, {creepFilters: creepFilters}, data),
     pickup: (resourceFilters = []) => new Blueprint(TASK_TYPE_PICKUP, {resourceFilters: resourceFilters}),
     withdraw: (targetFilters = [], data) => new Blueprint(TASK_TYPE_WITHDRAW, {targetFilters: targetFilters}, data),
-    // moveTo: (targetFilters = []) => new Blueprint(TASK_TYPE_MOVE_TO, {targetFilters: targetFilters}, data),
+    moveTo: (data) => new Blueprint(TASK_TYPE_MOVE_TO, {}, data),
     // claimController: (controllerFilters = []) => new Blueprint(TASK_TYPE_CLAIM_CONTROLLER, {controllerFilters: controllerFilters}), // No need
-    attack: (targetFilters = []) => new Blueprint(TASK_TYPE_ATTACK, {targetFilters: targetFilters}),
+    attack: (targetFilters = [], data) => new Blueprint(TASK_TYPE_ATTACK, {targetFilters: targetFilters}, data),
+    attackController: (targetFilters = [], data) => new Blueprint(TASK_TYPE_ATTACK_CONTROLLER, {targetFilters: targetFilters}, data),
     rangedAttack: (targetFilters = [], data) => new Blueprint(TASK_TYPE_RANGED_ATTACK, {targetFilters: targetFilters}, data),
     move: (direction) => new Blueprint(TASK_TYPE_MOVE, {}, {direction: direction}),
     requestRecycle: (spawnFilters) => new Blueprint(TASK_TYPE_REQUEST_RECYCLE, {spawnFilters: spawnFilters}),

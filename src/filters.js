@@ -68,6 +68,9 @@ module.exports.Filters = {
     my: (strict = true) => ((object) => {
         return strict ? object.my : object.my !== false
     }),
+    notMy: (strict = true) => ((object) => {
+        return strict ? !object.my : object.my === false
+    }),
     nearTo: (to) => ((object) => {
         return object.pos.isNearTo(to)
     }),

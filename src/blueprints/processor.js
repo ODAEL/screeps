@@ -18,6 +18,8 @@ const {__} = require("../filters");
 const {Helpers} = require("../helpers");
 const {Filters} = require("../filters");
 const {RoomWrapper} = require("../wrappers");
+const {TaskMove} = require("../tasks/move");
+const {TaskMoveTo} = require("../tasks/move_to");
 
 const getRoomWrapper = (subject) => {
     return new RoomWrapper(subject.room)
@@ -75,6 +77,15 @@ const getDefaultFilters = (subject, type) => {
                 Filters.structureType(__.eq(STRUCTURE_LINK)),
                 Filters.my(true),
                 Filters.freeCapacity(__.gt(0))
+            ];
+        case TASK_TYPE_ATTACK:
+            return [
+                Filters.notMy(true),
+            ];
+        case TASK_TYPE_ATTACK_CONTROLLER:
+            return [
+                Filters.notMy(true),
+                Filters.instanceof(StructureController),
             ];
         default:
             return [];
@@ -211,7 +222,7 @@ module.exports.BlueprintProcessor = {
                     return null;
                 }
 
-                return new TaskAttack(target);
+                return new TaskAttack(target, blueprint.data);
 
             case TASK_TYPE_RANGED_ATTACK:
                 filter = __.and(...defaultFilters, ...blueprint.filters.targetFilters);
@@ -225,7 +236,10 @@ module.exports.BlueprintProcessor = {
                 return new TaskRangedAttack(target, blueprint.data);
 
             case TASK_TYPE_MOVE:
-                return new TaskRangedAttack(blueprint.data.direction);
+                return new TaskMove(blueprint.data.direction);
+
+            case TASK_TYPE_MOVE_TO:
+                return new TaskMoveTo(blueprint.data.pos);
 
             case TASK_TYPE_REQUEST_RECYCLE:
                 filter = __.and(...defaultFilters, ...blueprint.filters.spawnFilters);
